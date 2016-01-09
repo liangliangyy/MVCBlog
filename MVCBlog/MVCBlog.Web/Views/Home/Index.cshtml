@@ -1,7 +1,38 @@
-﻿
+﻿@using PagedList;
+@using MVCBlog.Common;
+@model MVCBlog.Entities.Pagination<MVCBlog.Entities.Models.PostInfo>
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "首页";
 }
 
-<h2>Index</h2>
+<main class="col-md-8">
+    @if (Model != null && Model.Items != null && Model.Items.Count > 0)
+    {
+        foreach (var item in Model.Items)
+        {
+            <article class="post post-1">
+                <header class="entry-header">
+                    <h1 class="entry-title">
+                        <a href="#">@item.Title</a>
+                    </h1>
+                    <div class="entry-meta">
+                        <span class="post-category"><a href="#">@item.PostCategoryInfo.CategoryName</a></span>
 
+                        <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@item.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
+
+                        <span class="post-author"><a href="#">@item.PostAuthor.Name</a></span>
+
+                        <span class="comments-link"><a href="#">@item.CommentCount Comments</a></span>
+                    </div>
+                </header>
+                <div class="entry-content clearfix">
+                    <p>@item.Content</p>
+                    <div class="read-more cl-effect-14">
+                        <a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
+                    </div>
+                </div>
+            </article>
+        }
+    }
+</main>

@@ -12,6 +12,13 @@ namespace MVCBlog.Entities.Models
 
     public class UserInfo
     {
+        public UserInfo()
+        {
+            this.UserRole = string.Empty;
+            this.UserStatus = MVCBlog.Entities.Enums.UserStatus.正常;
+            this.CreateTime = DateTime.Now;
+
+        }
         [Key]
         public int Id { get; set; }
 

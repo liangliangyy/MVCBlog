@@ -48,9 +48,15 @@
     <Compile Include="Models\PostInfo.cs" />
     <Compile Include="Models\PostMetasInfo.cs" />
     <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MVCBlog.Common\MVCBlog.Common.csproj">
+      <Project>{e040367e-d984-4b30-9ef3-8e85180fc24c}</Project>
+      <Name>MVCBlog.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

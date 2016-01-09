@@ -25,8 +25,7 @@ namespace MVCBlog.Web
         {
             IIdentity id = Context.User.Identity;
             if (id.IsAuthenticated)
-            {
-
+            { 
                 var customerService = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IUserService)) as IUserService;
                 var userinfo = customerService.GetUserInfo(id.Name);
 

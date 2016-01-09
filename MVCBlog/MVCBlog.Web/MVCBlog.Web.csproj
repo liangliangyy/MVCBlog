@@ -76,6 +76,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -139,9 +143,11 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="CommonHelper\ApplicationContainer.cs" />
+    <Compile Include="CommonHelper\Helper.cs" />
     <Compile Include="CommonHelper\Menu\MenuHelper.cs" />
     <Compile Include="CommonHelper\Menu\MenuInfo.cs" />
     <Compile Include="CommonHelper\ResolverHelper.cs" />
+    <Compile Include="CommonHelper\UserHelper.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -149,6 +155,7 @@
     </Compile>
     <Compile Include="Infrastructure\Dependency.cs" />
     <Compile Include="Infrastructure\DependencyConfigure.cs" />
+    <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -163,6 +170,9 @@
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="CommonHelper\Menu\AdminMenu.json" />
+    <Content Include="Views\Admin\WritePost.cshtml" />
+    <Content Include="Views\Admin\AddCategoryInfo.cshtml" />
+    <Content Include="Views\Admin\CategoryList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -211,7 +221,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2359</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2359/</IISUrl>
+          <IISUrl>http://localhost:8888/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

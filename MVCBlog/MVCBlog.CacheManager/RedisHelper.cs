@@ -231,6 +231,14 @@ namespace MVCBlog.CacheManager
             }
         }
 
+        public static void DeleteEntity(string key)
+        {
+            using (var client = new RedisClient(Host))
+            {
+                client.Remove(key);
+            }
+        }
+
         /// <summary>
         /// 根据key Set存储
         /// </summary>

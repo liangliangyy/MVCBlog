@@ -12,7 +12,7 @@ namespace MVCBlog.Repository.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        CategoryName = c.String(unicode: false),
+                        CategoryName = c.String(nullable: false, unicode: false),
                         CreateTime = c.DateTime(nullable: false, precision: 0),
                         IsDelete = c.Boolean(nullable: false),
                         CreateUser_Id = c.Int(),
@@ -81,16 +81,19 @@ namespace MVCBlog.Repository.Migrations
                         Content = c.String(nullable: false, unicode: false),
                         PostStatus = c.Int(nullable: false),
                         PostType = c.Int(nullable: false),
-                        CommentStatus = c.Int(nullable: false),
+                        PostCommentStatus = c.Int(nullable: false),
                         CommentCount = c.Int(nullable: false),
                         EditedTime = c.DateTime(precision: 0),
                         CreateTime = c.DateTime(nullable: false, precision: 0),
                         IsDelete = c.Boolean(nullable: false),
                         PostAuthor_Id = c.Int(),
+                        PostCategoryInfo_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.UserInfo", t => t.PostAuthor_Id)
-                .Index(t => t.PostAuthor_Id);
+                .ForeignKey("dbo.CategoryInfo", t => t.PostCategoryInfo_Id)
+                .Index(t => t.PostAuthor_Id)
+                .Index(t => t.PostCategoryInfo_Id);
             
             CreateTable(
                 "dbo.PostMetasInfoes",
@@ -112,6 +115,7 @@ namespace MVCBlog.Repository.Migrations
             DropForeignKey("dbo.CommentInfo", "ParentCommentInfo_Id", "dbo.CommentInfo");
             DropForeignKey("dbo.CommentInfo", "CommentUser_Id", "dbo.UserInfo");
             DropForeignKey("dbo.PostMetasInfoes", "PostInfo_Id", "dbo.PostInfo");
+            DropForeignKey("dbo.PostInfo", "PostCategoryInfo_Id", "dbo.CategoryInfo");
             DropForeignKey("dbo.PostInfo", "PostAuthor_Id", "dbo.UserInfo");
             DropForeignKey("dbo.CommentInfo", "CommentPost_Id", "dbo.PostInfo");
             DropForeignKey("dbo.CategoryRelationships", "ParentCategoryInfo_Id", "dbo.CategoryInfo");
@@ -120,6 +124,7 @@ namespace MVCBlog.Repository.Migrations
             DropIndex("dbo.CommentInfo", new[] { "ParentCommentInfo_Id" });
             DropIndex("dbo.CommentInfo", new[] { "CommentUser_Id" });
             DropIndex("dbo.PostMetasInfoes", new[] { "PostInfo_Id" });
+            DropIndex("dbo.PostInfo", new[] { "PostCategoryInfo_Id" });
             DropIndex("dbo.PostInfo", new[] { "PostAuthor_Id" });
             DropIndex("dbo.CommentInfo", new[] { "CommentPost_Id" });
             DropIndex("dbo.CategoryRelationships", new[] { "ParentCategoryInfo_Id" });

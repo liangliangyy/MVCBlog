@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using MVCBlog.Entities.Models;
+using PagedList;
+using MVCBlog.Entities;
+
 namespace MVCBlog.Service.Interfaces
 {
     public interface IPostService
@@ -9,5 +12,6 @@ namespace MVCBlog.Service.Interfaces
         void Insert(PostInfo model);
         void Update(PostInfo model);
         void Delete(PostInfo model);
+        Pagination<PostInfo> PostPagination(int index,int pagecount);
     }
 }

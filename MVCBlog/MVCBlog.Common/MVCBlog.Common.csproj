@@ -44,6 +44,7 @@
     <Compile Include="CacheHelper.cs" />
     <Compile Include="ConfigInfo.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="ModelDefaultValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,11 @@ using MVCBlog.Entities.Models;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Repository;
 using MVCBlog.Entities.Enums;
+using PagedList;
+using MVCBlog.Common;
+using MVCBlog.CacheManager;
+using MVCBlog.Entities;
+
 namespace MVCBlog.Service
 {
     public class PostService : IPostService
@@ -14,10 +19,10 @@ namespace MVCBlog.Service
         {
             this.Context = _contest;
         }
-       
+
         public void Delete(PostInfo model)
         {
-            if (model!=null)
+            if (model != null)
             {
                 var entity = Context.PostInfo.Find(model.Id);
                 entity.IsDelete = true;
@@ -40,8 +45,49 @@ namespace MVCBlog.Service
 
         public void Insert(PostInfo model)
         {
-            Context.PostInfo.Add(model);
+            model.PostStatus = PostStatus.发布;
+            model.PostType = PostType.文章;
+            model.PostCommentStatus = PostCommentStatus.打开;
+            model.CommentCount = 0;
+            model.CreateTime = DateTime.Now;
+            model.IsDelete = false;
+            var entity = Context.PostInfo.Add(model);
             Context.SaveChanges();
+            string key = ConfigInfo.GetPostKey(entity.Id);
+            RedisHelper.SetEntity<PostInfo>(key, entity);
+        }
+
+        public Pagination<PostInfo> PostPagination(int index, int pagecount)
+        {
+            var res = Context.PostInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
+            if (res != null && res.Count > 0)
+            {
+                List<PostInfo> list = new List<PostInfo>();
+                foreach (var item in res)
+                {
+                    string key = ConfigInfo.GetPostKey(item);
+                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
+                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
+                    list.Add(info);
+                }
+                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
+                {
+                    Items = list,
+                    TotalItemCount = res.TotalItemCount,
+                    PageCount = res.PageCount,
+                    PageNumber = res.PageNumber,
+                    PageSize = res.PageSize
+                };
+                return pagination;
+            }
+            return new Pagination<PostInfo>()
+            {
+                Items = null,
+                TotalItemCount = 0,
+                PageCount = 0,
+                PageSize = pagecount,
+                PageNumber = index
+            };
         }
 
         public void Update(PostInfo model)
@@ -50,7 +96,7 @@ namespace MVCBlog.Service
             entity.Title = model.Title;
             entity.Content = model.Content;
             entity.PostStatus = model.PostStatus;
-            entity.CommentStatus = model.CommentStatus;
+            entity.PostCommentStatus = model.PostCommentStatus;
             entity.EditedTime = DateTime.Now;
             Context.SaveChanges();
         }

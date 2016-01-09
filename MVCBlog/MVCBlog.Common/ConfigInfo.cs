@@ -16,10 +16,28 @@ namespace MVCBlog.Common
             }
             return string.Format("{0}:{1}", UserCackeKey, Email);
         }
+        public static string GetPostKey(int id)
+        {
+            if (id == 0)
+            {
+                throw new NotSupportedException("id必须大于0");
+            }
+            return string.Format("{0}:{1}", PostListKey, id);
+        }
+
+        public static string GetCategoryKey { get { return "MVCBlog:CategoryList"; } }
+
+
+
+        public static int PageCount { get { return 20; } }
+        public static string TimeFormat { get { return "yyyy-MM-dd HH:mm:ss"; } }
+
         private static string UserCackeKey { get; set; }
+        private static string PostListKey { get; set; }
         static ConfigInfo()
         {
             UserCackeKey = "MVCBlog:UserInfo";
+            PostListKey = "MVCBlog:PostInfo";
         }
     }
 }
