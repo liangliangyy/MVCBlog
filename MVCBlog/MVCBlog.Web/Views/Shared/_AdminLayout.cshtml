@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Dashboard with Off-canvas Sidebar</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/Content/admin/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="~/Content/admin/js/html5.js"></script>
+    <![endif]-->
+    <link href="~/Content/admin/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Project name</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    @foreach (var item in MVCBlog.Web.CommonHelper.Menu.MenuHelper.GetMenuInfo(MVCBlog.Entities.Enums.MenuType.后台))
+                    {
+                        <li><a href="@item.MenuUrl">@item.MenuName</a></li>
+                    }
+                    @*<li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Help</a></li>*@
+                </ul>
+                @*<form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>*@
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+
+        <div class="row row-offcanvas row-offcanvas-left">
+
+         
+
+            <div class="col-sm-9 col-md-10 main">
+
+                <!--toggle sidebar button-->
+                <p class="visible-xs">
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                </p>
+
+             @RenderBody()
+
+            </div><!--/row-->
+        </div>
+    </div><!--/.container-->
+    <footer>
+        @*<p class="pull-right">©2014 Company</p>*@
+    </footer>
+
+    <!-- script references -->
+    <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+    <script src="~/Content/admin/js/bootstrap.min.js"></script>
+    <script src="~/Content/admin/js/scripts.js"></script>
+</body>
+</html>

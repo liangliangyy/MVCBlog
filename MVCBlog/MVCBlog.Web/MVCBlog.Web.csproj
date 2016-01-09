@@ -43,12 +43,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.4.0\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -109,19 +117,52 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\admin\css\bootstrap.min.css" />
+    <Content Include="Content\admin\css\styles.css" />
+    <Content Include="Content\admin\index.html" />
+    <Content Include="Content\admin\js\bootstrap.min.js" />
+    <Content Include="Content\admin\js\html5.js" />
+    <Content Include="Content\admin\js\scripts.js" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\ionicons.min.css" />
+    <Content Include="Content\css\pace.css" />
+    <Content Include="Content\img\me.jpg" />
+    <Content Include="Content\js\bootstrap.min.js" />
+    <Content Include="Content\js\jquery-2.1.3.min.js" />
+    <Content Include="Content\js\modernizr.custom.js" />
+    <Content Include="Content\js\pace.min.js" />
+    <Content Include="Content\js\script.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="CommonHelper\ApplicationContainer.cs" />
+    <Compile Include="CommonHelper\Menu\MenuHelper.cs" />
+    <Compile Include="CommonHelper\Menu\MenuInfo.cs" />
+    <Compile Include="CommonHelper\ResolverHelper.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Dependency.cs" />
+    <Compile Include="Infrastructure\DependencyConfigure.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\LogIn.cshtml" />
+    <Content Include="Views\Admin\Register.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="CommonHelper\Menu\AdminMenu.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -131,11 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MVCBlog.CacheManager\MVCBlog.CacheManager.csproj">
@@ -149,6 +186,10 @@
     <ProjectReference Include="..\MVCBlog.Entities\MVCBlog.Entities.csproj">
       <Project>{89cf1584-5108-4f0c-b5da-ece98c62ac50}</Project>
       <Name>MVCBlog.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MVCBlog.Repository\MVCBlog.Repository.csproj">
+      <Project>{1eb2b92e-5308-48a8-bbd1-e45fe579b972}</Project>
+      <Name>MVCBlog.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\MVCBlog.Service\MVCBlog.Service.csproj">
       <Project>{7f069261-8228-498d-a1b9-8a4f7883c620}</Project>
