@@ -4,7 +4,7 @@ using System.Data.Entity.Migrations;
 
 namespace MVCBlog.Repository
 {
-   //[DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
+   [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     public class MVCBlogContext : DbContext
     {
         

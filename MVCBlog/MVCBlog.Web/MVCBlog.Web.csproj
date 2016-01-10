@@ -165,6 +165,7 @@
     <Compile Include="CommonHelper\ResolverHelper.cs" />
     <Compile Include="CommonHelper\UserHelper.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostInfoController.cs" />
     <Compile Include="Global.asax.cs">
@@ -172,6 +173,7 @@
     </Compile>
     <Compile Include="Infrastructure\Dependency.cs" />
     <Compile Include="Infrastructure\DependencyConfigure.cs" />
+    <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -196,6 +198,7 @@
     <Content Include="Content\classyleaves\css\fontawesome-webfont.woff" />
     <Content Include="Content\classyleaves\license" />
     <Content Include="Content\classyleaves\readme" />
+    <Content Include="Views\Comment\CommentInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

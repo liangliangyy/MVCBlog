@@ -23,4 +23,5 @@
             @Model.Content
         </div>
     </article>
+    @Html.Action("CommentInfo", "Comment", new { postid = Model.Id })
 </main>
