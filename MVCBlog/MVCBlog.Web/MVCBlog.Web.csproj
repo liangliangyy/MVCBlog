@@ -127,6 +127,22 @@
     <Content Include="Content\admin\js\bootstrap.min.js" />
     <Content Include="Content\admin\js\html5.js" />
     <Content Include="Content\admin\js\scripts.js" />
+    <Content Include="Content\classyleaves\css\documentation.css" />
+    <Content Include="Content\classyleaves\css\jquery.classyleaves.css" />
+    <Content Include="Content\classyleaves\css\jquery.classyleaves.min.css" />
+    <Content Include="Content\classyleaves\images\leaves\1.png" />
+    <Content Include="Content\classyleaves\images\leaves\2.png" />
+    <Content Include="Content\classyleaves\images\leaves\3.png" />
+    <Content Include="Content\classyleaves\images\leaves\4.png" />
+    <Content Include="Content\classyleaves\images\leaves\5.png" />
+    <Content Include="Content\classyleaves\images\leaves\6.png" />
+    <Content Include="Content\classyleaves\images\leaves\7.png" />
+    <Content Include="Content\classyleaves\images\leaves\8.png" />
+    <Content Include="Content\classyleaves\index.html" />
+    <Content Include="Content\classyleaves\js\jquery.classyleaves.js" />
+    <Content Include="Content\classyleaves\js\jquery.classyleaves.min.js" />
+    <Content Include="Content\classyleaves\js\jquery.min.js" />
+    <Content Include="Content\classyleaves\js\jquery.rotate.js" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\custom.css" />
     <Content Include="Content\css\ionicons.min.css" />
@@ -150,6 +166,7 @@
     <Compile Include="CommonHelper\UserHelper.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PostInfoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -173,6 +190,12 @@
     <Content Include="Views\Admin\WritePost.cshtml" />
     <Content Include="Views\Admin\AddCategoryInfo.cshtml" />
     <Content Include="Views\Admin\CategoryList.cshtml" />
+    <Content Include="Views\PostInfo\RecentPost.cshtml" />
+    <Content Include="Views\PostInfo\PostCategoryInfo.cshtml" />
+    <Content Include="Views\PostInfo\PostInfo.cshtml" />
+    <Content Include="Content\classyleaves\css\fontawesome-webfont.woff" />
+    <Content Include="Content\classyleaves\license" />
+    <Content Include="Content\classyleaves\readme" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

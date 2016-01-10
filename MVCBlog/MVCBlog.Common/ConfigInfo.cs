@@ -27,7 +27,7 @@ namespace MVCBlog.Common
 
         public static string GetCategoryKey { get { return "MVCBlog:CategoryList"; } }
 
-
+        public static int RecentPostCount { get { return 5; } }
 
         public static int PageCount { get { return 20; } }
         public static string TimeFormat { get { return "yyyy-MM-dd HH:mm:ss"; } }

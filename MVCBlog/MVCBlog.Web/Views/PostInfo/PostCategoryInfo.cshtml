@@ -1,0 +1,17 @@
+﻿@model IEnumerable<MVCBlog.Entities.Models.CategoryInfo>
+
+
+<div class="widget widget-category">
+    <h3 class="widget-title">Category</h3>
+    <ul>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <li>
+                    <a href="#">@item.CategoryName</a>
+            </li>
+            }
+        }
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+﻿@model MVCBlog.Entities.Models.PostInfo
+@using MVCBlog.Common;
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="col-md-8">
+    <article class="post post-1">
+        <header class="entry-header">
+            <h1 class="entry-title">@Model.Title</h1>
+            <div class="entry-meta">
+                <span class="post-category"><a href="#">@Model.PostCategoryInfo.CategoryName</a></span>
+
+                <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@Model.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
+
+                <span class="post-author"><a href="#">@Model.PostAuthor.Name</a></span>
+
+                <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
+            </div>
+        </header>
+        <div class="entry-content clearfix">
+            @Model.Content
+        </div>
+    </article>
+</main>

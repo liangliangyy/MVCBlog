@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8" />
+        <title>ClassyLeaves jQuery plugin | vox.SPACE</title>
+        <link rel="stylesheet" href="css/documentation.css" />
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.rotate.js"></script>
+        <script src="js/jquery.classyleaves.min.js"></script>
+        <link rel="stylesheet" href="css/jquery.classyleaves.min.css" />
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="main-container">
+                <div id="page-content">
+                    <div class="content-header">
+                        <div class="header-section">
+                            <h1>ClassyLeaves<br><small>Socialize with the power of jQuery!</small></h1>
+                        </div>
+                    </div>
+                    <ul class="breadcrumb breadcrumb-top">
+                        <li><a href="https://vox.space/"><i class="fa fa-home"></i> vox.SPACE</a></li>
+                        <li><a href="https://vox.space/?section=4">jQuery plugins</a></li>
+                        <li>ClassyLeaves</li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="block">
+                                <div class="block-title">
+                                    <h2>Introduction</h2>
+                                </div>
+                                <div class="clearfix">
+                                    <p>ClassyLeaves is a plugin that will provide beautiful decorations on your website: falling and rotating interactive leaves. If you click on a leaf, it will fall; if you click on a falling leaf, magic will happen.</p>
+                                    <p>The plugin is crossbrowser, mobile-optimized and very easy to extend.</p>
+                                    <p>
+                                        <a href="/files/jquery-classyleaves.zip" class="btn btn-primary">
+                                            <i class="fa fa-folder-open"></i> Download it
+                                        </a>
+                                    </p>
+                                    <div class="alert alert-info">
+                                        <h4><i class="fa fa-info-circle"></i> License</h4>
+                                        This jQuery plugin is distributed under the <a href="https://vox.space/LICENSE-MIT">MIT license</a>. Enjoy!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="block">
+                                <div class="block-title">
+                                    <h2>Demo</h2>
+                                </div>
+                                <div class="clearfix">
+                                    <a href="#" class="addLeaf btn btn-danger">Add More Leaves</a>
+                                    <script>
+                                        $(document).ready(function() {
+                                            var tree = new ClassyLeaves({
+                                                leaves: 30,
+                                                maxY: -10,
+                                                multiplyOnClick: true,
+                                                multiply: 2,
+                                                infinite: true,
+                                                speed: 4000
+                                            });
+                                            $('body').on('click', '.addLeaf', function() {
+                                                console.log('8');
+                                                tree.add(8);
+                                                return false;
+                                            });
+                                        });
+                                    </script>
+                                    <br />
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="block">
+                                <div class="block-title">
+                                    <h2>Setup</h2>
+                                </div>
+                                <div class="clearfix">
+                                    <p>First you need to include the jQuery library, since ClassySocial is a plugin. You can download it from the jQuery website or link it directly from the Google CDN.</p>
+                                    <pre>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</pre>
+                                    <p>You will also need the <a href="http://code.google.com/p/jqueryrotate/">jQuery rotate plugin</a>, which you can insert into your page with the code below:</p>
+                                    <pre>&lt;script src="js/jquery.rotate.js"&gt;&lt;/script&gt;</pre>
+                                    <p>Secondly, you need to include the jQuery ClassyLeaves javascript and the CSS file, which you can do it by adding the code below to your page.</p>
+                                    <pre>&lt;script src="js/jquery.classyleaves.min.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" type="text/css" href="css/jquery.classyleaves.min.css" /&gt;</pre>
+                                    <p>As the last step, you create an instance of the plugin object, which you can store in a variable for later use.</p>
+                                    <pre>var tree = new ClassyLeaves({
+    leaves: 30,
+    maxY: -10,
+    multiplyOnClick: true,
+    multiply: 2,
+    infinite: true,
+    speed: 4000
+});</pre>
+                                    <p>This way, when you want to add more leaves, you can do:</p>
+                                    <pre>tree.add(8);</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="block">
+                                <div class="block-title">
+                                    <h2>Options</h2>
+                                </div>
+                                <div class="clearfix">
+                                    <ul class="fa-ul">
+                                        <li>
+                                            <h3>Parameters</h3>
+                                            <hr />
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">leaves</span> - number of leaves to spawn initially, default is <span class="label label-primary">50</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">maxY</span> - spread size, default is <span class="label label-primary">100</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">multiplyOnClick</span> - whether to multiply the leaf when the user clicks on it, can be <span class="label label-success">true</span> or <span class="label label-success">false</span>, default is <span class="label label-primary">true</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">multiply</span> -  number of images to spawn when clicking on a leaf, default is <span class="label label-primary">1</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">infinite</span> - if you want the leaves to never stop falling, can be <span class="label label-success">true</span> or <span class="label label-success">false</span>, default is <span class="label label-primary">true</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">speed</span> - speed of the falling leaf animation, default is <span class="label label-primary">3000</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">numImages</span> - total number of images in the leaves folder, default is <span class="label label-primary">8</span>
+                                        </li>
+                                        <li>
+                                            <span class="label label-danger">folder</span> - the folder containing the leaf images, default is <span class="label label-primary">images/leaves/</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="clearfix">
+                    <div class="pull-right">
+                        <span>2005 - 2015</span> © <a href="https://vox.space" target="_blank">vox.SPACE</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var _paq = _paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u = "https://www.picozu.com/x/";
+                _paq.push(['setTrackerUrl', u + 'piwik.php']);
+                _paq.push(['setSiteId', 2]);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.type = 'text/javascript';
+                g.async = true;
+                g.defer = true;
+                g.src = u + 'piwik.js';
+                s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+        <noscript><p><img src="https://www.picozu.com/x/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+    </body>
+</html>

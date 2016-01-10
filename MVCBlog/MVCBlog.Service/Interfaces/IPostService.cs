@@ -13,5 +13,7 @@ namespace MVCBlog.Service.Interfaces
         void Update(PostInfo model);
         void Delete(PostInfo model);
         Pagination<PostInfo> PostPagination(int index,int pagecount);
+
+        List<PostInfo> GetRecentPost(int count);
     }
 }

@@ -14,7 +14,7 @@
             <article class="post post-1">
                 <header class="entry-header">
                     <h1 class="entry-title">
-                        <a href="#">@item.Title</a>
+                        <a href="@Url.Action("PostInfo", "PostInfo", new { id = item.Id })">@item.Title</a>
                     </h1>
                     <div class="entry-meta">
                         <span class="post-category"><a href="#">@item.PostCategoryInfo.CategoryName</a></span>
@@ -29,7 +29,7 @@
                 <div class="entry-content clearfix">
                     <p>@item.Content</p>
                     <div class="read-more cl-effect-14">
-                        <a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
+                        <a href="@Url.Action("PostInfo","PostInfo"), new { id = item.Id }" class="more-link">Continue reading <span class="meta-nav">→</span></a>
                     </div>
                 </div>
             </article>

@@ -1,0 +1,17 @@
+﻿@model IEnumerable<MVCBlog.Entities.Models.PostInfo>
+
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="widget widget-recent-posts">
+        <h3 class="widget-title">Recent Posts</h3>
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+                    <a href="#">@item.Title</a>
+                </li>
+            }
+        </ul>
+    </div>
+}

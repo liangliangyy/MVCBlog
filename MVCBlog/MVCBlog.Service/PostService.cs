@@ -33,14 +33,34 @@ namespace MVCBlog.Service
 
         public PostInfo GetById(int id)
         {
-            var entity = Context.PostInfo.Find(id);
-            return entity;
+            Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
+            string key = ConfigInfo.GetPostKey(id);
+            PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
+            return info;
         }
 
         public List<PostInfo> GetPosts()
         {
             return Context.PostInfo.ToList();
             //return Context.PostInfo.Where(x => !x.IsDelete && x.PostStatus == PostStatus.发布).ToList();
+        }
+
+        public List<PostInfo> GetRecentPost(int count)
+        {
+            var res = Context.PostInfo.OrderByDescending(x => x.Id).Take(count).Select(x => x.Id).ToList();
+            if (res != null && res.Count > 0)
+            {
+                List<PostInfo> list = new List<PostInfo>();
+                foreach (var item in res)
+                {
+                    string key = ConfigInfo.GetPostKey(item);
+                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
+                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
+                    list.Add(info);
+                }
+                return list;
+            }
+            return new List<PostInfo>();
         }
 
         public void Insert(PostInfo model)

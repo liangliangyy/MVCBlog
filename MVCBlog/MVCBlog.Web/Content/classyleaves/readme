@@ -1,0 +1,12 @@
+ClassyLeaves is a plugin that will provide beautiful decorations on your
+website: falling and rotating interactive leaves. If you click on a leaf,
+it will fall; if you click on a falling leaf, magic will happen.
+
+The plugin is crossbrowser, mobile-optimized and very easy to extend.
+
+@name ClassyLeaves
+@package jQuery plugin
+@author Marius Stanciu - Sergiu <marius@vox.space>
+@website https://vox.space/
+@version 1.1.1
+@license MIT https://vox.space/LICENSE-MIT
