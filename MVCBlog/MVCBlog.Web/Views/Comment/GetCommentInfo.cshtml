@@ -1,0 +1,27 @@
+﻿@model IEnumerable<MVCBlog.Entities.Models.CommentInfo>
+
+@if (Model != null && Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        @*<div class="panel panel-default">
+                <div class="panel-heading">@item.CommentTitle</div>
+                <div class="panel-body">
+                    @item.CommentContent
+                </div>
+            </div>*@
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                   <div class="col-xs">
+                       @item.CommentTitle
+                   </div>
+                    <div class="col-xs-6">
+                        @item.CommentContent
+                    </div>
+                </div>
+            </li>
+        </ul>
+    }
+}
+

@@ -15,13 +15,20 @@ namespace MVCBlog.Web.CommonHelper
     {
         public static UserInfo GetLogInUserInfo()
         {
-
-            IIdentity id = HttpContext.Current.User.Identity;
-            if (id.IsAuthenticated)
+            try
             {
-                UserService userservice = (UserService)ResolverHelper.GetResolver<UserService>();
-                var userinfo = userservice.GetUserInfo(id.Name);
-                return userinfo;
+                IIdentity id = HttpContext.Current.User.Identity;
+                if (id.IsAuthenticated)
+                {
+                    IUserService userservice = (IUserService)ResolverHelper.GetResolver<UserService>();
+                    var userinfo = userservice.GetUserInfo(id.Name);
+                    return userinfo;
+                }
+            }
+            catch 
+            {
+                HttpContext.Current.User = null;
+                HttpContext.Current.Response.Redirect("/Admin/LogIn");
             }
             return null;
         }

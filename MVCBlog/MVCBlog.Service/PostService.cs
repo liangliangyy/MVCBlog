@@ -63,7 +63,7 @@ namespace MVCBlog.Service
             return new List<PostInfo>();
         }
 
-        public void Insert(PostInfo model)
+        public void Insert(PostInfo model,int userid)
         {
             model.PostStatus = PostStatus.发布;
             model.PostType = PostType.文章;
@@ -71,6 +71,8 @@ namespace MVCBlog.Service
             model.CommentCount = 0;
             model.CreateTime = DateTime.Now;
             model.IsDelete = false;
+            model.PostAuthor = Context.UserInfo.Find(userid);
+            model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
             var entity = Context.PostInfo.Add(model);
             Context.SaveChanges();
             string key = ConfigInfo.GetPostKey(entity.Id);

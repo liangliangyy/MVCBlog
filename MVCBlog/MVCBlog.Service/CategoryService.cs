@@ -22,6 +22,7 @@ namespace MVCBlog.Service
         public void AddCategoryInfo(CategoryInfo info)
         {
             RedisHelper.DeleteEntity(ConfigInfo.GetCategoryKey);
+            info.CreateUser = Context.UserInfo.Find(info.CreateUser.Id);
             Context.CategoryInfo.Add(info);
             Context.SaveChanges();
         }

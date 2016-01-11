@@ -145,6 +145,7 @@
     <Content Include="Content\classyleaves\js\jquery.rotate.js" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\embed.default.css" />
     <Content Include="Content\css\ionicons.min.css" />
     <Content Include="Content\css\pace.css" />
     <Content Include="Content\img\me.jpg" />
@@ -199,6 +200,7 @@
     <Content Include="Content\classyleaves\license" />
     <Content Include="Content\classyleaves\readme" />
     <Content Include="Views\Comment\CommentInfo.cshtml" />
+    <Content Include="Views\Comment\GetCommentInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

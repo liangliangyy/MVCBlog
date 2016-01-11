@@ -9,7 +9,7 @@ namespace MVCBlog.Service.Interfaces
     {
         List<PostInfo> GetPosts();
         PostInfo GetById(int id);
-        void Insert(PostInfo model);
+        void Insert(PostInfo model,int userid);
         void Update(PostInfo model);
         void Delete(PostInfo model);
         Pagination<PostInfo> PostPagination(int index,int pagecount);

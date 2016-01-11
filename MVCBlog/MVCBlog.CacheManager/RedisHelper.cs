@@ -249,8 +249,10 @@ namespace MVCBlog.CacheManager
         {
             using (var client = new RedisClient(Host))
             {
-                var entitys = client.As<T>();
-                entitys.SetEntry(key, val);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(val);
+                //var entitys = client.As<T>();
+                //entitys.SetEntry(key, val);
+                client.Set<T>(key, val);
             }
         }
 

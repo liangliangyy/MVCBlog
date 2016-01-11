@@ -89,9 +89,8 @@ namespace MVCBlog.Web.Controllers
                 var entity = new PostInfo();
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
-                entity.PostAuthor = UserHelper.GetLogInUserInfo();
                 entity.PostCategoryInfo = categoryService.GetCategoryList().First(x => x.Id == postinfo.CategoryID);
-                postService.Insert(entity);
+                postService.Insert(entity,UserHelper.GetLogInUserInfo().Id);
                 return RedirectToAction("Index", "Home");
             }
             return View();

@@ -1,5 +1,6 @@
 ﻿using MVCBlog.Entities.Models;
 using MVCBlog.Service;
+using MVCBlog.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ namespace MVCBlog.Web.CommonHelper
     {
         public static List<SelectListItem> GetCategorySelectList()
         {
-            CategoryService service = (CategoryService)ResolverHelper.GetResolver<CategoryService>();
+            ICategoryService service = (ICategoryService)ResolverHelper.GetResolver<CategoryService>();
             List<CategoryInfo> list = service.GetCategoryList();
             if (list.Count == 0)
             {
-                UserService userservice = (UserService)ResolverHelper.GetResolver<UserService>();
+                IUserService userservice = (IUserService)ResolverHelper.GetResolver<UserService>();
                 var loginuser = UserHelper.GetLogInUserInfo();
                 var defaultcategory = new CategoryInfo()
                 {

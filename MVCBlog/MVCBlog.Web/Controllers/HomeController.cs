@@ -10,6 +10,7 @@ using PagedList;
 using MVCBlog.Entities.Models;
 using MVCBlog.Common;
 using MVCBlog.Entities;
+using MVCBlog.Web.CommonHelper;
 
 namespace MVCBlog.Web.Controllers
 {
@@ -31,6 +32,7 @@ namespace MVCBlog.Web.Controllers
             //string jsoninfo = JsonConvert.SerializeObject(list);
             //var test = postService.GetPosts();
             //return View();
+            UserHelper.GetLogInUserInfo();
             Pagination<PostInfo> pagination = postService.PostPagination(pageindex, ConfigInfo.PageCount);
             return View(pagination);
         }

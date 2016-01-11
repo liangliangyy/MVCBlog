@@ -19,9 +19,17 @@
                 <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
             </div>
         </header>
+
         <div class="entry-content clearfix">
             @Model.Content
         </div>
     </article>
-    @Html.Action("CommentInfo", "Comment", new { postid = Model.Id })
+
 </main>
+<div class="col-md-8">
+
+    @Html.Action("GetCommentInfo", "Comment", new { postid = Model.Id })
+
+
+    @Html.Action("CommentInfo", "Comment", new { postid = Model.Id })
+</div>

@@ -1,5 +1,6 @@
 ﻿using MVCBlog.Entities.Models;
 using MVCBlog.Service;
+using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
 using MVCBlog.Web.Models;
 using System;
@@ -13,9 +14,9 @@ namespace MVCBlog.Web.Controllers
     public class CommentController : Controller
     {
         // GET: Comment
-        private CommentService commentService = (CommentService)ResolverHelper.GetResolver<CommentService>();
-        private PostService postService = (PostService)ResolverHelper.GetResolver<PostService>();
-        private UserService userService = (UserService)ResolverHelper.GetResolver<UserService>();
+        private ICommentService commentService = (ICommentService)ResolverHelper.GetResolver<CommentService>();
+        private IPostService postService = (IPostService)ResolverHelper.GetResolver<PostService>();
+        private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
         public ActionResult Index()
         {
             return View();
@@ -51,7 +52,7 @@ namespace MVCBlog.Web.Controllers
                 var commentinfo = new CommentInfo()
                 {
                     CommentUser = userinfo,
-                    CommentPost = postinfo,
+                    PostID = model.PostID,
                     CommentContent = model.CommentContent,
                     CommentTitle = model.CommentTitle
                 };
