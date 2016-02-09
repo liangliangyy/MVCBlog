@@ -63,7 +63,43 @@ namespace MVCBlog.Service
             return new List<PostInfo>();
         }
 
-        public void Insert(PostInfo model,int userid)
+        public Pagination<PostInfo> GetUserPosts(int authorid, int index, int pagecount)
+        {
+            var postids = Context.PostInfo
+                .Where(x => x.PostAuthor.Id == authorid)
+                .Select(x => x.Id).OrderByDescending(x => x)
+                .ToPagedList(index, pagecount);
+            if (postids != null && postids.Count > 0)
+            {
+                List<PostInfo> list = new List<PostInfo>();
+                foreach (var item in postids)
+                {
+                    string key = ConfigInfo.GetPostKey(item);
+                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
+                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
+                    list.Add(info);
+                }
+                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
+                {
+                    Items = list,
+                    TotalItemCount = postids.TotalItemCount,
+                    PageCount = postids.PageCount,
+                    PageNumber = postids.PageNumber,
+                    PageSize = postids.PageSize
+                };
+                return pagination;
+            }
+            return new Pagination<PostInfo>()
+            {
+                Items = null,
+                TotalItemCount = 0,
+                PageCount = 0,
+                PageSize = pagecount,
+                PageNumber = index
+            };
+        }
+
+        public void Insert(PostInfo model, int userid)
         {
             model.PostStatus = PostStatus.发布;
             model.PostType = PostType.文章;

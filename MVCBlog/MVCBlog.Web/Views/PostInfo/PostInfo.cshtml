@@ -14,7 +14,7 @@
 
                 <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@Model.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
 
-                <span class="post-author"><a href="#">@Model.PostAuthor.Name</a></span>
+                <span class="post-author"><a href="@Url.Action("UserPostInfo", "User", new { userid = Model.PostAuthor.Id })">@Model.PostAuthor.Name</a></span>
 
                 <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
             </div>

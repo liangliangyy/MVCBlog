@@ -15,5 +15,7 @@ namespace MVCBlog.Service.Interfaces
         Pagination<PostInfo> PostPagination(int index,int pagecount);
 
         List<PostInfo> GetRecentPost(int count);
+
+        Pagination<PostInfo> GetUserPosts(int authorid,int index,int pagecount);
     }
 }

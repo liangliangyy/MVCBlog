@@ -1,4 +1,5 @@
-﻿using MVCBlog.Service;
+﻿using MVCBlog.Common;
+using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
 using System;
@@ -13,15 +14,22 @@ namespace MVCBlog.Web.Controllers
     public class UserController : Controller
     {
         private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
+        private IPostService postService = (IPostService)ResolverHelper.GetResolver<PostService>();
         // GET: User
         public ActionResult Index()
         {
             return View();
         }
         public ActionResult UserList()
-        {
-            
+        { 
             return View();
+        }
+
+
+        public ActionResult UserPostInfo(int userid, int index = 1)
+        {
+            var postinfos = postService.GetUserPosts(userid, index, ConfigInfo.PageCount);
+            return View(postinfos);
         }
     }
 }

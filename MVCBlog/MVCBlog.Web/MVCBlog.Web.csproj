@@ -169,6 +169,7 @@
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostInfoController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -201,6 +202,8 @@
     <Content Include="Content\classyleaves\readme" />
     <Content Include="Views\Comment\CommentInfo.cshtml" />
     <Content Include="Views\Comment\GetCommentInfo.cshtml" />
+    <None Include="Properties\PublishProfiles\MVCBlog.pubxml" />
+    <Content Include="Views\User\UserPostInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
