@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ServiceStack.Redis;
 using ServiceStack.Model;
-
+using Newtonsoft.Json;
 
 namespace MVCBlog.CacheManager
 {
@@ -60,6 +60,16 @@ namespace MVCBlog.CacheManager
                     return null;
             }
         }
+
+        public static void DeleteAllKeys()
+        {
+            using (var client = new RedisClient(Host))
+            {
+                client.RemoveByPattern("*");
+            }
+        }
+
+
         public static bool Exists(string key)
         {
             using (var client = new RedisClient(Host))
@@ -167,6 +177,19 @@ namespace MVCBlog.CacheManager
                 return entity;
             }
         }
+        public static List<T> GetEntityByList<T>(string key, Func<List<T>> GetItemByDb)
+        {
+            var list = GetEntityFromList<T>(key);
+            if (list == null)
+            {
+                var entitys = GetItemByDb();
+                AddEntitiesToList(key, entitys);
+                return GetEntityByList<T>(key, GetItemByDb);
+            }
+            return list;
+        }
+
+
 
         /// <summary>
         /// 搜索实体
@@ -292,6 +315,54 @@ namespace MVCBlog.CacheManager
                 entitys.SetEntry(key, val);
             }
         }
+        /// <summary>
+        /// 添加至list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        public static void AddEntityToList<T>(string key, T val)
+        {
+            using (var client = new RedisClient(Host))
+            {
+                string value = JsonConvert.SerializeObject(val);
+                client.AddItemToList(key, value);
+            }
+        }
+
+        public static void AddEntitiesToList<T>(string key, IEnumerable<T> entities)
+        {
+            using (var client = new RedisClient(Host))
+            {
+                List<string> values = new List<string>();
+                foreach (var item in entities)
+                {
+                    string val = JsonConvert.SerializeObject(item);
+                    values.Add(val);
+                }
+                client.AddRangeToList(key, values);
+            }
+        }
+
+        public static List<T> GetEntityFromList<T>(string key)
+        {
+            using (var client = new RedisClient(Host))
+            {
+                if (client.ContainsKey(key))
+                {
+                    var res = client.GetAllItemsFromList(key);
+                    var list = new List<T>();
+                    res.ForEach(x =>
+                    {
+                        var entity = JsonConvert.DeserializeObject<T>(x);
+                        list.Add(entity);
+                    });
+                    return list;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// 通过ket获得泛型类型的所有值
         /// </summary>

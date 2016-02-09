@@ -35,7 +35,6 @@ namespace MVCBlog.Entities.Models
         [DefaultValue(0)]
         public int CommentCount { get; set; }
         public virtual UserInfo PostAuthor { get; set; }
-        public virtual ICollection<CommentInfo> CommentInfos { get; set; }
         public virtual ICollection<PostMetasInfo> PostMetasInfos { get; set; }
 
         public virtual CategoryInfo PostCategoryInfo { get; set; }

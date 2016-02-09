@@ -20,7 +20,7 @@ namespace MVCBlog.Entities.Models
         public int Id { get; set; }
         [Required(ErrorMessage ="分类名称不能为空")]
         public string CategoryName { get; set; }
-        public UserInfo CreateUser { get; set; }
+        public virtual UserInfo CreateUser { get; set; }
         public DateTime CreateTime { get; set; }
         public bool IsDelete { get; set; }
     }

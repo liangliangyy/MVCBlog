@@ -18,9 +18,10 @@ namespace MVCBlog.Entities.Models
         [Required]
         public virtual UserInfo CommentUser { get; set; }
         public virtual DateTime CreateTime { get; set; }
+        [Required]
         public int PostID { get; set; }
-        //public virtual PostInfo CommentPost { get; set; }
-        public virtual CommentInfo ParentCommentInfo { get; set; }
+
+        //public virtual CommentInfo ParentCommentInfo { get; set; }
 
         [Required]
         public string CommentTitle { get; set; }

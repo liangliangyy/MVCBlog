@@ -3,7 +3,7 @@ namespace MVCBlog.Repository.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class init : DbMigration
     {
         public override void Up()
         {
@@ -64,16 +64,10 @@ namespace MVCBlog.Repository.Migrations
                         CommentContent = c.String(nullable: false, unicode: false),
                         IsDelete = c.Boolean(nullable: false),
                         CommentUser_Id = c.Int(nullable: false),
-                        ParentCommentInfo_Id = c.Int(),
-                        PostInfo_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.UserInfo", t => t.CommentUser_Id, cascadeDelete: true)
-                .ForeignKey("dbo.CommentInfo", t => t.ParentCommentInfo_Id)
-                .ForeignKey("dbo.PostInfo", t => t.PostInfo_Id)
-                .Index(t => t.CommentUser_Id)
-                .Index(t => t.ParentCommentInfo_Id)
-                .Index(t => t.PostInfo_Id);
+                .Index(t => t.CommentUser_Id);
             
             CreateTable(
                 "dbo.PostInfo",
@@ -118,8 +112,6 @@ namespace MVCBlog.Repository.Migrations
             DropForeignKey("dbo.PostMetasInfoes", "PostInfo_Id", "dbo.PostInfo");
             DropForeignKey("dbo.PostInfo", "PostCategoryInfo_Id", "dbo.CategoryInfo");
             DropForeignKey("dbo.PostInfo", "PostAuthor_Id", "dbo.UserInfo");
-            DropForeignKey("dbo.CommentInfo", "PostInfo_Id", "dbo.PostInfo");
-            DropForeignKey("dbo.CommentInfo", "ParentCommentInfo_Id", "dbo.CommentInfo");
             DropForeignKey("dbo.CommentInfo", "CommentUser_Id", "dbo.UserInfo");
             DropForeignKey("dbo.CategoryRelationships", "ParentCategoryInfo_Id", "dbo.CategoryInfo");
             DropForeignKey("dbo.CategoryRelationships", "CategoryInfo_Id", "dbo.CategoryInfo");
@@ -127,8 +119,6 @@ namespace MVCBlog.Repository.Migrations
             DropIndex("dbo.PostMetasInfoes", new[] { "PostInfo_Id" });
             DropIndex("dbo.PostInfo", new[] { "PostCategoryInfo_Id" });
             DropIndex("dbo.PostInfo", new[] { "PostAuthor_Id" });
-            DropIndex("dbo.CommentInfo", new[] { "PostInfo_Id" });
-            DropIndex("dbo.CommentInfo", new[] { "ParentCommentInfo_Id" });
             DropIndex("dbo.CommentInfo", new[] { "CommentUser_Id" });
             DropIndex("dbo.CategoryRelationships", new[] { "ParentCategoryInfo_Id" });
             DropIndex("dbo.CategoryRelationships", new[] { "CategoryInfo_Id" });

@@ -23,16 +23,22 @@ namespace MVCBlog.Service
             var postinfo = Context.PostInfo.Find(entity.PostID);
             postinfo.CommentCount += 1;
             entity.CommentUser = Context.UserInfo.Find(entity.CommentUser.Id);
-            
+
             Context.CommentInfo.Add(entity);
             Context.SaveChanges();
+            RedisHelper.AddEntityToList(ConfigInfo.GetCommentKey(entity.PostID), entity);
             RedisHelper.DeleteEntity(ConfigInfo.GetPostKey(entity.PostID));
         }
 
         public List<CommentInfo> CommentList(int postid)
         {
-            var res = Context.CommentInfo.Where(x => x.PostID == postid).ToList();
-            return res;
+            Func<List<CommentInfo>> getbydb = () =>
+            {
+                return Context.CommentInfo.Where(x => x.PostID == postid).ToList();
+            };
+            string key = ConfigInfo.GetCommentKey(postid);
+            var list = RedisHelper.GetEntityByList(key, getbydb);
+            return list;
         }
     }
 }
