@@ -48,7 +48,7 @@ namespace MVCBlog.Web.Controllers
                 entity.Name = userinfo.Name;
                 entity.Password = userinfo.Password;
                 entity.Email = userinfo.Email;
-                userService.RegisterUserInfo(entity);
+                userService.Insert(entity);
                 return RedirectToAction("LogIn");
             }
             return View();
@@ -62,6 +62,7 @@ namespace MVCBlog.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult LogIn(string email, string password)
         {
             if (userService.ValidateUser(email, password) == null)

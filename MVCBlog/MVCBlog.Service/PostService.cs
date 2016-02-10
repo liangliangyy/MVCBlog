@@ -315,7 +315,6 @@ namespace MVCBlog.Service
             return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
         }
 
-
-
+    
     }
 }

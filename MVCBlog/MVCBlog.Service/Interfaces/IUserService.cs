@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Service.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IBase<UserInfo>
     {
-        void RegisterUserInfo(UserInfo user);
+        void Insert(UserInfo user);
         bool CheckUserEmail(string email);
         UserInfo ValidateUser(string email, string password);
+        Task<UserInfo> ValidateUserAsync(string email, string password);
         UserInfo GetUserInfo(string email);
     }
 }

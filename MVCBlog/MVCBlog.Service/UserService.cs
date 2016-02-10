@@ -18,7 +18,7 @@ namespace MVCBlog.Service
         {
             this.Context = _contest;
         }
-        public void RegisterUserInfo(UserInfo user)
+        public void Insert(UserInfo user)
         {
             user.Password = AesSecret.EncryptStringToAES(user.Password);
             user.CreateTime = DateTime.Now;
@@ -29,19 +29,41 @@ namespace MVCBlog.Service
             Context.UserInfo.Add(user);
             Context.SaveChanges();
         }
+        public async Task InsertAsync(UserInfo user, int userid = 0)
+        {
+            user.Password = AesSecret.EncryptStringToAES(user.Password);
+            user.CreateTime = DateTime.Now;
+            user.EditedTime = DateTime.Now;
+            user.UserStatus = UserStatus.正常;
+            user.UserRole = UserRole.读者.ToString();
+            user.IsDelete = false;
+            Context.UserInfo.Add(user);
+            await SaveChanges();
+        }
         public UserInfo ValidateUser(string email, string password)
         {
-            if (Context.UserInfo.Any(x => x.Email == email))
-            { 
-                var user = Context.UserInfo.First(x => x.Email == email);
-                string encryptPassword = AesSecret.EncryptStringToAES(password);
-                if (user.Password == encryptPassword)
-                {
-                    user.LastLoginTime = DateTime.Now;
-                    Context.SaveChanges();
-                    user = Context.UserInfo.Find(user.Id);
-                    return user;
-                }
+            string encryptPassword = AesSecret.EncryptStringToAES(password);
+            var entity = Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
+            if (entity != null)
+            {
+                entity.LastLoginTime = DateTime.Now;
+                Context.SaveChanges();
+                entity = Context.UserInfo.Find(entity.Id);
+                return entity;
+            }
+            return null;
+        }
+        public async Task<UserInfo> ValidateUserAsync(string email, string password)
+        {
+            string encryptPassword = AesSecret.EncryptStringToAES(password);
+            Func<UserInfo> finditem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
+            var entity = await Common.TaskExtensions.WithCurrentCulture<UserInfo>(finditem);
+            if (entity != null)
+            {
+                entity.LastLoginTime = DateTime.Now;
+                await SaveChanges();
+                entity = await Context.UserInfo.FindAsync(entity.Id);
+                return entity;
             }
             return null;
         }
@@ -56,9 +78,67 @@ namespace MVCBlog.Service
             string key = ConfigInfo.GetUserKey(email);
             Func<UserInfo> getitem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email);
             var userinfo = RedisHelper.GetEntity<UserInfo>(key, getitem);
-            //var userinfo = Context.UserInfo.FirstOrDefault(x => x.Email == email);
             return userinfo;
         }
 
+        public void Insert(UserInfo model, int userid)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Update(UserInfo model)
+        {
+            var entity = Context.UserInfo.Find(model.Id);
+            entity.EditedTime = DateTime.Now;
+            entity.Name = model.Name;
+            entity.Password = model.Password;
+            entity.UserRole = model.UserRole;
+            entity.UserStatus = model.UserStatus;
+            Context.SaveChanges();
+        }
+
+        public async Task UpdateAsync(UserInfo model)
+        {
+            var entity = await Context.UserInfo.FindAsync(model.Id);
+            entity.EditedTime = DateTime.Now;
+            entity.Name = model.Name;
+            entity.Password = model.Password;
+            entity.UserRole = model.UserRole;
+            entity.UserStatus = model.UserStatus;
+            await SaveChanges();
+        }
+
+        public void Delete(UserInfo model)
+        {
+            var entity = Context.UserInfo.Find(model.Id);
+            entity.IsDelete = true;
+            Context.SaveChanges();
+        }
+
+        public async Task DeleteAsync(UserInfo model)
+        {
+            var entity = await Context.UserInfo.FindAsync(model.Id);
+            if (entity != null)
+            {
+                entity.IsDelete = true;
+                await SaveChanges();
+            }
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await Common.TaskExtensions.WithCurrentCulture<int>(Context.SaveChangesAsync());
+        }
+
+        public UserInfo GetById(int id)
+        {
+            return Context.UserInfo.Find(id);
+        }
+
+        public async Task<UserInfo> GetByIdAsync(int id)
+        {
+            return await Context.UserInfo.FindAsync(id);
+        }
     }
 }
