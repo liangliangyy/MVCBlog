@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlog.Repository", "MVCBl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlog.Service", "MVCBlog.Service\MVCBlog.Service.csproj", "{7F069261-8228-498D-A1B9-8A4F7883C620}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlog.ConsoleTest", "MVCBlog.ConsoleTest\MVCBlog.ConsoleTest.csproj", "{DE542886-4546-4D76-B888-76EB09C37641}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{7F069261-8228-498D-A1B9-8A4F7883C620}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F069261-8228-498D-A1B9-8A4F7883C620}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F069261-8228-498D-A1B9-8A4F7883C620}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE542886-4546-4D76-B888-76EB09C37641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE542886-4546-4D76-B888-76EB09C37641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE542886-4546-4D76-B888-76EB09C37641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE542886-4546-4D76-B888-76EB09C37641}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

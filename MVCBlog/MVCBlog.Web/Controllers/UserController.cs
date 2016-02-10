@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace MVCBlog.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class UserController : Controller
     {
         private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
@@ -21,14 +21,14 @@ namespace MVCBlog.Web.Controllers
             return View();
         }
         public ActionResult UserList()
-        { 
+        {
             return View();
         }
 
 
         public ActionResult UserPostInfo(int userid, int index = 1)
         {
-            var postinfos = postService.GetUserPosts(userid, index, ConfigInfo.PageCount);
+            var postinfos = postService.GetUserPostsAsync(userid, index, ConfigInfo.PageCount).Result;
             return View(postinfos);
         }
     }

@@ -47,7 +47,7 @@ namespace MVCBlog.Common
         {
             UserCackeKey = "MVCBlog:UserInfo";
             PostListKey = "MVCBlog:PostInfo";
-            CommentKey = "MVCBlog.CommentInfo";
+            CommentKey = "MVCBlog:CommentInfo";
         }
     }
 }

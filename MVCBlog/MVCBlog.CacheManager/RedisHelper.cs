@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ServiceStack.Redis;
 using ServiceStack.Model;
 using Newtonsoft.Json;
+using MVCBlog.Common;
 
 namespace MVCBlog.CacheManager
 {
@@ -177,6 +178,23 @@ namespace MVCBlog.CacheManager
                 return entity;
             }
         }
+
+        public static async Task<T> GetEntityAsync<T>(string key, Func<T> GetItemByDb)
+        {
+            var entity = GetEntity<T>(key);
+            if (entity != null)
+            {
+                return entity;
+            }
+            else
+            {
+                //entity = await Common.TaskExtensions.GetItemAsync(GetItemByDb);
+                entity = await Common.TaskExtensions.WithCurrentCulture<T>(GetItemByDb);
+                SetEntity<T>(key, entity);
+                return entity;
+            }
+        }
+
         public static List<T> GetEntityByList<T>(string key, Func<List<T>> GetItemByDb)
         {
             var list = GetEntityFromList<T>(key);

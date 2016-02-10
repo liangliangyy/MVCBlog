@@ -32,7 +32,7 @@ namespace MVCBlog.Service
         public UserInfo ValidateUser(string email, string password)
         {
             if (Context.UserInfo.Any(x => x.Email == email))
-            {
+            { 
                 var user = Context.UserInfo.First(x => x.Email == email);
                 string encryptPassword = AesSecret.EncryptStringToAES(password);
                 if (user.Password == encryptPassword)

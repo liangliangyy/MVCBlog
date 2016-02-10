@@ -46,12 +46,7 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="ModelDefaultValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MVCBlog.CacheManager\MVCBlog.CacheManager.csproj">
-      <Project>{b2d9ae77-a376-468b-afd7-6ed67523d6d2}</Project>
-      <Name>MVCBlog.CacheManager</Name>
-    </ProjectReference>
+    <Compile Include="ThreadHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

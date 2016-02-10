@@ -5,12 +5,14 @@ using MVCBlog.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
 namespace MVCBlog.Web.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IPostService postService;
@@ -27,11 +29,13 @@ namespace MVCBlog.Web.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Register(UserViewModel userinfo)
         {
             if (userService.CheckUserEmail(userinfo.Email))
@@ -50,11 +54,14 @@ namespace MVCBlog.Web.Controllers
             return View();
         }
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult LogIn()
         {
             return View();
         }
+
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult LogIn(string email, string password)
         {
             if (userService.ValidateUser(email, password) == null)
@@ -65,7 +72,6 @@ namespace MVCBlog.Web.Controllers
             FormsAuthentication.SetAuthCookie(email, false);
             return RedirectToAction("Index");
         }
-        [Authorize]
         [HttpGet]
         public ActionResult WritePost()
         {
@@ -76,9 +82,10 @@ namespace MVCBlog.Web.Controllers
             }
             return View();
         }
-        [Authorize]
+
         [HttpPost]
-        public ActionResult WritePost(PostViewModel postinfo)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> WritePost(PostViewModel postinfo)
         {
             if (UserHelper.GetLogInUserInfo() == null)
             {
@@ -90,7 +97,7 @@ namespace MVCBlog.Web.Controllers
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
                 entity.PostCategoryInfo = categoryService.GetCategoryList().First(x => x.Id == postinfo.CategoryID);
-                postService.Insert(entity,UserHelper.GetLogInUserInfo().Id);
+                await postService.InsertAsync(entity, UserHelper.GetLogInUserInfo().Id);
                 return RedirectToAction("Index", "Home");
             }
             return View();
