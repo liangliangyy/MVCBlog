@@ -201,6 +201,10 @@ namespace MVCBlog.CacheManager
             if (list == null)
             {
                 var entitys = GetItemByDb();
+                if(entitys.Count==0)
+                {
+                    return new List<T>();
+                }
                 AddEntitiesToList(key, entitys);
                 return GetEntityByList<T>(key, GetItemByDb);
             }

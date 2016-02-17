@@ -1,4 +1,5 @@
-﻿using MVCBlog.Entities.Models;
+﻿using MVCBlog.Common;
+using MVCBlog.Entities.Models;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
@@ -6,6 +7,7 @@ using MVCBlog.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -42,12 +44,23 @@ namespace MVCBlog.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CommentInfo(CommentViewModel model)
+        public async Task<ActionResult> CommentInfo(CommentViewModel model)
         {
             if (ModelState.IsValid)
             {
 
                 var userinfo = userService.GetUserInfo(model.UserEmail);
+                if (userinfo == null)
+                {
+                    UserInfo u = new UserInfo()
+                    {
+                        Email = model.UserEmail,
+                        Name = model.UserName,
+                        Password = ConfigInfo.UserDefaultPassword
+                    };
+                    await userService.InsertAsync(u, 0);
+                    userinfo = await userService.GetUserInfoAsync(model.UserEmail);
+                }
                 var postinfo = postService.GetById(model.PostID);
                 var commentinfo = new CommentInfo()
                 {

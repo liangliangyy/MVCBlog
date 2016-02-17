@@ -39,6 +39,7 @@ namespace MVCBlog.Common
 
         public static int PageCount { get { return 20; } }
         public static string TimeFormat { get { return "yyyy-MM-dd HH:mm:ss"; } }
+        public static string UserDefaultPassword { get { return "1"; } }
 
         private static string UserCackeKey { get; set; }
         private static string PostListKey { get; set; }

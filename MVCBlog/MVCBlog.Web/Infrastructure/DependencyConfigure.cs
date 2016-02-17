@@ -5,6 +5,7 @@ using MVCBlog.Repository;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
+using System.Data.Entity;
 using System.Web.Mvc;
 namespace MVCBlog.Web.Infrastructure
 {
@@ -29,7 +30,7 @@ namespace MVCBlog.Web.Infrastructure
 
             //注册上下文.每次都会创建不同的实例
             //builder.RegisterType<MVCBlogContext>().As<MVCBlogContext>().InstancePerRequest();
-            builder.RegisterType<MVCBlogContext>().InstancePerLifetimeScope();
+            builder.RegisterType<MVCBlogContext>().InstancePerDependency();
             //注册PostService
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
             //通过AS可以通过构造函数依赖注入类型相应的接口

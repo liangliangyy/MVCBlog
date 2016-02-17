@@ -23,6 +23,7 @@ namespace MVCBlog.Web.CommonHelper
             RegisterServices<TService>(builder, iType);
             builder.Update(ApplicationContainer.Container);
             return ApplicationContainer.Container.Resolve(iType);
+            
         }
         private static void RegisterServices<TService>(ContainerBuilder builder,Type iType)
         {

@@ -26,7 +26,7 @@ namespace MVCBlog.Service
             user.UserStatus = UserStatus.正常;
             user.UserRole = UserRole.读者.ToString();
             user.IsDelete = false;
-            Context.UserInfo.Add(user);
+            user = Context.UserInfo.Add(user);
             Context.SaveChanges();
         }
         public async Task InsertAsync(UserInfo user, int userid = 0)
@@ -78,6 +78,14 @@ namespace MVCBlog.Service
             string key = ConfigInfo.GetUserKey(email);
             Func<UserInfo> getitem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email);
             var userinfo = RedisHelper.GetEntity<UserInfo>(key, getitem);
+            return userinfo;
+        }
+
+        public async Task<UserInfo> GetUserInfoAsync(string email)
+        {
+            string key = ConfigInfo.GetUserKey(email);
+            Func<UserInfo> getitem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email);
+            var userinfo = await RedisHelper.GetEntityAsync<UserInfo>(key, getitem);
             return userinfo;
         }
 
