@@ -11,10 +11,10 @@ namespace MVCBlog.Web.CommonHelper
 {
     public class Helper
     {
-        public static List<SelectListItem> GetCategorySelectList()
+        public static async Task<List<SelectListItem>> GetCategorySelectList()
         {
             ICategoryService service = (ICategoryService)ResolverHelper.GetResolver<CategoryService>();
-            List<CategoryInfo> list = service.GetCategoryList();
+            List<CategoryInfo> list = await service.GetCategoryListAsync();
             if (list.Count == 0)
             {
                 IUserService userservice = (IUserService)ResolverHelper.GetResolver<UserService>();
@@ -27,8 +27,8 @@ namespace MVCBlog.Web.CommonHelper
                     CreateUser = loginuser,
                     IsDelete = false
                 };
-                service.AddCategoryInfo(defaultcategory);
-                return GetCategorySelectList();
+                service.Insert(defaultcategory, 0);
+                return await GetCategorySelectList();
             }
             var res = list.Select(x => new SelectListItem() { Text = x.CategoryName, Value = x.Id.ToString() }).ToList();
             return res;

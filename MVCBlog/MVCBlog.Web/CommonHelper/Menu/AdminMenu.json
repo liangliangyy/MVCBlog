@@ -11,7 +11,12 @@
   },
   {
     "MenuName": "创建文章",
-    "MenuUrl": "/Admin/CreatePost",
+    "MenuUrl": "/Admin/PostDeal",
+    "MenuPosition": 2
+  },
+  {
+    "MenuName": "分类目录",
+    "MenuUrl": "/Admin/CategoryList",
     "MenuPosition": 2
   }
 ]

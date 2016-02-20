@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Service.Interfaces
 {
-    public interface ICategoryService
+    public interface ICategoryService : IBase<CategoryInfo>
     {
         List<CategoryInfo> GetCategoryList();
-        void AddCategoryInfo(CategoryInfo info);
+        Task<List<CategoryInfo>> GetCategoryListAsync();
+        //void AddCategoryInfo(CategoryInfo info);
     }
 }

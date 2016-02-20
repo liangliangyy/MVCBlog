@@ -74,19 +74,31 @@ namespace MVCBlog.Web.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public ActionResult WritePost()
+        public async Task<ActionResult> PostDeal(int postid = 0)
         {
-            var category = Helper.GetCategorySelectList();
+            var category = await Helper.GetCategorySelectList();
             if (UserHelper.GetLogInUserInfo() == null)
             {
                 return RedirectToAction("LogIn");
             }
-            return View();
+            PostViewModel model = new PostViewModel();
+            if (postid != 0)
+            {
+                var entity = await postService.GetByIdAsync(postid);
+                model.Id = entity.Id;
+                model.Content = entity.Content;
+                model.Title = entity.Title;
+                model.PostStatus = entity.PostStatus;
+                model.PostCommentStatus = entity.PostCommentStatus;
+                model.CategoryID = entity.PostCategoryInfo.Id;
+            }
+            return View(model);
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> WritePost(PostViewModel postinfo)
+        public async Task<ActionResult> PostDeal(PostViewModel postinfo)
         {
             if (UserHelper.GetLogInUserInfo() == null)
             {
@@ -95,10 +107,20 @@ namespace MVCBlog.Web.Controllers
             if (ModelState.IsValid)
             {
                 var entity = new PostInfo();
+                entity.Id = postinfo.Id;
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
                 entity.PostCategoryInfo = categoryService.GetCategoryList().First(x => x.Id == postinfo.CategoryID);
-                await postService.InsertAsync(entity, UserHelper.GetLogInUserInfo().Id);
+                if (entity.Id == 0)
+                {
+                    await postService.InsertAsync(entity, UserHelper.GetLogInUserInfo().Id);
+                }
+                else
+                {
+                    entity.PostCommentStatus = postinfo.PostCommentStatus;
+                    entity.PostStatus = postinfo.PostStatus;
+                    await postService.UpdateAsync(entity);
+                }
                 return RedirectToAction("Index", "Home");
             }
             return View();
@@ -111,12 +133,12 @@ namespace MVCBlog.Web.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult AddCategoryInfo(CategoryInfo categoryinfo)
+        public async Task<ActionResult> AddCategoryInfo(CategoryInfo categoryinfo)
         {
             if (ModelState.IsValid)
             {
                 categoryinfo.CreateUser = UserHelper.GetLogInUserInfo();
-                categoryService.AddCategoryInfo(categoryinfo);
+                await categoryService.InsertAsync(categoryinfo, categoryinfo.CreateUser.Id);
                 return RedirectToAction("CategoryList");
             }
             return View();

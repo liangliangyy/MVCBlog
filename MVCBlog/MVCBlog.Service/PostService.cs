@@ -308,6 +308,8 @@ namespace MVCBlog.Service
             entity.PostStatus = model.PostStatus;
             entity.PostCommentStatus = model.PostCommentStatus;
             entity.EditedTime = DateTime.Now;
+            string key = ConfigInfo.GetPostKey(model.Id);
+            RedisHelper.DeleteEntity(key);
             await SaveChanges();
         }
         public async Task<int> SaveChanges()

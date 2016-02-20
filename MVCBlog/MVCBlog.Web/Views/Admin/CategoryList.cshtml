@@ -3,8 +3,14 @@
 @{
     ViewBag.Title = "CategoryList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-}
-
+} 
+<h2 class="sub-header">@ViewBag.Title</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <a href="@Url.Action("AddCategoryInfo")" class="btn btn-default" target="_blank">创建分类目录</a>
+    </div>
+</div>
 
 <table class="table">
     <tr>
@@ -35,8 +41,8 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreateUser.Name)
-        </td>
-    </tr>
+            </td>
+        </tr>
     }
 
 </table>

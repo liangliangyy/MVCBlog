@@ -1,4 +1,5 @@
-﻿using MVCBlog.Entities.Models;
+﻿using MVCBlog.Entities.Enums;
+using MVCBlog.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,10 @@ namespace MVCBlog.Web.Models
 {
     public class PostViewModel
     {
+        public PostViewModel()
+        {
+            CategoryID = 1;
+        }
         public int Id { get; set; }
 
         [Required(ErrorMessage = "文章标题不能为空")]
@@ -24,6 +29,9 @@ namespace MVCBlog.Web.Models
         [Required]
         [Display(Name = "分类目录")]
         public int CategoryID { get; set; }
+
+        public PostStatus PostStatus { get; set; }
+        public PostCommentStatus PostCommentStatus { get; set; }
 
         public virtual UserInfo PostAuthor { get; set; }
     }
