@@ -21,6 +21,7 @@ namespace MVCBlog.ConsoleTest
             //var res = Common.TaskExtensions.GetItemAsync(getdb);
             //var list = res.Result;
             //Console.ReadLine();
+
         }
 
         public static async Task<T> GetItemAsync<T>(Func<T> GetItem)
