@@ -6,6 +6,7 @@ using MySql.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -35,7 +36,9 @@ namespace MVCBlog.Web
         }
 
         protected void Application_Start()
-        { 
+        {
+            //配置log4net日志
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(Server.MapPath("log4net.config")));
             CacheManager.RedisHelper.DeleteAllKeys();
 
             DbConfiguration.SetConfiguration(new MySqlEFConfiguration());

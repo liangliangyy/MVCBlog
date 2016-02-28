@@ -26,6 +26,8 @@ namespace MVCBlog.Web.Controllers
         // GET: Home
         public ActionResult Index(int pageindex = 1)
         {
+            log4net.LogManager.GetLogger("info").Info("ttest");
+            log4net.LogManager.GetLogger(this.GetType()).Debug("ffff");
             //List<MenuInfo> list = new List<MenuInfo>();
             //list.Add(new MenuInfo() { MenuName = "Home", MenuUrl = "/Admin/", MenuPosition = 1 });
             //list.Add(new MenuInfo() { MenuName = "创建文章", MenuUrl = "/Admin/CreatePost", MenuPosition = 2 });
