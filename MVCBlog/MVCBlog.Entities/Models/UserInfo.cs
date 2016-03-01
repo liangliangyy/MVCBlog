@@ -31,13 +31,15 @@ namespace MVCBlog.Entities.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-
         public string UserRole { get; set; }
         public UserStatus UserStatus { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime? EditedTime { get; set; }
         public DateTime? LastLoginTime { get; set; }
         public bool IsDelete { get; set; }
+
+        public string access_token { get; set; }
+        public string uid { get; set; }
+        public string avator { get; set; }
     }
 }
