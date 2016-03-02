@@ -3,7 +3,7 @@ namespace MVCBlog.Repository.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -35,6 +35,9 @@ namespace MVCBlog.Repository.Migrations
                         EditedTime = c.DateTime(precision: 0),
                         LastLoginTime = c.DateTime(precision: 0),
                         IsDelete = c.Boolean(nullable: false),
+                        access_token = c.String(unicode: false),
+                        uid = c.String(unicode: false),
+                        avator = c.String(unicode: false),
                     })
                 .PrimaryKey(t => t.Id);
             

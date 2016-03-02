@@ -114,6 +114,9 @@ namespace MVCBlog.Service
             entity.Password = model.Password;
             entity.UserRole = model.UserRole;
             entity.UserStatus = model.UserStatus;
+            entity.access_token = model.access_token;
+            entity.uid = model.uid;
+            entity.avator = model.avator;
             await SaveChanges();
         }
 
@@ -147,6 +150,16 @@ namespace MVCBlog.Service
         public async Task<UserInfo> GetByIdAsync(int id)
         {
             return await Context.UserInfo.FindAsync(id);
+        }
+
+        public UserInfo GettUserInfoByUid(string uid)
+        {
+            if (!string.IsNullOrEmpty(uid))
+            {
+                var userinfo = Context.UserInfo.FirstOrDefault(x => x.uid == uid);
+                return userinfo;
+            }
+            return null;
         }
     }
 }

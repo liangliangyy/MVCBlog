@@ -73,6 +73,7 @@ namespace MVCBlog.Web.Controllers
             FormsAuthentication.SetAuthCookie(email, false);
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public async Task<ActionResult> PostDeal(int postid = 0)
         {

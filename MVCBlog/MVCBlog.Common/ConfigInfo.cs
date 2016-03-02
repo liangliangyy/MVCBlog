@@ -44,6 +44,12 @@ namespace MVCBlog.Common
         private static string UserCackeKey { get; set; }
         private static string PostListKey { get; set; }
         private static string CommentKey { get; set; }
+
+
+        //sinaconfig
+        public static string SinaAppKey { get { return ""; } }
+        public static string SinaAppSecret { get { return ""; } }
+
         static ConfigInfo()
         {
             UserCackeKey = "MVCBlog:UserInfo";
