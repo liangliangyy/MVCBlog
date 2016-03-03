@@ -27,6 +27,23 @@ namespace MVCBlog.Web.Controllers
         }
 
         [HttpPost]
+        public JsonResult GetQQUsetState()
+        {
+            JsonResult jr = new JsonResult();
+
+            var client = OAuthHelper.GetQQClient();
+            if (!client.IsAuthorized)
+            {
+                jr.Data = new { code = 0, msg = "未授权", url = client.GetAuthorizationUrl() };
+            }
+            else
+            {
+                jr.Data = new { code = 1, msg = "已授权!" };
+            }
+            return jr;
+        }
+
+        [HttpPost]
         public JsonResult GetUserState()
         {
             JsonResult jr = new JsonResult();
@@ -65,9 +82,9 @@ namespace MVCBlog.Web.Controllers
                     if (entity != null)
                     {
                         entity.Name = userinfo.screen_name;
-                        entity.uid = userinfo.uid;
-                        entity.access_token = userinfo.access_token;
-                        entity.avator = userinfo.profile_image_url;
+                        entity.WeiBoUid = userinfo.uid;
+                        entity.WeiBoAccessToken = userinfo.access_token;
+                        entity.WeiBoAvator = userinfo.profile_image_url;
                         userService.UpdateAsync(entity);
                         FormsAuthentication.SetAuthCookie(entity.Email, false);
                         return RedirectToAction("Index");
@@ -81,6 +98,45 @@ namespace MVCBlog.Web.Controllers
             }
         }
 
+
+
+        [HttpGet]
+        public ActionResult QQAuthorized(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                return RedirectToAction("index");
+            }
+            var client = OAuthHelper.GetQQClient();
+            client.GetAccessTokenByCode(code);
+            if (client.IsAuthorized)
+            {
+                Session["access_token"] = client.AccessToken;
+                Response.AppendCookie(new HttpCookie("uid", client.UID) { Expires = DateTime.Now.AddDays(7) });
+                //SinaUserInfo userinfo = client.GetUserInfo(client.AccessToken, client.UID);
+
+                //if (userinfo != null)
+                //{
+                //    Session["sinauserinfo"] = userinfo;
+                //    var entity = userService.GettUserInfoByUid(client.UID);
+                //    if (entity != null)
+                //    {
+                //        entity.Name = userinfo.screen_name;
+                //        entity.WeiBoUid = userinfo.uid;
+                //        entity.WeiBoAccessToken = userinfo.access_token;
+                //        entity.WeiBoAvator = userinfo.profile_image_url;
+                //        userService.UpdateAsync(entity);
+                //        FormsAuthentication.SetAuthCookie(entity.Email, false);
+                //        return RedirectToAction("Index");
+                //    }
+                //}
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
         [HttpPost]
         [Authorize]
         public JsonResult BindUserWithWeibo()
@@ -95,11 +151,11 @@ namespace MVCBlog.Web.Controllers
             else
             {
                 var userinfo = UserHelper.GetLogInUserInfo();
-                userinfo.access_token = sinauser.access_token;
+                userinfo.WeiBoAccessToken = sinauser.access_token;
                 userinfo.Name = sinauser.screen_name;
-                userinfo.uid = sinauser.uid;
-                userinfo.access_token = sinauser.access_token;
-                userinfo.avator = sinauser.profile_image_url;
+                userinfo.WeiBoUid = sinauser.uid;
+                userinfo.WeiBoAccessToken = sinauser.access_token;
+                userinfo.WeiBoAvator = sinauser.profile_image_url;
                 userService.UpdateAsync(userinfo);
                 jr.Data = new { code = 1, msg = "绑定成功!" };
             }

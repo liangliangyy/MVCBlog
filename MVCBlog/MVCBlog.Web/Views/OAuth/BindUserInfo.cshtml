@@ -1,0 +1,28 @@
+﻿@model MVCBlog.Entities.Models.UserInfo
+@{
+    ViewBag.Title = "绑定第三方帐号";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2 class="sub-header">@ViewBag.Title</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        当前登录用户名:@Model.Name
+    </div>
+    <div class="col-md-4">
+        <a href="@MVCBlog.Web.CommonHelper.OAuthHelper.GetWeiBoLoginUrl()"><img src="http://img.t.sinajs.cn/t4/appstyle/open/images/website/loginbtn/loginbtn_03.png" /></a>
+        <a href="#" onclick="SubmitInfo()">确定绑定</a>
+    </div>
+</div>
+
+
+<script>
+    function SubmitInfo() {
+        $.post("@Url.Action("BindUserWithWeibo")", {}, function (res) {
+            alert(res.msg);
+            if (res.code == 1) {
+                location.href = "@Url.Action("Index","Admin")"
+            }
+        });
+    }
+</script>

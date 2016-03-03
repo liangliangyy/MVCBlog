@@ -38,8 +38,16 @@ namespace MVCBlog.Entities.Models
         public DateTime? LastLoginTime { get; set; }
         public bool IsDelete { get; set; }
 
-        public string access_token { get; set; }
-        public string uid { get; set; }
-        public string avator { get; set; }
+        public string WeiBoAccessToken { get; set; }
+        public string WeiBoUid { get; set; }
+        public string WeiBoAvator { get; set; }
+
+        public string QQAccessToken { get; set; }
+        public string QQUid { get; set; }
+        public string QQAvator { get; set; }
+
+        public string WeiXinAccessToken { get; set; }
+        public string WeiXinUid { get; set; }
+        public string WeiXinAvator { get; set; }
     }
 }

@@ -47,8 +47,11 @@ namespace MVCBlog.Common
 
 
         //sinaconfig
-        public static string SinaAppKey { get { return ""; } }
-        public static string SinaAppSecret { get { return ""; } }
+        public static string SinaAppKey { get { return "1072707227"; } }
+        public static string SinaAppSecret { get { return "db87257dbcbaac074e8a3efecbff968e"; } }
+
+        public static string QQAppKey { get { return "101293291"; } }
+        public static string QQAppSecret { get { return "1dca3b9dbe972057436d6f5f9c8a40a4"; } }
 
         static ConfigInfo()
         {

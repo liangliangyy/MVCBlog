@@ -114,9 +114,9 @@ namespace MVCBlog.Service
             entity.Password = model.Password;
             entity.UserRole = model.UserRole;
             entity.UserStatus = model.UserStatus;
-            entity.access_token = model.access_token;
-            entity.uid = model.uid;
-            entity.avator = model.avator;
+            entity.WeiBoAccessToken = model.WeiBoAccessToken;
+            entity.WeiBoUid = model.WeiBoUid;
+            entity.WeiBoAvator = model.WeiBoAvator;
             await SaveChanges();
         }
 
@@ -156,7 +156,7 @@ namespace MVCBlog.Service
         {
             if (!string.IsNullOrEmpty(uid))
             {
-                var userinfo = Context.UserInfo.FirstOrDefault(x => x.uid == uid);
+                var userinfo = Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
                 return userinfo;
             }
             return null;

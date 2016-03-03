@@ -34,6 +34,18 @@ namespace MVCBlog.Web.CommonHelper
             var client = new WeiBoOpenAuthentication(ConfigInfo.SinaAppKey, ConfigInfo.SinaAppSecret, callbackUrl, accessToken, uid);
             return client;
         }
+
+        public static QQOpenAuthentication GetQQClient(string callbackUrl = "http://lylinux.org/OAuth/QQAuthorized")
+        {
+            HttpRequest request = HttpContext.Current.Request;
+            var session = HttpContext.Current.Session;
+            var cookies = request.Cookies;
+
+            var accessToken = session["access_token"] == null ? string.Empty : (string)session["access_token"];
+            var uid = cookies["uid"] == null ? string.Empty : cookies["uid"].Value;
+            var client = new QQOpenAuthentication(ConfigInfo.QQAppKey, ConfigInfo.QQAppSecret, HttpUtility.UrlEncode(callbackUrl), accessToken, uid);
+            return client;
+        }
     }
 
 }

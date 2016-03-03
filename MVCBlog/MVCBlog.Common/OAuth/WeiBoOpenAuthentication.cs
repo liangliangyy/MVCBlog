@@ -26,7 +26,7 @@ namespace MVCBlog.Common.OAuth
         public WeiBoOpenAuthentication(string appKey, string appSecret, string callbackUrl, string accessToken = null, string uid = null)
             : base(appKey, appSecret, callbackUrl, accessToken)
         {
-            ClientName = "SinaWeibo";
+            oAuthSystemType = OAuthSystemType.Weibo;
             UID = uid;
             if (!string.IsNullOrEmpty(accessToken) && string.IsNullOrEmpty(uid))
             {
