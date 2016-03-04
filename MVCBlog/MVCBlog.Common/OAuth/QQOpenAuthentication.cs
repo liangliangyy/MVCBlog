@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common.OAuth.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,6 @@ namespace MVCBlog.Common.OAuth
         private int STATE { get { return 1; } }
 
 
-        public string UID { get; set; }
         public QQOpenAuthentication(string appKey, string appSecret, string callbackUrl, string accessToken = null, string uid = null)
             : base(appKey, appSecret, callbackUrl, accessToken)
         {
@@ -90,6 +90,40 @@ namespace MVCBlog.Common.OAuth
                 isAccessTokenSet = true;
 
             }
+        }
+
+        public override OAuthUserInfo GetOAuthUserInfo()
+        {
+            if (!IsAuthorized)
+            {
+                return null;
+            }
+            var ub = new UriBuilder("https://graph.qq.com/user/get_user_info");
+
+            ub.Query = string.Format("access_token={0}&oauth_consumer_key={1}&openid={2}", AccessToken, ClientId, UID);
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("access_token", AccessToken);
+            parameters.Add("oauth_consumer_key", ClientId);
+            parameters.Add("openid", UID);
+            HttpWebResponse response = HttpHelper.CreatePostHttpResponse("https://graph.qq.com/user/get_user_info", parameters);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return null;
+            }
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string content = reader.ReadToEndAsync().Result;
+                QQUserInfo qqUserinfo = JsonConvert.DeserializeObject<QQUserInfo>(content);
+                return new OAuthUserInfo()
+                {
+                    AccessToken = AccessToken,
+                    Uid = UID,
+                    SystemType = OAuthSystemType.QQ,
+                    Name = qqUserinfo.nickname,
+                    ProfileImgUrl = qqUserinfo.figureurl_qq_2
+                };
+            } 
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MVCBlog.Repository;
 using MVCBlog.Service.Interfaces;
+using MVCBlog.Web.App_Start;
 using MVCBlog.Web.CommonHelper;
 using MVCBlog.Web.Infrastructure;
 using MySql.Data.Entity;
@@ -45,7 +46,7 @@ namespace MVCBlog.Web
 
             Database.SetInitializer<MVCBlogContext>(new DropCreateDatabaseIfModelChanges<MVCBlogContext>());
 
-
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             AreaRegistration.RegisterAllAreas();
             DependencyConfigure.Initialize();
             RouteConfig.RegisterRoutes(RouteTable.Routes);

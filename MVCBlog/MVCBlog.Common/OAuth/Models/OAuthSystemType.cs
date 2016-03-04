@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Common.OAuth.Models
 {
-    public enum OAuthSystemType
+    public enum OAuthSystemType : int
     {
-        Weibo,
-        QQ,
-        WeiXin,
-        Email
+        Weibo = 1,
+        QQ = 2,
+        WeiXin = 3,
+        Email = 4
     }
 }

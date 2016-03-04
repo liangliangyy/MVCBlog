@@ -50,6 +50,8 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="ModelDefaultValue.cs" />
+    <Compile Include="OAuth\Models\OAuthUserInfo.cs" />
+    <Compile Include="OAuth\Models\QQUserInfo.cs" />
     <Compile Include="OAuth\Models\SinaUserInfo.cs" />
     <Compile Include="OAuth\Models\OAuthSystemType.cs" />
     <Compile Include="OAuth\OpenAuthenticationBase.cs" />

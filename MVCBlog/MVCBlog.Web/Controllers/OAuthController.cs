@@ -25,77 +25,30 @@ namespace MVCBlog.Web.Controllers
         {
             return View();
         }
-
         [HttpPost]
-        public JsonResult GetQQUsetState()
+        public JsonResult GetOauthLoginUrl(OAuthSystemType systemtype)
         {
+            var client = OAuthClientFactory.GetOAuthClient(systemtype);
             JsonResult jr = new JsonResult();
-
-            var client = OAuthHelper.GetQQClient();
-            if (!client.IsAuthorized)
-            {
-                jr.Data = new { code = 0, msg = "未授权", url = client.GetAuthorizationUrl() };
-            }
-            else
-            {
-                jr.Data = new { code = 1, msg = "已授权!" };
-            }
+            jr.Data = new { url = client.GetAuthorizationUrl() };
             return jr;
         }
 
-        [HttpPost]
-        public JsonResult GetUserState()
-        {
-            JsonResult jr = new JsonResult();
-
-            var client = OAuthHelper.GetWeiBoClient();
-            if (!client.IsAuthorized)
-            {
-                jr.Data = new { code = 0, msg = "未授权", url = client.GetAuthorizationUrl() };
-            }
-            else
-            {
-                jr.Data = new { code = 1, msg = "已授权!" };
-            }
-            return jr;
-        }
 
         [HttpGet]
-        public ActionResult Authorized(string code)
+        public ActionResult WeiBoAuthorized(string code)
         {
             if (string.IsNullOrEmpty(code))
             {
                 return RedirectToAction("index");
             }
-            var client = OAuthHelper.GetWeiBoClient();
-            client.GetAccessTokenByCode(code);
-            if (client.IsAuthorized)
+            bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.Weibo, code);
+            if (result)
             {
-                Session["access_token"] = client.AccessToken;
-                Response.AppendCookie(new HttpCookie("uid", client.UID) { Expires = DateTime.Now.AddDays(7) });
-                SinaUserInfo userinfo = client.GetUserInfo(client.AccessToken, client.UID);
-
-                if (userinfo != null)
-                {
-                    Session["sinauserinfo"] = userinfo;
-                    var entity = userService.GettUserInfoByUid(client.UID);
-                    if (entity != null)
-                    {
-                        entity.Name = userinfo.screen_name;
-                        entity.WeiBoUid = userinfo.uid;
-                        entity.WeiBoAccessToken = userinfo.access_token;
-                        entity.WeiBoAvator = userinfo.profile_image_url;
-                        userService.UpdateAsync(entity);
-                        FormsAuthentication.SetAuthCookie(entity.Email, false);
-                        return RedirectToAction("Index");
-                    }
-                }
-                return RedirectToAction("Index");
+                var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.QQ);
+                OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("index");
         }
 
 
@@ -103,62 +56,36 @@ namespace MVCBlog.Web.Controllers
         [HttpGet]
         public ActionResult QQAuthorized(string code)
         {
-            if (string.IsNullOrEmpty(code))
+            bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.QQ, code);
+            if (result)
             {
-                return RedirectToAction("index");
+                var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.QQ);
+                OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
             }
-            var client = OAuthHelper.GetQQClient();
-            client.GetAccessTokenByCode(code);
-            if (client.IsAuthorized)
-            {
-                Session["access_token"] = client.AccessToken;
-                Response.AppendCookie(new HttpCookie("uid", client.UID) { Expires = DateTime.Now.AddDays(7) });
-                //SinaUserInfo userinfo = client.GetUserInfo(client.AccessToken, client.UID);
-
-                //if (userinfo != null)
-                //{
-                //    Session["sinauserinfo"] = userinfo;
-                //    var entity = userService.GettUserInfoByUid(client.UID);
-                //    if (entity != null)
-                //    {
-                //        entity.Name = userinfo.screen_name;
-                //        entity.WeiBoUid = userinfo.uid;
-                //        entity.WeiBoAccessToken = userinfo.access_token;
-                //        entity.WeiBoAvator = userinfo.profile_image_url;
-                //        userService.UpdateAsync(entity);
-                //        FormsAuthentication.SetAuthCookie(entity.Email, false);
-                //        return RedirectToAction("Index");
-                //    }
-                //}
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("index");
         }
         [HttpPost]
         [Authorize]
         public JsonResult BindUserWithWeibo()
         {
             JsonResult jr = new JsonResult();
-            var cookie = Request.Cookies;
-            SinaUserInfo sinauser = Session["sinauserinfo"] == null ? null : (SinaUserInfo)Session["sinauserinfo"];
-            if (sinauser == null)
-            {
-                jr.Data = new { code = 0, msg = "未登录第三方" };
-            }
-            else
-            {
-                var userinfo = UserHelper.GetLogInUserInfo();
-                userinfo.WeiBoAccessToken = sinauser.access_token;
-                userinfo.Name = sinauser.screen_name;
-                userinfo.WeiBoUid = sinauser.uid;
-                userinfo.WeiBoAccessToken = sinauser.access_token;
-                userinfo.WeiBoAvator = sinauser.profile_image_url;
-                userService.UpdateAsync(userinfo);
-                jr.Data = new { code = 1, msg = "绑定成功!" };
-            }
+            //var cookie = Request.Cookies;
+            //SinaUserInfo sinauser = Session["sinauserinfo"] == null ? null : (SinaUserInfo)Session["sinauserinfo"];
+            //if (sinauser == null)
+            //{
+            //    jr.Data = new { code = 0, msg = "未登录第三方" };
+            //}
+            //else
+            //{
+            //    var userinfo = UserHelper.GetLogInUserInfo();
+            //    userinfo.WeiBoAccessToken = sinauser.access_token;
+            //    userinfo.Name = sinauser.screen_name;
+            //    userinfo.WeiBoUid = sinauser.uid;
+            //    userinfo.WeiBoAccessToken = sinauser.access_token;
+            //    userinfo.WeiBoAvator = sinauser.profile_image_url;
+            //    userService.UpdateAsync(userinfo);
+            //    jr.Data = new { code = 1, msg = "绑定成功!" };
+            //}
             return jr;
         }
 

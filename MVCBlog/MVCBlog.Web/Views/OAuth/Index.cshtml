@@ -5,32 +5,20 @@
 }
 
 <div>
-    <a id="login" href="#">登录微博</a>
+    <a id="loginweibo" href="#">登录微博</a>
     <a id="loginqq" href="#">登录qq</a>
 </div>
 
 <script>
     $(function () {
-        $.post("@Url.Action("GetUserState")", {}, function (res) {
-            console.log(res);
-            if (res.code != 1) {
-                var url = res.url;
-                $("#login").attr("href", url);
-            }
-            else {
-                alert("login ok");
-            }
+        $.post("@Url.Action("GetOauthLoginUrl")", { systemtype: 1 }, function (res) {
+            var url = res.url;
+            $("#loginweibo").attr("href", url);
         });
 
-        $.post("@Url.Action("GetQQUsetState")", {}, function (res) {
-            console.log(res);
-            if (res.code != 1) {
-                var url = res.url;
-                $("#loginqq").attr("href", url);
-            }
-            else {
-                alert("login ok");
-            }
+        $.post("@Url.Action("GetOauthLoginUrl")", { systemtype: 2 }, function (res) {
+            var url = res.url;
+            $("#loginqq").attr("href", url);
         });
     });
 </script>

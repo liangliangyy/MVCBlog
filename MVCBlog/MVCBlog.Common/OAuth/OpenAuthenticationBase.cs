@@ -13,7 +13,7 @@ namespace MVCBlog.Common.OAuth
         public string ClientSecret { get; set; }
         public string CallbackUrl { get; set; }
         public string AccessToken { get; set; }
-
+        public string UID { get; set; }
         public OAuthSystemType oAuthSystemType { get; set; }
         protected bool isAccessTokenSet = false;
 
@@ -34,6 +34,9 @@ namespace MVCBlog.Common.OAuth
         protected abstract string AuthorizationCodeUrl { get; }
         protected abstract string AccessTokenUrl { get; }
         public abstract string GetAuthorizationUrl();
+
+        public abstract OAuthUserInfo GetOAuthUserInfo();
+
         public abstract void GetAccessTokenByCode(string code);
     }
 }

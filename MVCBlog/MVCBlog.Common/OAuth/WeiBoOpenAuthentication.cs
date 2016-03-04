@@ -21,7 +21,7 @@ namespace MVCBlog.Common.OAuth
 
 
         private static CookieCollection cookies { get { return new CookieCollection(); } }
-        public string UID { get; set; }
+
 
         public WeiBoOpenAuthentication(string appKey, string appSecret, string callbackUrl, string accessToken = null, string uid = null)
             : base(appKey, appSecret, callbackUrl, accessToken)
@@ -33,33 +33,7 @@ namespace MVCBlog.Common.OAuth
                 isAccessTokenSet = true;
             }
         }
-
-        public SinaUserInfo GetUserInfo(string accesstoken, string uid)
-        {
-            var ub = new UriBuilder(API_URL + USER_INFO_API);
-            if (string.IsNullOrEmpty(accesstoken) || string.IsNullOrEmpty(uid))
-            {
-                throw new ArgumentNullException("存在空参数");
-            }
-            ub.Query = string.Format("uid={0}&access_token={1}", uid, accesstoken);
-            string url = ub.ToString();
-            HttpWebResponse response = HttpHelper.CreateGetHttpResponse(url);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                return null;
-            }
-            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-            {
-                string content = reader.ReadToEndAsync().Result;
-                var model = JsonConvert.DeserializeObject<SinaUserInfo>(content);
-                if (model != null)
-                {
-                    model.access_token = accesstoken;
-                    model.uid = uid;
-                }
-                return model;
-            }
-        }
+        
         protected override string AuthorizationCodeUrl
         {
             get { return AUTH_URL; }
@@ -104,6 +78,39 @@ namespace MVCBlog.Common.OAuth
                 isAccessTokenSet = true;
             }
 
+        }
+
+        public override OAuthUserInfo GetOAuthUserInfo()
+        {
+            var ub = new UriBuilder(API_URL + USER_INFO_API);
+            if (string.IsNullOrEmpty(AccessToken) || string.IsNullOrEmpty(UID))
+            {
+                throw new ArgumentNullException("存在空参数");
+            }
+            ub.Query = string.Format("uid={0}&access_token={1}", UID, AccessToken);
+            string url = ub.ToString();
+            HttpWebResponse response = HttpHelper.CreateGetHttpResponse(url);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return null;
+            }
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string content = reader.ReadToEndAsync().Result;
+                var model = JsonConvert.DeserializeObject<SinaUserInfo>(content);
+                if (model != null)
+                {
+                    return new OAuthUserInfo()
+                    {
+                        Name = model.screen_name,
+                        AccessToken = AccessToken,
+                        Uid = UID,
+                        SystemType = OAuthSystemType.Weibo,
+                        ProfileImgUrl = model.profile_image_url
+                    };
+                }
+                return null;
+            }
         }
     }
 }

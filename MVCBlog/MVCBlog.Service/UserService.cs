@@ -98,11 +98,21 @@ namespace MVCBlog.Service
         public void Update(UserInfo model)
         {
             var entity = Context.UserInfo.Find(model.Id);
+
             entity.EditedTime = DateTime.Now;
             entity.Name = model.Name;
             entity.Password = model.Password;
             entity.UserRole = model.UserRole;
             entity.UserStatus = model.UserStatus;
+            entity.WeiBoAccessToken = model.WeiBoAccessToken;
+            entity.WeiBoUid = model.WeiBoUid;
+            entity.WeiBoAvator = model.WeiBoAvator;
+            entity.QQAccessToken = model.QQAccessToken;
+            entity.QQAvator = model.QQAvator;
+            entity.QQUid = model.QQUid;
+
+            string key = ConfigInfo.GetUserKey(entity.Email);
+            RedisHelper.DeleteEntity(key);
             Context.SaveChanges();
         }
 
@@ -117,6 +127,11 @@ namespace MVCBlog.Service
             entity.WeiBoAccessToken = model.WeiBoAccessToken;
             entity.WeiBoUid = model.WeiBoUid;
             entity.WeiBoAvator = model.WeiBoAvator;
+            entity.QQAccessToken = model.QQAccessToken;
+            entity.QQAvator = model.QQAvator;
+            entity.QQUid = model.QQUid;
+            string key = ConfigInfo.GetUserKey(entity.Email);
+            RedisHelper.DeleteEntity(key);
             await SaveChanges();
         }
 

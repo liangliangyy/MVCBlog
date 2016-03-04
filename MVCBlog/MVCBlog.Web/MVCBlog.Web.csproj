@@ -16,7 +16,7 @@
     <RootNamespace>MVCBlog.Web</RootNamespace>
     <AssemblyName>MVCBlog.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -162,12 +162,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="CommonHelper\ApplicationContainer.cs" />
     <Compile Include="CommonHelper\Helper.cs" />
     <Compile Include="CommonHelper\Menu\MenuHelper.cs" />
     <Compile Include="CommonHelper\Menu\MenuInfo.cs" />
-    <Compile Include="CommonHelper\OAuthHelper.cs" />
+    <Compile Include="CommonHelper\OAuthClientFactory.cs" />
     <Compile Include="CommonHelper\ResolverHelper.cs" />
     <Compile Include="CommonHelper\UserHelper.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\MvcActionAttribute.cs" />
     <Compile Include="Infrastructure\Dependency.cs" />
     <Compile Include="Infrastructure\DependencyConfigure.cs" />
     <Compile Include="Models\CommentViewModel.cs" />
