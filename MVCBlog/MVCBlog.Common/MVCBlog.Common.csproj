@@ -58,6 +58,7 @@
     <Compile Include="OAuth\QQOpenAuthentication.cs" />
     <Compile Include="OAuth\WeiBoOpenAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringHelper.cs" />
     <Compile Include="ThreadHelper.cs" />
   </ItemGroup>
   <ItemGroup>

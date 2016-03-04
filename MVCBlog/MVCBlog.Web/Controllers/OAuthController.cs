@@ -14,6 +14,7 @@ using MVCBlog.Web.CommonHelper;
 using MVCBlog.Common.OAuth.Models;
 using MVCBlog.Service;
 using System.Web.Security;
+using MVCBlog.Web.Models;
 
 namespace MVCBlog.Web.Controllers
 {
@@ -45,8 +46,22 @@ namespace MVCBlog.Web.Controllers
             bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.Weibo, code);
             if (result)
             {
-                var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.QQ);
+                var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.Weibo);
                 OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
+                var userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, OAuthSystemType.Weibo);
+                if (userinfo != null)
+                {
+                    UserDataModel userData = new UserDataModel()
+                    {
+                        Id = userinfo.Id,
+                        Email = userinfo.Email,
+                        Name = userinfo.Name,
+                        SystemType = OAuthSystemType.Weibo,
+                        Uid =oauthUserinfo.Uid,
+                        AccessToken = oauthUserinfo.AccessToken
+                    };
+                    UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
+                }
             }
             return RedirectToAction("index");
         }
@@ -61,6 +76,20 @@ namespace MVCBlog.Web.Controllers
             {
                 var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.QQ);
                 OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
+                var userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, OAuthSystemType.QQ);
+                if (userinfo != null)
+                {
+                    UserDataModel userData = new UserDataModel()
+                    {
+                        Id = userinfo.Id,
+                        Email = userinfo.Email,
+                        Name = userinfo.Name,
+                        SystemType = OAuthSystemType.Weibo,
+                        Uid = oauthUserinfo.Uid,
+                        AccessToken = oauthUserinfo.AccessToken
+                    };
+                    UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
+                }
             }
             return RedirectToAction("index");
         }

@@ -9,6 +9,8 @@ using MVCBlog.Entities.Enums;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Common;
 using MVCBlog.CacheManager;
+using MVCBlog.Common.OAuth.Models;
+
 namespace MVCBlog.Service
 {
     public class UserService : IUserService
@@ -167,7 +169,7 @@ namespace MVCBlog.Service
             return await Context.UserInfo.FindAsync(id);
         }
 
-        public UserInfo GettUserInfoByUid(string uid)
+        public UserInfo GetUserInfoByUid(string uid)
         {
             if (!string.IsNullOrEmpty(uid))
             {
@@ -175,6 +177,19 @@ namespace MVCBlog.Service
                 return userinfo;
             }
             return null;
+        }
+
+        public UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype)
+        {
+            switch (systemtype)
+            {
+                case OAuthSystemType.QQ:
+                    return Context.UserInfo.FirstOrDefault(x => x.QQUid == uid);
+                case OAuthSystemType.Weibo:
+                    return Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
+                default:
+                    return null;
+            }
         }
     }
 }

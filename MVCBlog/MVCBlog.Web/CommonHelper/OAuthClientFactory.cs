@@ -96,6 +96,7 @@ namespace MVCBlog.Web.CommonHelper
                         loginuser.QQAvator = userinfo.ProfileImgUrl;
                         loginuser.Name = userinfo.Name;
                         userService.UpdateAsync(loginuser);
+
                     }
                     if (userinfo.SystemType == OAuthSystemType.Weibo)
                     {
@@ -107,6 +108,12 @@ namespace MVCBlog.Web.CommonHelper
                     }
                 }
             }
+        }
+
+        public static string GetOAuthLoginUrl(OAuthSystemType systemtype)
+        {
+            var client = GetOAuthClient(systemtype);
+            return client.GetAuthorizationUrl();
         }
     }
 }

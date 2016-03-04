@@ -1,7 +1,9 @@
-﻿using MVCBlog.Entities.Models;
+﻿using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities.Models;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
 using MVCBlog.Web.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,12 +67,22 @@ namespace MVCBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogIn(string email, string password)
         {
-            if (userService.ValidateUser(email, password) == null)
+            var userinfo = userService.ValidateUser(email, password);
+            if (userinfo == null)
             {
                 ModelState.AddModelError("", "您输入的帐号或密码错误");
                 return View();
             }
-            FormsAuthentication.SetAuthCookie(email, false);
+            UserDataModel userData = new UserDataModel()
+            {
+                Id = userinfo.Id,
+                Email = userinfo.Email,
+                Name = userinfo.Name,
+                SystemType = OAuthSystemType.Email,
+                Uid = string.Empty,
+                AccessToken = string.Empty
+            };
+            UserHelper.SetFormsAuthenticationTicket(email, userData, true);
             return RedirectToAction("Index");
         }
 
@@ -151,5 +163,6 @@ namespace MVCBlog.Web.Controllers
             var list = categoryService.GetCategoryList();
             return View(list);
         }
+         
     }
 }

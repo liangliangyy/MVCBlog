@@ -180,11 +180,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\CustomExceptionAttribute.cs" />
     <Compile Include="Infrastructure\MvcActionAttribute.cs" />
     <Compile Include="Infrastructure\Dependency.cs" />
     <Compile Include="Infrastructure\DependencyConfigure.cs" />
+    <Compile Include="Infrastructure\MVCBlogIdentity.cs" />
+    <Compile Include="Infrastructure\MVCBlogPrincipal.cs" />
     <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />
+    <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

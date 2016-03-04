@@ -38,7 +38,10 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="登录" class="btn btn-default" />
-                <a href="@MVCBlog.Web.CommonHelper.OAuthHelper.GetWeiBoLoginUrl()"><img src="http://img.t.sinajs.cn/t4/appstyle/open/images/website/loginbtn/loginbtn_03.png" /></a>
+                <a href="@Url.Action("register")" class="btn btn-default">注册</a>
+                <a href="@MVCBlog.Web.CommonHelper.OAuthClientFactory.GetOAuthLoginUrl(MVCBlog.Common.OAuth.Models.OAuthSystemType.Weibo)">
+                    <img src="http://img.t.sinajs.cn/t4/appstyle/open/images/website/loginbtn/loginbtn_03.png" />
+                </a>
             </div>
         </div>
     </div>

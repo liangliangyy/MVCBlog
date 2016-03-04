@@ -13,6 +13,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 
 namespace MVCBlog.Web
 {
@@ -25,14 +26,27 @@ namespace MVCBlog.Web
 
         void MvcApplication_AuthorizeRequest(object sender, EventArgs e)
         {
-            IIdentity id = Context.User.Identity;
-            if (id.IsAuthenticated)
+            //IIdentity id = Context.User.Identity;
+            //if (id.IsAuthenticated)
+            //{
+            //    var customerService = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IUserService)) as IUserService;
+            //    var userinfo = customerService.GetUserInfo(id.Name);
+
+            //    ResolverHelper.GetResolver<MVCBlog.Service.PostService>();
+
+            //}
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                var customerService = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IUserService)) as IUserService;
-                var userinfo = customerService.GetUserInfo(id.Name);
-
-                ResolverHelper.GetResolver<MVCBlog.Service.PostService>();
-
+                var formsIdetity = HttpContext.Current.User.Identity as FormsIdentity;
+                MVCBlogIdentity mvcblogIdentity = new MVCBlogIdentity(formsIdetity.Ticket.UserData)
+                {
+                    AuthenticationType = formsIdetity.AuthenticationType,
+                    IsAuthenticated = formsIdetity.IsAuthenticated,
+                    Name = formsIdetity.Name,
+                    Ticket = formsIdetity.Ticket,
+                };
+                MVCBlogPrincipal mvcblogPrincipal = new MVCBlogPrincipal() { Identity = mvcblogIdentity, };
+                HttpContext.Current.User = mvcblogPrincipal;
             }
         }
 

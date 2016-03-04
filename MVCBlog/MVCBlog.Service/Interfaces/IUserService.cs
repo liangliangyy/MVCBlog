@@ -1,4 +1,5 @@
-﻿using MVCBlog.Entities.Enums;
+﻿using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities.Enums;
 using MVCBlog.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace MVCBlog.Service.Interfaces
         Task<UserInfo> ValidateUserAsync(string email, string password);
         UserInfo GetUserInfo(string email);
         Task<UserInfo> GetUserInfoAsync(string email); 
-        UserInfo GettUserInfoByUid(string uid);
+        UserInfo GetUserInfoByUid(string uid);
+        UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype);
     }
 }
