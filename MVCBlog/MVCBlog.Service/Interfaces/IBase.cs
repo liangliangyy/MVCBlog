@@ -17,5 +17,8 @@ namespace MVCBlog.Service.Interfaces
         Task<int> SaveChanges();
         T GetById(int id);
         Task<T> GetByIdAsync(int id);
+        event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
+        event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
+        event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
     }
 }

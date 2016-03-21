@@ -23,8 +23,9 @@ namespace MVCBlog.Web.Infrastructure
 
             log4net.LogManager.GetLogger("exception").Error(filterContext.Exception.ToString());
 
-            filterContext.ExceptionHandled = true;
-            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            //filterContext.ExceptionHandled = true;
+            //filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            
         }
     }
 }

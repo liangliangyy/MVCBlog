@@ -32,8 +32,8 @@ namespace MVCBlog.Web.CommonHelper
             }
             catch
             {
-                HttpContext.Current.User = null;
-                HttpContext.Current.Response.Redirect("/Admin/LogIn");
+                //HttpContext.Current.User = null;
+                //HttpContext.Current.Response.Redirect("/Admin/LogIn");
             }
             return null;
         }

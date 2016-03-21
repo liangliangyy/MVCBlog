@@ -16,6 +16,11 @@ namespace MVCBlog.Service
     public class UserService : IUserService
     {
         private MVCBlogContext Context;
+
+        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
+
         public UserService(MVCBlogContext _contest)
         {
             this.Context = _contest;

@@ -22,6 +22,7 @@ namespace MVCBlog.Web
         public MvcApplication()
         {
             AuthorizeRequest += new EventHandler(MvcApplication_AuthorizeRequest);
+ 
         }
 
         void MvcApplication_AuthorizeRequest(object sender, EventArgs e)

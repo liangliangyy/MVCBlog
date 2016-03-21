@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common;
+using MVCBlog.Entities.Models;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
@@ -25,6 +26,15 @@ namespace MVCBlog.Web.Controllers
             return View();
         }
 
+        public ActionResult UserWightInfo()
+        {
+            UserInfo userinfo = UserHelper.GetLogInUserInfo();
+            if (userinfo != null)
+            {
+                return PartialView(userinfo);
+            }
+            return PartialView();
+        }
 
         public ActionResult UserPostInfo(int userid, int index = 1)
         {

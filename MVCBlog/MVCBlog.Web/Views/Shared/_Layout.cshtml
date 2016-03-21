@@ -67,12 +67,13 @@
                 @RenderBody()
 
                 <aside class="col-md-4">
-                    <div class="widget widget-recent-posts">
-
-                        @Html.Action("RecentPost", "PostInfo")
+                    @Html.Action("UserWightInfo", "User")
 
 
+                    <div class="widget widget-recent-posts"> 
+                        @Html.Action("RecentPost", "PostInfo") 
                     </div>
+                  
                     <div class="widget widget-archives">
                         <h3 class="widget-title">Archives</h3>
                         <ul>

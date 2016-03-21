@@ -35,7 +35,15 @@ namespace MVCBlog.Web.Infrastructure
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
             //通过AS可以通过构造函数依赖注入类型相应的接口
             builder.RegisterType<UserService>().As<IUserService>();
-            builder.RegisterType<PostService>().As<IPostService>();
+            builder.RegisterType<ModelCacheEventHandle>();
+            builder.RegisterType<CategoryService>().As<ICategoryService>();
+            builder.RegisterType<PostService>().As<IPostService>()
+                .OnActivated(act =>
+                {
+                    var instance = act.Context.Resolve<ModelCacheEventHandle>();
+                    act.Instance.ModelCreateEventHandler += instance.ModelCreateEventHandler<IPostService,PostInfo>;
+                    act.Instance.ModelDeleteEventHandler += instance.ModelDeleteEventHandler;
+                });
 
             builder.RegisterType<CategoryService>().As<ICategoryService>();
             //Build()方法生成一个对应的Container实例,这样,就可以通过Resolve解析到注册的类型实例

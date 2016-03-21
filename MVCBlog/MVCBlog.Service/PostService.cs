@@ -16,6 +16,11 @@ namespace MVCBlog.Service
     public class PostService : IPostService
     {
         private MVCBlogContext Context;
+
+        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
+
         public PostService(MVCBlogContext _contest)
         {
             this.Context = _contest;
@@ -29,6 +34,11 @@ namespace MVCBlog.Service
                 entity.IsDelete = true;
                 entity.PostStatus = PostStatus.删除;
                 Context.SaveChanges();
+                if (ModelDeleteEventHandler != null)
+                {
+                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                    ModelDeleteEventHandler(this, e);
+                }
             }
         }
 
@@ -40,6 +50,11 @@ namespace MVCBlog.Service
                 entity.IsDelete = true;
                 entity.PostStatus = PostStatus.删除;
                 await SaveChanges();
+                if (ModelDeleteEventHandler != null)
+                {
+                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                    ModelDeleteEventHandler(this, e);
+                }
             }
         }
         public PostInfo GetById(int id)
@@ -201,8 +216,13 @@ namespace MVCBlog.Service
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
             var entity = Context.PostInfo.Add(model);
             await SaveChanges();
-            string key = ConfigInfo.GetPostKey(entity.Id);
-            RedisHelper.SetEntity<PostInfo>(key, entity);
+            //string key = ConfigInfo.GetPostKey(entity.Id);
+            //RedisHelper.SetEntity<PostInfo>(key, entity);
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
 
         public void Insert(PostInfo model, int userid)
@@ -217,8 +237,12 @@ namespace MVCBlog.Service
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
             var entity = Context.PostInfo.Add(model);
             Context.SaveChanges();
-            string key = ConfigInfo.GetPostKey(entity.Id);
-            RedisHelper.SetEntity<PostInfo>(key, entity);
+
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
 
         public Pagination<PostInfo> PostPagination(int index, int pagecount)
@@ -298,6 +322,11 @@ namespace MVCBlog.Service
             entity.PostCommentStatus = model.PostCommentStatus;
             entity.EditedTime = DateTime.Now;
             Context.SaveChanges();
+            if (ModelUpdateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                ModelUpdateEventHandler(this, e);
+            }
         }
 
         public async Task UpdateAsync(PostInfo model)
@@ -311,12 +340,17 @@ namespace MVCBlog.Service
             string key = ConfigInfo.GetPostKey(model.Id);
             RedisHelper.DeleteEntity(key);
             await SaveChanges();
+            if (ModelUpdateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
+                ModelUpdateEventHandler(this, e);
+            }
         }
         public async Task<int> SaveChanges()
         {
             return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
         }
 
-    
+
     }
 }

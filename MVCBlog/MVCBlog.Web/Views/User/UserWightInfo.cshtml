@@ -1,0 +1,9 @@
+﻿@model MVCBlog.Entities.Models.UserInfo
+
+@if (Model != null)
+{
+    <div class="widget">
+        <h3 class="widget-title">欢迎回来: @Model.Name</h3>
+        <img src="@(string.IsNullOrEmpty(Model.QQAvator)?Model.WeiBoAvator:Model.QQAvator)" />
+    </div>
+}

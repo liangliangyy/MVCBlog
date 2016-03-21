@@ -14,6 +14,11 @@ namespace MVCBlog.Service
     public class CategoryService : ICategoryService
     {
         private MVCBlogContext Context;
+
+        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
+        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
+
         public CategoryService(MVCBlogContext _contest)
         {
             this.Context = _contest;
