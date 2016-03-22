@@ -35,6 +35,11 @@ namespace MVCBlog.Service
             user.IsDelete = false;
             user = Context.UserInfo.Add(user);
             Context.SaveChanges();
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(user.Email), ID = user.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
         public async Task InsertAsync(UserInfo user, int userid = 0)
         {
@@ -46,6 +51,11 @@ namespace MVCBlog.Service
             user.IsDelete = false;
             Context.UserInfo.Add(user);
             await SaveChanges();
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(user.Email), ID = user.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
         public UserInfo ValidateUser(string email, string password)
         {
@@ -95,12 +105,7 @@ namespace MVCBlog.Service
             var userinfo = await RedisHelper.GetEntityAsync<UserInfo>(key, getitem);
             return userinfo;
         }
-
-        public void Insert(UserInfo model, int userid)
-        {
-            throw new NotImplementedException();
-        }
-
+         
 
         public void Update(UserInfo model)
         {
@@ -117,10 +122,13 @@ namespace MVCBlog.Service
             entity.QQAccessToken = model.QQAccessToken;
             entity.QQAvator = model.QQAvator;
             entity.QQUid = model.QQUid;
-
-            string key = ConfigInfo.GetUserKey(entity.Email);
-            RedisHelper.DeleteEntity(key);
             Context.SaveChanges();
+
+            if (ModelUpdateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
+                ModelUpdateEventHandler(this, e);
+            }
         }
 
         public async Task UpdateAsync(UserInfo model)
@@ -137,9 +145,13 @@ namespace MVCBlog.Service
             entity.QQAccessToken = model.QQAccessToken;
             entity.QQAvator = model.QQAvator;
             entity.QQUid = model.QQUid;
-            string key = ConfigInfo.GetUserKey(entity.Email);
-            RedisHelper.DeleteEntity(key);
+        
             await SaveChanges();
+            if (ModelUpdateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
+                ModelUpdateEventHandler(this, e);
+            }
         }
 
         public void Delete(UserInfo model)
@@ -147,6 +159,11 @@ namespace MVCBlog.Service
             var entity = Context.UserInfo.Find(model.Id);
             entity.IsDelete = true;
             Context.SaveChanges();
+            if (ModelDeleteEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
+                ModelDeleteEventHandler(this, e);
+            }
         }
 
         public async Task DeleteAsync(UserInfo model)
@@ -156,6 +173,11 @@ namespace MVCBlog.Service
             {
                 entity.IsDelete = true;
                 await SaveChanges();
+                if (ModelDeleteEventHandler != null)
+                {
+                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
+                    ModelDeleteEventHandler(this, e);
+                }
             }
         }
 
@@ -195,6 +217,16 @@ namespace MVCBlog.Service
                 default:
                     return null;
             }
+        }
+
+        public void Insert(UserInfo model, int userid = 0)
+        {
+            Insert(model);
+        }
+
+        public UserInfo GetFromDB(int id)
+        {
+            return Context.UserInfo.Find(id);
         }
     }
 }

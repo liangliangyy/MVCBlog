@@ -33,7 +33,10 @@ namespace MVCBlog.Common
             }
             return string.Format("{0}:{1}", CommentKey, postid);
         }
-        public static string CategoryKey { get { return "MVCBlog:CategoryList"; } }
+        public static string GetCategoryKey(int id)
+        {
+            return string.Format("MVCBlog:CategoryInfo:{0}",id);
+        }
 
         public static int RecentPostCount { get { return 5; } }
 

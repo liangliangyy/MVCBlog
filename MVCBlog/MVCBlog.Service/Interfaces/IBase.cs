@@ -16,6 +16,7 @@ namespace MVCBlog.Service.Interfaces
         Task DeleteAsync(T model);
         Task<int> SaveChanges();
         T GetById(int id);
+        T GetFromDB(int id);
         Task<T> GetByIdAsync(int id);
         event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
         event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;

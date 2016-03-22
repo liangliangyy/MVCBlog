@@ -23,7 +23,7 @@ namespace MVCBlog.Web.Infrastructure
                     requestList.Add(x, request.Params[x]);
                 }
                 string content = JsonConvert.SerializeObject(requestList);
-                log4net.LogManager.GetLogger("info").Info(string.Format("{0}:{1}:{2}", control, action, content));
+                log4net.LogManager.GetLogger("api").Info(string.Format("{0}:{1}:{2}", control, action, content));
             }
             base.OnActionExecuted(filterContext);
         }

@@ -24,19 +24,17 @@ namespace MVCBlog.Service
             this.Context = _contest;
         }
 
-        public void AddCategoryInfo(CategoryInfo info)
-        {
-            RedisHelper.DeleteEntity(ConfigInfo.CategoryKey);
-            info.CreateUser = Context.UserInfo.Find(info.CreateUser.Id);
-            Context.CategoryInfo.Add(info);
-            Context.SaveChanges();
-        }
 
         public void Delete(CategoryInfo model)
         {
             var entity = Context.CategoryInfo.Find(model.Id);
             entity.IsDelete = true;
             Context.SaveChanges();
+            if (ModelDeleteEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                ModelDeleteEventHandler(this, e);
+            }
         }
 
         public async Task DeleteAsync(CategoryInfo model)
@@ -44,11 +42,16 @@ namespace MVCBlog.Service
             var entity = Context.CategoryInfo.Find(model.Id);
             entity.IsDelete = true;
             await SaveChanges();
+            if (ModelDeleteEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                ModelDeleteEventHandler(this, e);
+            }
         }
 
         public CategoryInfo GetById(int id)
         {
-            var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.CategoryKey);
+            var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.GetCategoryKey(id));
             if (list != null)
             {
                 return list.Find(x => x.Id == id);
@@ -60,7 +63,7 @@ namespace MVCBlog.Service
         {
             Func<CategoryInfo> getitem = () =>
             {
-                var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.CategoryKey);
+                var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.GetCategoryKey(id));
                 if (list != null)
                 {
                     return list.Find(x => x.Id == id);
@@ -72,29 +75,54 @@ namespace MVCBlog.Service
 
         public List<CategoryInfo> GetCategoryList()
         {
-            Func<List<CategoryInfo>> GetDb = () => Context.CategoryInfo.ToList();
-            return RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.CategoryKey, GetDb);
+            List<CategoryInfo> list = new List<CategoryInfo>();
+             var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
+            foreach (int id in categoryids)
+            {
+                Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
+                string key = ConfigInfo.GetCategoryKey(id);
+                CategoryInfo info = RedisHelper.GetEntity<CategoryInfo>(key, GetDb);
+                list.Add(info);
+            }
+            return list;
         }
 
         public async Task<List<CategoryInfo>> GetCategoryListAsync()
         {
-            Func<List<CategoryInfo>> GetDb = () => Context.CategoryInfo.ToList();
-            return await RedisHelper.GetEntityAsync<List<CategoryInfo>>(ConfigInfo.CategoryKey, GetDb);
+            List<CategoryInfo> list = new List<CategoryInfo>();
+            var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
+            foreach (int id in categoryids)
+            {
+                Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
+                string key = ConfigInfo.GetCategoryKey(id);
+                CategoryInfo info =await RedisHelper.GetEntityAsync<CategoryInfo>(key, GetDb);
+                list.Add(info);
+            }
+            return list;
         }
         public void Insert(CategoryInfo model, int userid = 0)
         {
-            RedisHelper.DeleteEntity(ConfigInfo.CategoryKey);
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
             Context.CategoryInfo.Add(model);
             Context.SaveChanges();
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
 
         public async Task InsertAsync(CategoryInfo model, int userid)
         {
-            RedisHelper.DeleteEntity(ConfigInfo.CategoryKey);
+
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
             Context.CategoryInfo.Add(model);
             await SaveChanges();
+            if (ModelCreateEventHandler != null)
+            {
+                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                ModelCreateEventHandler(this, e);
+            }
         }
 
 
@@ -106,6 +134,11 @@ namespace MVCBlog.Service
                 entity.CategoryName = model.CategoryName;
                 entity.IsDelete = model.IsDelete;
                 Context.SaveChanges();
+                if (ModelUpdateEventHandler != null)
+                {
+                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                    ModelUpdateEventHandler(this, e);
+                }
             }
         }
 
@@ -117,6 +150,11 @@ namespace MVCBlog.Service
                 entity.CategoryName = model.CategoryName;
                 entity.IsDelete = model.IsDelete;
                 await SaveChanges();
+                if (ModelUpdateEventHandler != null)
+                {
+                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
+                    ModelUpdateEventHandler(this, e);
+                }
             }
         }
         public async Task<int> SaveChanges()
@@ -124,5 +162,9 @@ namespace MVCBlog.Service
             return await Context.SaveChangesAsync();
         }
 
+        public CategoryInfo GetFromDB(int id)
+        {
+            return Context.CategoryInfo.Find(id);
+        }
     }
 }

@@ -351,6 +351,9 @@ namespace MVCBlog.Service
             return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
         }
 
-
+        public PostInfo GetFromDB(int id)
+        {
+            return Context.PostInfo.Find(id);
+        }
     }
 }

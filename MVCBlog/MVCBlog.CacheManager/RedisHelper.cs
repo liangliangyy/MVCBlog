@@ -201,7 +201,7 @@ namespace MVCBlog.CacheManager
             if (list == null)
             {
                 var entitys = GetItemByDb();
-                if(entitys.Count==0)
+                if (entitys.Count == 0)
                 {
                     return new List<T>();
                 }
@@ -292,6 +292,10 @@ namespace MVCBlog.CacheManager
         /// <returns></returns>
         public static void SetEntity<T>(string key, T val)
         {
+            if (GetEntity<T>(key) != null)
+            {
+                DeleteEntity(key);
+            }
             using (var client = new RedisClient(Host))
             {
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(val);
