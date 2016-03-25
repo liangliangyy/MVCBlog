@@ -1,4 +1,5 @@
-﻿using MVCBlog.Entities.Models;
+﻿using Autofac;
+using MVCBlog.Entities.Models;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using System;
@@ -13,11 +14,11 @@ namespace MVCBlog.Web.CommonHelper
     {
         public static async Task<List<SelectListItem>> GetCategorySelectList()
         {
-            ICategoryService service = (ICategoryService)ResolverHelper.GetResolver<CategoryService>();
+            ICategoryService service = ApplicationContainer.Container.Resolve<ICategoryService>();
             List<CategoryInfo> list = await service.GetCategoryListAsync();
             if (list.Count == 0)
             {
-                IUserService userservice = (IUserService)ResolverHelper.GetResolver<UserService>();
+                IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>();
                 var loginuser = UserHelper.GetLogInUserInfo();
                 var defaultcategory = new CategoryInfo()
                 {

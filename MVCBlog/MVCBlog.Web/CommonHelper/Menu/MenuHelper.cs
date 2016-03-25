@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using System.IO;
 using MVCBlog.Entities.Enums;
 using MVCBlog.Common;
+using System.Web;
+
 namespace MVCBlog.Web.CommonHelper.Menu
 {
     public class MenuHelper
@@ -15,11 +17,11 @@ namespace MVCBlog.Web.CommonHelper.Menu
         {
             if (type == MenuType.后台)
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "//CommonHelper//Menu//AdminMenu.json";
+                string path = HttpContext.Current.Server.MapPath("~//App_Data//AdminMenu.json");
                 string json = FileHelper.GetFileContent(path);
-                if(!string.IsNullOrEmpty(json))
+                if (!string.IsNullOrEmpty(json))
                 {
-                    return JsonConvert.DeserializeObject<List<MenuInfo>>(json).OrderBy(x=>x.MenuPosition).ToList();
+                    return JsonConvert.DeserializeObject<List<MenuInfo>>(json).OrderBy(x => x.MenuPosition).ToList();
                 }
             }
             return new List<MenuInfo>();

@@ -25,6 +25,8 @@ namespace MVCBlog.Entities.Models
         [Required]
         public string Title { get; set; }
         [Required]
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(10000)]
         public string Content { get; set; }
         [DefaultValue(PostStatus.发布)]
         public PostStatus PostStatus { get; set; }

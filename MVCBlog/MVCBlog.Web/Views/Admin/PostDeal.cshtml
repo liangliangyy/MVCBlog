@@ -7,15 +7,16 @@
 }
 
 <h2>写文章</h2>
+<script type="text/javascript" src="~/Content/ckeditor/ckeditor.js"></script>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @Html.HiddenFor(model=>model.Id)
-        @Html.HiddenFor(model=>model.PostCommentStatus)
-        @Html.HiddenFor(model=>model.PostStatus)
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.PostCommentStatus)
+        @Html.HiddenFor(model => model.PostStatus)
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -49,3 +50,8 @@
         </div>
     </div>
 }
+<script>
+    $(function () {
+        CKEDITOR.replace('Content');
+    });
+</script>

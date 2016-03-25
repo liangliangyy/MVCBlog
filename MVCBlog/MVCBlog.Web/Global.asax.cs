@@ -1,15 +1,10 @@
 ﻿using MVCBlog.Repository;
-using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.App_Start;
-using MVCBlog.Web.CommonHelper;
 using MVCBlog.Web.Infrastructure;
 using MySql.Data.Entity;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
-using System.Linq;
-using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;

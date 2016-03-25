@@ -110,6 +110,7 @@ namespace MVCBlog.Web.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PostDeal(PostViewModel postinfo)
         {

@@ -1,4 +1,5 @@
-﻿using MVCBlog.Common;
+﻿using Autofac;
+using MVCBlog.Common;
 using MVCBlog.Entities.Models;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
@@ -25,7 +26,7 @@ namespace MVCBlog.Web.CommonHelper
                 MVCBlogIdentity mvcblogidentity = HttpContext.Current.User.Identity as MVCBlogIdentity;
                 if (mvcblogidentity != null && mvcblogidentity.IsAuthenticated)
                 {
-                    IUserService userservice = (IUserService)ResolverHelper.GetResolver<UserService>();
+                    IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>(); 
                     var userinfo = userservice.GetByIdAsync(mvcblogidentity.UserData.Id).Result;
                     return userinfo;
                 }

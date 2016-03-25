@@ -14,8 +14,14 @@ namespace MVCBlog.Web.Controllers
     //[Authorize]
     public class UserController : Controller
     {
-        private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
-        private IPostService postService = (IPostService)ResolverHelper.GetResolver<PostService>();
+        private IUserService userService;
+        private IPostService postService;
+        public UserController(IUserService _userService, IPostService _postService)
+        {
+            userService = _userService;
+            postService = _postService;
+        }
+
         // GET: User
         public ActionResult Index()
         {

@@ -17,13 +17,20 @@ namespace MVCBlog.Web.Infrastructure
             var request = filterContext.RequestContext.HttpContext.Request;
             if (request.HttpMethod.Equals("post", StringComparison.CurrentCultureIgnoreCase))
             {
-                var requestList = new SortedList<string, string>();
-                foreach (var x in request.Params.AllKeys)
+                try
                 {
-                    requestList.Add(x, request.Params[x]);
+                    var requestList = new SortedList<string, string>();
+                    foreach (var x in request.Params.AllKeys)
+                    {
+                        requestList.Add(x, request.Params[x]);
+                    }
+                    string content = JsonConvert.SerializeObject(requestList);
+                    log4net.LogManager.GetLogger("api").Info(string.Format("{0}:{1}:{2}", control, action, content));
                 }
-                string content = JsonConvert.SerializeObject(requestList);
-                log4net.LogManager.GetLogger("api").Info(string.Format("{0}:{1}:{2}", control, action, content));
+                catch
+                {
+
+                }
             }
             base.OnActionExecuted(filterContext);
         }

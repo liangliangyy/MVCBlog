@@ -11,6 +11,7 @@ using MVCBlog.Common;
 using MVCBlog.Common.OAuth.Models;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Service;
+using Autofac;
 
 namespace MVCBlog.Web.CommonHelper
 {
@@ -88,7 +89,7 @@ namespace MVCBlog.Web.CommonHelper
                 var loginuser = UserHelper.GetLogInUserInfo();
                 if (loginuser != null)
                 {
-                    IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
+                    IUserService userService = ApplicationContainer.Container.Resolve<IUserService>(); 
                     if (userinfo.SystemType == OAuthSystemType.QQ)
                     {
                         loginuser.QQAccessToken = userinfo.AccessToken;

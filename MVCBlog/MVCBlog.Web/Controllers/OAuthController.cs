@@ -20,8 +20,11 @@ namespace MVCBlog.Web.Controllers
 {
     public class OAuthController : Controller
     {
-        private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
-
+        private IUserService userService;
+        public OAuthController(IUserService _userService)
+        {
+            userService = _userService;
+        }
         public ActionResult Index()
         {
             return View();
@@ -57,7 +60,7 @@ namespace MVCBlog.Web.Controllers
                         Email = userinfo.Email,
                         Name = userinfo.Name,
                         SystemType = OAuthSystemType.Weibo,
-                        Uid =oauthUserinfo.Uid,
+                        Uid = oauthUserinfo.Uid,
                         AccessToken = oauthUserinfo.AccessToken
                     };
                     UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);

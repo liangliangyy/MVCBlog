@@ -16,9 +16,15 @@ namespace MVCBlog.Web.Controllers
     public class CommentController : Controller
     {
         // GET: Comment
-        private ICommentService commentService = (ICommentService)ResolverHelper.GetResolver<CommentService>();
-        private IPostService postService = (IPostService)ResolverHelper.GetResolver<PostService>();
-        private IUserService userService = (IUserService)ResolverHelper.GetResolver<UserService>();
+        private ICommentService commentService ;
+        private IPostService postService;
+        private IUserService userService;
+        public CommentController(ICommentService _commentService, IPostService _postService, IUserService _userService)
+        {
+            commentService = _commentService;
+            postService = _postService;
+            userService = _userService;
+        }
         public ActionResult Index()
         {
             return View();

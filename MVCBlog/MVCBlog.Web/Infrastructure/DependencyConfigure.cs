@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Integration.Mvc;
 using MVCBlog.Entities.Models;
@@ -8,7 +7,6 @@ using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
 using System;
-using System.Data.Entity;
 using System.Web.Mvc;
 namespace MVCBlog.Web.Infrastructure
 {
