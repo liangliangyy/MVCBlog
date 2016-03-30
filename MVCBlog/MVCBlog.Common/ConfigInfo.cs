@@ -8,13 +8,9 @@ namespace MVCBlog.Common
 {
     public static class ConfigInfo
     {
-        public static string GetUserKey(string Email)
+        public static string GetUserKey(int id)
         {
-            if (string.IsNullOrEmpty(Email))
-            {
-                throw new NotSupportedException("email不能为空");
-            }
-            return string.Format("{0}:{1}", UserCackeKey, Email);
+            return string.Format("{0}:{1}", UserCackeKey, id);
         }
 
         public static string GetPostKey(int id)

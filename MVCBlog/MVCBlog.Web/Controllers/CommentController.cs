@@ -75,7 +75,7 @@ namespace MVCBlog.Web.Controllers
                     CommentContent = model.CommentContent,
                     CommentTitle = model.CommentTitle
                 };
-                commentService.AddCommentInfo(commentinfo);
+                commentService.Insert(commentinfo);
                 return RedirectToAction("PostInfo", "PostInfo", new { id = model.PostID });
             }
             return View();

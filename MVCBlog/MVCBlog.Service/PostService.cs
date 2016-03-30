@@ -13,20 +13,17 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Service
 {
-    public class PostService : IPostService
+    public class PostService : BaseService<PostInfo>, IPostService
     {
         private MVCBlogContext Context;
 
-        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
 
         public PostService(MVCBlogContext _contest)
         {
             this.Context = _contest;
         }
 
-        public void Delete(PostInfo model)
+        public override void Delete(PostInfo model)
         {
             if (model != null)
             {
@@ -34,15 +31,11 @@ namespace MVCBlog.Service
                 entity.IsDelete = true;
                 entity.PostStatus = PostStatus.删除;
                 Context.SaveChanges();
-                if (ModelDeleteEventHandler != null)
-                {
-                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                    ModelDeleteEventHandler(this, e);
-                }
+                base.Delete(model);
             }
         }
 
-        public async Task DeleteAsync(PostInfo model)
+        public override async Task DeleteAsync(PostInfo model)
         {
             if (model != null)
             {
@@ -50,37 +43,23 @@ namespace MVCBlog.Service
                 entity.IsDelete = true;
                 entity.PostStatus = PostStatus.删除;
                 await SaveChanges();
-                if (ModelDeleteEventHandler != null)
-                {
-                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                    ModelDeleteEventHandler(this, e);
-                }
+                await base.DeleteAsync(model);
             }
         }
-        public PostInfo GetById(int id)
+        public override PostInfo GetById(int id)
         {
             Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
             string key = ConfigInfo.GetPostKey(id);
             PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
             return info;
         }
-        public async Task<PostInfo> GetByIdAsync(int id)
+        public override async Task<PostInfo> GetByIdAsync(int id)
         {
             Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
             string key = ConfigInfo.GetPostKey(id);
             return await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
         }
 
-        public List<PostInfo> GetPosts()
-        {
-            return Context.PostInfo.ToList();
-            //return Context.PostInfo.Where(x => !x.IsDelete && x.PostStatus == PostStatus.发布).ToList();
-        }
-        public async Task<List<PostInfo>> GetPostsAsync()
-        {
-            Func<List<PostInfo>> GetItems = () => { return Context.PostInfo.ToList(); };
-            return await Common.TaskExtensions.WithCurrentCulture<List<PostInfo>>(GetItems);
-        }
 
         public List<PostInfo> GetRecentPost(int count)
         {
@@ -204,7 +183,7 @@ namespace MVCBlog.Service
         }
 
 
-        public async Task InsertAsync(PostInfo model, int userid)
+        public override async Task InsertAsync(PostInfo model, int userid)
         {
             model.PostStatus = PostStatus.发布;
             model.PostType = PostType.文章;
@@ -216,16 +195,10 @@ namespace MVCBlog.Service
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
             var entity = Context.PostInfo.Add(model);
             await SaveChanges();
-            //string key = ConfigInfo.GetPostKey(entity.Id);
-            //RedisHelper.SetEntity<PostInfo>(key, entity);
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            await base.InsertAsync(model, userid);
         }
 
-        public void Insert(PostInfo model, int userid)
+        public override void Insert(PostInfo model, int userid)
         {
             model.PostStatus = PostStatus.发布;
             model.PostType = PostType.文章;
@@ -237,12 +210,7 @@ namespace MVCBlog.Service
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
             var entity = Context.PostInfo.Add(model);
             Context.SaveChanges();
-
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            base.Insert(model, userid);
         }
 
         public Pagination<PostInfo> PostPagination(int index, int pagecount)
@@ -313,7 +281,7 @@ namespace MVCBlog.Service
                 PageNumber = index
             };
         }
-        public void Update(PostInfo model)
+        public override void Update(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
             entity.Title = model.Title;
@@ -322,14 +290,10 @@ namespace MVCBlog.Service
             entity.PostCommentStatus = model.PostCommentStatus;
             entity.EditedTime = DateTime.Now;
             Context.SaveChanges();
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            base.Update(model);
         }
 
-        public async Task UpdateAsync(PostInfo model)
+        public override async Task UpdateAsync(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
             entity.Title = model.Title;
@@ -340,20 +304,21 @@ namespace MVCBlog.Service
             string key = ConfigInfo.GetPostKey(model.Id);
             RedisHelper.DeleteEntity(key);
             await SaveChanges();
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetPostKey(model.Id), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            await base.UpdateAsync(model);
         }
-        public async Task<int> SaveChanges()
+        public override async Task<int> SaveChanges()
         {
             return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
         }
 
-        public PostInfo GetFromDB(int id)
+        public override PostInfo GetFromDB(int id)
         {
             return Context.PostInfo.Find(id);
+        }
+
+        public override string GetModelKey(PostInfo model)
+        {
+            return ConfigInfo.GetPostKey(model.Id);
         }
     }
 }

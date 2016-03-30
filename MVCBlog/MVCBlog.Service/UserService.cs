@@ -13,35 +13,16 @@ using MVCBlog.Common.OAuth.Models;
 
 namespace MVCBlog.Service
 {
-    public class UserService : IUserService
+    public class UserService : BaseService<UserInfo>, IUserService
     {
         private MVCBlogContext Context;
-
-        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
 
         public UserService(MVCBlogContext _contest)
         {
             this.Context = _contest;
         }
-        public void Insert(UserInfo user)
-        {
-            user.Password = AesSecret.EncryptStringToAES(user.Password);
-            user.CreateTime = DateTime.Now;
-            user.EditedTime = DateTime.Now;
-            user.UserStatus = UserStatus.正常;
-            user.UserRole = UserRole.读者.ToString();
-            user.IsDelete = false;
-            user = Context.UserInfo.Add(user);
-            Context.SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(user.Email), ID = user.Id };
-                ModelCreateEventHandler(this, e);
-            }
-        }
-        public async Task InsertAsync(UserInfo user, int userid = 0)
+
+        public override async Task InsertAsync(UserInfo user, int userid = 0)
         {
             user.Password = AesSecret.EncryptStringToAES(user.Password);
             user.CreateTime = DateTime.Now;
@@ -51,11 +32,7 @@ namespace MVCBlog.Service
             user.IsDelete = false;
             Context.UserInfo.Add(user);
             await SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(user.Email), ID = user.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            await base.InsertAsync(user, userid);
         }
         public UserInfo ValidateUser(string email, string password)
         {
@@ -90,24 +67,7 @@ namespace MVCBlog.Service
             return Context.UserInfo.Any(x => x.Email == email);
         }
 
-        public UserInfo GetUserInfo(string email)
-        {
-            string key = ConfigInfo.GetUserKey(email);
-            Func<UserInfo> getitem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email);
-            var userinfo = RedisHelper.GetEntity<UserInfo>(key, getitem);
-            return userinfo;
-        }
-
-        public async Task<UserInfo> GetUserInfoAsync(string email)
-        {
-            string key = ConfigInfo.GetUserKey(email);
-            Func<UserInfo> getitem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email);
-            var userinfo = await RedisHelper.GetEntityAsync<UserInfo>(key, getitem);
-            return userinfo;
-        }
-         
-
-        public void Update(UserInfo model)
+        public override void Update(UserInfo model)
         {
             var entity = Context.UserInfo.Find(model.Id);
 
@@ -123,15 +83,10 @@ namespace MVCBlog.Service
             entity.QQAvator = model.QQAvator;
             entity.QQUid = model.QQUid;
             Context.SaveChanges();
-
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            base.Update(model);
         }
 
-        public async Task UpdateAsync(UserInfo model)
+        public override async Task UpdateAsync(UserInfo model)
         {
             var entity = await Context.UserInfo.FindAsync(model.Id);
             entity.EditedTime = DateTime.Now;
@@ -145,53 +100,40 @@ namespace MVCBlog.Service
             entity.QQAccessToken = model.QQAccessToken;
             entity.QQAvator = model.QQAvator;
             entity.QQUid = model.QQUid;
-        
             await SaveChanges();
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            await base.UpdateAsync(model);
         }
 
-        public void Delete(UserInfo model)
+        public override void Delete(UserInfo model)
         {
             var entity = Context.UserInfo.Find(model.Id);
             entity.IsDelete = true;
             Context.SaveChanges();
-            if (ModelDeleteEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
-                ModelDeleteEventHandler(this, e);
-            }
+            base.Delete(model);
         }
 
-        public async Task DeleteAsync(UserInfo model)
+        public override async Task DeleteAsync(UserInfo model)
         {
             var entity = await Context.UserInfo.FindAsync(model.Id);
             if (entity != null)
             {
                 entity.IsDelete = true;
                 await SaveChanges();
-                if (ModelDeleteEventHandler != null)
-                {
-                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetUserKey(model.Email), ID = model.Id };
-                    ModelDeleteEventHandler(this, e);
-                }
+                await base.DeleteAsync(model);
             }
         }
 
-        public async Task<int> SaveChanges()
+        public override async Task<int> SaveChanges()
         {
             return await Common.TaskExtensions.WithCurrentCulture<int>(Context.SaveChangesAsync());
         }
 
-        public UserInfo GetById(int id)
+        public override UserInfo GetById(int id)
         {
             return Context.UserInfo.Find(id);
         }
 
-        public async Task<UserInfo> GetByIdAsync(int id)
+        public override async Task<UserInfo> GetByIdAsync(int id)
         {
             return await Context.UserInfo.FindAsync(id);
         }
@@ -219,14 +161,40 @@ namespace MVCBlog.Service
             }
         }
 
-        public void Insert(UserInfo model, int userid = 0)
+        public override void Insert(UserInfo user, int userid = 0)
         {
-            Insert(model);
+            user.Password = AesSecret.EncryptStringToAES(user.Password);
+            user.CreateTime = DateTime.Now;
+            user.EditedTime = DateTime.Now;
+            user.UserStatus = UserStatus.正常;
+            user.UserRole = UserRole.读者.ToString();
+            user.IsDelete = false;
+            user = Context.UserInfo.Add(user);
+            Context.SaveChanges();
+            base.Insert(user, userid);
         }
 
-        public UserInfo GetFromDB(int id)
+        public override UserInfo GetFromDB(int id)
         {
             return Context.UserInfo.Find(id);
+        }
+
+        public override string GetModelKey(UserInfo model)
+        {
+            return ConfigInfo.GetUserKey(model.Id);
+        }
+
+        public UserInfo GetUserInfo(string email)
+        {
+            return Context.UserInfo.Single(x => x.Email == email);
+        }
+
+        public async Task<UserInfo> GetUserInfoAsync(string email)
+        {
+            return await Common.TaskExtensions.WithCurrentCulture<UserInfo>(() =>
+            {
+                return Context.UserInfo.Single(x => x.Email == email);
+            });
         }
     }
 }

@@ -11,6 +11,5 @@ namespace MVCBlog.Service.Interfaces
     {
         List<CategoryInfo> GetCategoryList();
         Task<List<CategoryInfo>> GetCategoryListAsync();
-        //void AddCategoryInfo(CategoryInfo info);
     }
 }

@@ -11,7 +11,7 @@ using MVCBlog.Common;
 
 namespace MVCBlog.Service
 {
-    public class CommentService : ICommentService
+    public class CommentService : BaseService<CommentInfo>, ICommentService
     {
         private MVCBlogContext Context;
         public CommentService(MVCBlogContext _contest)
@@ -19,21 +19,6 @@ namespace MVCBlog.Service
             this.Context = _contest;
         }
 
-        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
-
-        public void AddCommentInfo(CommentInfo entity)
-        {
-            var postinfo = Context.PostInfo.Find(entity.PostID);
-            postinfo.CommentCount += 1;
-            entity.CommentUser = Context.UserInfo.Find(entity.CommentUser.Id);
-
-            Context.CommentInfo.Add(entity);
-            Context.SaveChanges();
-            RedisHelper.AddEntityToList(ConfigInfo.GetCommentKey(entity.PostID), entity);
-            RedisHelper.DeleteEntity(ConfigInfo.GetPostKey(entity.PostID));
-        }
 
         public List<CommentInfo> CommentList(int postid)
         {
@@ -46,98 +31,80 @@ namespace MVCBlog.Service
             return list;
         }
 
-        public void Delete(CommentInfo model)
+        public override void Delete(CommentInfo model)
         {
             var entity = Context.CommentInfo.Find(model.Id);
             entity.IsDelete = true;
             Context.SaveChanges();
-            if (ModelDeleteEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelDeleteEventHandler(this, e);
-            }
+            base.Delete(model);
         }
 
-        public async Task DeleteAsync(CommentInfo model)
+        public override async Task DeleteAsync(CommentInfo model)
         {
             var entity = Context.CommentInfo.Find(model.Id);
             entity.IsDelete = true;
             await SaveChanges();
-            if (ModelDeleteEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelDeleteEventHandler(this, e);
-            }
+            await base.DeleteAsync(model);
         }
 
-        public CommentInfo GetById(int id)
+        public override CommentInfo GetById(int id)
         {
             var entity = Context.CommentInfo.Find(id);
             return entity;
         }
 
-        public async Task<CommentInfo> GetByIdAsync(int id)
+        public override async Task<CommentInfo> GetByIdAsync(int id)
         {
             var entity = await Context.CommentInfo.FindAsync(id);
             return entity;
         }
+        
 
-        public CommentInfo GetFromDB(int id)
+        public override CommentInfo GetFromDB(int id)
         {
             return Context.CommentInfo.Find(id);
         }
 
-        public void Insert(CommentInfo model, int userid = 0)
+        public override string GetModelKey(CommentInfo model)
+        {
+            return ConfigInfo.GetCommentKey(model.PostID);
+        }
+
+        public override void Insert(CommentInfo model, int userid = 0)
         {
             model.CommentUser = Context.UserInfo.Find(userid);
             Context.CommentInfo.Add(model);
             Context.SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            base.Insert(model, userid);
         }
 
-        public async Task InsertAsync(CommentInfo model, int userid = 0)
+        public override async Task InsertAsync(CommentInfo model, int userid = 0)
         {
             model.CommentUser = await Context.UserInfo.FindAsync(userid);
             Context.CommentInfo.Add(model);
             await SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            await base.InsertAsync(model, userid);
         }
 
-        public async Task<int> SaveChanges()
+        public override async Task<int> SaveChanges()
         {
             return await Context.SaveChangesAsync();
         }
 
-        public void Update(CommentInfo model)
+        public override void Update(CommentInfo model)
         {
             var entity = Context.CommentInfo.Find(model.Id);
             entity.CommentContent = model.CommentContent;
             Context.SaveChanges();
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            base.Update(model);
         }
 
-        public async Task UpdateAsync(CommentInfo model)
+        public override async Task UpdateAsync(CommentInfo model)
         {
             var entity = await Context.CommentInfo.FindAsync(model.Id);
             entity.CommentContent = model.CommentContent;
             await SaveChanges();
-            if (ModelUpdateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCommentKey(model.PostID), ID = model.Id };
-                ModelUpdateEventHandler(this, e);
-            }
+            await base.UpdateAsync(model);
         }
     }
 }
