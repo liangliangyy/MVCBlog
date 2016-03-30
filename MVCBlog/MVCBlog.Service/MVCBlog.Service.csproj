@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseService.cs" />
     <Compile Include="CategoryService.cs" />
     <Compile Include="CommentService.cs" />
     <Compile Include="Interfaces\IBase.cs" />

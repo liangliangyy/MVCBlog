@@ -11,13 +11,9 @@ using MVCBlog.Common;
 
 namespace MVCBlog.Service
 {
-    public class CategoryService : ICategoryService
+    public class CategoryService : BaseService<CategoryInfo>, ICategoryService
     {
         private MVCBlogContext Context;
-
-        public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
-        public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
 
         public CategoryService(MVCBlogContext _contest)
         {
@@ -25,31 +21,23 @@ namespace MVCBlog.Service
         }
 
 
-        public void Delete(CategoryInfo model)
+        public override void Delete(CategoryInfo model)
         {
             var entity = Context.CategoryInfo.Find(model.Id);
             entity.IsDelete = true;
             Context.SaveChanges();
-            if (ModelDeleteEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                ModelDeleteEventHandler(this, e);
-            }
+            base.Delete(model);
         }
 
-        public async Task DeleteAsync(CategoryInfo model)
+        public override async Task DeleteAsync(CategoryInfo model)
         {
             var entity = Context.CategoryInfo.Find(model.Id);
             entity.IsDelete = true;
             await SaveChanges();
-            if (ModelDeleteEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                ModelDeleteEventHandler(this, e);
-            }
+            await base.DeleteAsync(model);
         }
 
-        public CategoryInfo GetById(int id)
+        public override CategoryInfo GetById(int id)
         {
             var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.GetCategoryKey(id));
             if (list != null)
@@ -59,7 +47,7 @@ namespace MVCBlog.Service
             return Context.CategoryInfo.Find(id);
         }
 
-        public async Task<CategoryInfo> GetByIdAsync(int id)
+        public override async Task<CategoryInfo> GetByIdAsync(int id)
         {
             Func<CategoryInfo> getitem = () =>
             {
@@ -76,7 +64,7 @@ namespace MVCBlog.Service
         public List<CategoryInfo> GetCategoryList()
         {
             List<CategoryInfo> list = new List<CategoryInfo>();
-             var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
+            var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
             foreach (int id in categoryids)
             {
                 Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
@@ -95,38 +83,30 @@ namespace MVCBlog.Service
             {
                 Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
                 string key = ConfigInfo.GetCategoryKey(id);
-                CategoryInfo info =await RedisHelper.GetEntityAsync<CategoryInfo>(key, GetDb);
+                CategoryInfo info = await RedisHelper.GetEntityAsync<CategoryInfo>(key, GetDb);
                 list.Add(info);
             }
             return list;
         }
-        public void Insert(CategoryInfo model, int userid = 0)
+        public override void Insert(CategoryInfo model, int userid = 0)
         {
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
             Context.CategoryInfo.Add(model);
             Context.SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            base.Insert(model, userid);
         }
 
-        public async Task InsertAsync(CategoryInfo model, int userid)
+        public override async Task InsertAsync(CategoryInfo model, int userid)
         {
 
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
             Context.CategoryInfo.Add(model);
             await SaveChanges();
-            if (ModelCreateEventHandler != null)
-            {
-                ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                ModelCreateEventHandler(this, e);
-            }
+            await base.InsertAsync(model, userid);
         }
 
 
-        public void Update(CategoryInfo model)
+        public override void Update(CategoryInfo model)
         {
             var entity = Context.CategoryInfo.Find(model.Id);
             if (entity != null)
@@ -134,15 +114,11 @@ namespace MVCBlog.Service
                 entity.CategoryName = model.CategoryName;
                 entity.IsDelete = model.IsDelete;
                 Context.SaveChanges();
-                if (ModelUpdateEventHandler != null)
-                {
-                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                    ModelUpdateEventHandler(this, e);
-                }
+                base.Update(model);
             }
         }
 
-        public async Task UpdateAsync(CategoryInfo model)
+        public override async Task UpdateAsync(CategoryInfo model)
         {
             var entity = Context.CategoryInfo.Find(model.Id);
             if (entity != null)
@@ -150,21 +126,24 @@ namespace MVCBlog.Service
                 entity.CategoryName = model.CategoryName;
                 entity.IsDelete = model.IsDelete;
                 await SaveChanges();
-                if (ModelUpdateEventHandler != null)
-                {
-                    ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = ConfigInfo.GetCategoryKey(model.Id), ID = model.Id };
-                    ModelUpdateEventHandler(this, e);
-                }
+                await base.UpdateAsync(model);
             }
         }
-        public async Task<int> SaveChanges()
+        public override async Task<int> SaveChanges()
         {
             return await Context.SaveChangesAsync();
         }
 
-        public CategoryInfo GetFromDB(int id)
+        public override CategoryInfo GetFromDB(int id)
         {
             return Context.CategoryInfo.Find(id);
         }
+
+        public override string GetModelKey(CategoryInfo model)
+        {
+            return ConfigInfo.GetCategoryKey(model.Id);
+        }
+
+
     }
 }

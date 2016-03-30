@@ -18,6 +18,8 @@ namespace MVCBlog.Service.Interfaces
         T GetById(int id);
         T GetFromDB(int id);
         Task<T> GetByIdAsync(int id);
+        string GetModelKey(T model);
+        ModelCacheEventArgs GetEventArgs(T model);
         event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
         event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;
         event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
