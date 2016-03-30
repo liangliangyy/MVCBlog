@@ -181,7 +181,7 @@ namespace MVCBlog.Service
 
         public override string GetModelKey(UserInfo model)
         {
-            return ConfigInfo.GetUserKey(model.Id);
+            return RedisKeyHelper.GetUserKey(model.Id);
         }
 
         public UserInfo GetUserInfo(string email)

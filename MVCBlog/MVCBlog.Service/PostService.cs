@@ -49,14 +49,14 @@ namespace MVCBlog.Service
         public override PostInfo GetById(int id)
         {
             Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
-            string key = ConfigInfo.GetPostKey(id);
+            string key = RedisKeyHelper.GetPostKey(id);
             PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
             return info;
         }
         public override async Task<PostInfo> GetByIdAsync(int id)
         {
             Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
-            string key = ConfigInfo.GetPostKey(id);
+            string key = RedisKeyHelper.GetPostKey(id);
             return await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
         }
 
@@ -69,7 +69,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in res)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
                     PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
                     list.Add(info);
@@ -92,7 +92,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in res)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
                     PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
                     list.Add(info);
@@ -119,7 +119,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in postids)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
 
                     //PostInfo info = await Common.TaskExtensions.WithCurrentCulture<PostInfo>(GetDb);
@@ -157,7 +157,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in postids)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
                     PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
                     list.Add(info);
@@ -221,7 +221,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in res)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
                     PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
                     list.Add(info);
@@ -257,7 +257,7 @@ namespace MVCBlog.Service
                 List<PostInfo> list = new List<PostInfo>();
                 foreach (var item in res)
                 {
-                    string key = ConfigInfo.GetPostKey(item);
+                    string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
                     PostInfo info = await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
                     list.Add(info);
@@ -301,7 +301,7 @@ namespace MVCBlog.Service
             entity.PostStatus = model.PostStatus;
             entity.PostCommentStatus = model.PostCommentStatus;
             entity.EditedTime = DateTime.Now;
-            string key = ConfigInfo.GetPostKey(model.Id);
+            string key = RedisKeyHelper.GetPostKey(model.Id);
             RedisHelper.DeleteEntity(key);
             await SaveChanges();
             await base.UpdateAsync(model);
@@ -318,7 +318,7 @@ namespace MVCBlog.Service
 
         public override string GetModelKey(PostInfo model)
         {
-            return ConfigInfo.GetPostKey(model.Id);
+            return RedisKeyHelper.GetPostKey(model.Id);
         }
     }
 }

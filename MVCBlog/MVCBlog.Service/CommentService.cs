@@ -26,7 +26,7 @@ namespace MVCBlog.Service
             {
                 return Context.CommentInfo.Where(x => x.PostID == postid).ToList();
             };
-            string key = ConfigInfo.GetCommentKey(postid);
+            string key = RedisKeyHelper.GetCommentKey(postid);
             var list = RedisHelper.GetEntityByList(key, getbydb);
             return list;
         }
@@ -67,7 +67,7 @@ namespace MVCBlog.Service
 
         public override string GetModelKey(CommentInfo model)
         {
-            return ConfigInfo.GetCommentKey(model.PostID);
+            return RedisKeyHelper.GetCommentKey(model.PostID);
         }
 
         public override void Insert(CommentInfo model, int userid = 0)

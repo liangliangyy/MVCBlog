@@ -39,7 +39,7 @@ namespace MVCBlog.Service
 
         public override CategoryInfo GetById(int id)
         {
-            var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.GetCategoryKey(id));
+            var list = RedisHelper.GetEntity<List<CategoryInfo>>(RedisKeyHelper.GetCategoryKey(id));
             if (list != null)
             {
                 return list.Find(x => x.Id == id);
@@ -51,7 +51,7 @@ namespace MVCBlog.Service
         {
             Func<CategoryInfo> getitem = () =>
             {
-                var list = RedisHelper.GetEntity<List<CategoryInfo>>(ConfigInfo.GetCategoryKey(id));
+                var list = RedisHelper.GetEntity<List<CategoryInfo>>(RedisKeyHelper.GetCategoryKey(id));
                 if (list != null)
                 {
                     return list.Find(x => x.Id == id);
@@ -68,7 +68,7 @@ namespace MVCBlog.Service
             foreach (int id in categoryids)
             {
                 Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
-                string key = ConfigInfo.GetCategoryKey(id);
+                string key = RedisKeyHelper.GetCategoryKey(id);
                 CategoryInfo info = RedisHelper.GetEntity<CategoryInfo>(key, GetDb);
                 list.Add(info);
             }
@@ -82,7 +82,7 @@ namespace MVCBlog.Service
             foreach (int id in categoryids)
             {
                 Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
-                string key = ConfigInfo.GetCategoryKey(id);
+                string key = RedisKeyHelper.GetCategoryKey(id);
                 CategoryInfo info = await RedisHelper.GetEntityAsync<CategoryInfo>(key, GetDb);
                 list.Add(info);
             }
@@ -141,7 +141,7 @@ namespace MVCBlog.Service
 
         public override string GetModelKey(CategoryInfo model)
         {
-            return ConfigInfo.GetCategoryKey(model.Id);
+            return RedisKeyHelper.GetCategoryKey(model.Id);
         }
 
 
