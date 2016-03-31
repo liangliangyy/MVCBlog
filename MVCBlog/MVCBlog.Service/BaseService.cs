@@ -46,12 +46,9 @@ namespace MVCBlog.Service
             Service_ModelDeleteEventHandler(model);
         }
 
-        public virtual Task DeleteAsync(T model)
+        public async virtual Task DeleteAsync(T model)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                Service_ModelDeleteEventHandler(model);
-            });
+            await Common.TaskExtensions.WithCurrentCulture(() => { Service_ModelDeleteEventHandler(model); });
         }
 
         public abstract T GetById(int id);
@@ -65,12 +62,9 @@ namespace MVCBlog.Service
             Service_ModelCreateEventHandler(model);
         }
 
-        public virtual Task InsertAsync(T model, int userid = 0)
+        public async virtual Task InsertAsync(T model, int userid = 0)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                Service_ModelCreateEventHandler(model);
-            });
+            await Common.TaskExtensions.WithCurrentCulture(() => { Service_ModelCreateEventHandler(model); });
         }
 
         public abstract Task<int> SaveChanges();
@@ -80,12 +74,9 @@ namespace MVCBlog.Service
             Service_ModelUpdateEventHandler(model);
         }
 
-        public virtual Task UpdateAsync(T model)
+        public async virtual Task UpdateAsync(T model)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                Service_ModelUpdateEventHandler(model);
-            });
+            await Common.TaskExtensions.WithCurrentCulture(() => { Service_ModelUpdateEventHandler(model); });
         }
 
         public abstract string GetModelKey(T model);

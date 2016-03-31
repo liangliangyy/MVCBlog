@@ -16,11 +16,17 @@ namespace MVCBlog.Common
         {
             return new TaskExtensions.CultureAwaiter<T>(task);
         }
+        public static TaskExtensions.CultureAwaiter WithCurrentCulture(this Action todo)
+        {
+            Task task = Task.Factory.StartNew(todo);
+            return new TaskExtensions.CultureAwaiter(task);
+        }
         public static TaskExtensions.CultureAwaiter<T> WithCurrentCulture<T>(this Func<T> todo)
         {
-            Task<T> task = Task.Run<T>(todo);
+            Task<T> task = Task.Factory.StartNew<T>(todo);
             return new TaskExtensions.CultureAwaiter<T>(task);
         }
+       
         public static TaskExtensions.CultureAwaiter WithCurrentCulture(this Task task)
         {
             return new TaskExtensions.CultureAwaiter(task);
@@ -72,7 +78,7 @@ namespace MVCBlog.Common
             {
                 throw new NotImplementedException();
             }
-        }
+        } 
 
         public struct CultureAwaiter : ICriticalNotifyCompletion, INotifyCompletion
         {
