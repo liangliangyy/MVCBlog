@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common;
+using MVCBlog.ConsoleTest.ProxyTest;
 using MVCBlog.Entities.Models;
 using MVCBlog.Repository;
 using MVCBlog.Service;
@@ -21,7 +22,17 @@ namespace MVCBlog.ConsoleTest
             //var res = Common.TaskExtensions.GetItemAsync(getdb);
             //var list = res.Result;
             //Console.ReadLine();
-
+            TestProxy();
+        }
+        public static void TestProxy()
+        {
+            Person person = new Proxy<Person>(new Person()).GetTransparentProxy() as Person;
+            if (person != null)
+            {
+                var str = person.Say();
+                Console.WriteLine("返回值:" + str);
+            }
+            Console.ReadKey();
         }
 
         public static async Task<T> GetItemAsync<T>(Func<T> GetItem)
