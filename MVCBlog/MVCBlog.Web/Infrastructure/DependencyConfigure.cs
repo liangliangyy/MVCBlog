@@ -1,11 +1,14 @@
 ﻿using Autofac;
 using Autofac.Core;
+using Autofac.Extras.DynamicProxy2;
 using Autofac.Integration.Mvc;
+using Castle.DynamicProxy;
 using MVCBlog.Entities.Models;
 using MVCBlog.Repository;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
+using MVCBlog.Web.Infrastructure;
 using System;
 using System.Web.Mvc;
 namespace MVCBlog.Web.Infrastructure
@@ -37,22 +40,38 @@ namespace MVCBlog.Web.Infrastructure
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
             //通过AS可以通过构造函数依赖注入类型相应的接口
 
+
             builder.RegisterType<ModelCacheEventHandle>().InstancePerLifetimeScope();
 
+            //builder.RegisterType<UserService>().As<IUserService>()
+            //    .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+            //    .InstancePerLifetimeScope();
+            //builder.RegisterType<CategoryService>().As<ICategoryService>()
+            //    .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+            //    .InstancePerLifetimeScope(); ;
+            //builder.RegisterType<PostService>().As<IPostService>()
+            //    .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+            //    .InstancePerLifetimeScope();
+
+            //builder.RegisterType<CommentService>().As<ICommentService>()
+            //   .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+            //   .InstancePerLifetimeScope();
+
+
             builder.RegisterType<UserService>().As<IUserService>()
-                .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
                 .InstancePerLifetimeScope();
             builder.RegisterType<CategoryService>().As<ICategoryService>()
-                .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
                 .InstancePerLifetimeScope(); ;
             builder.RegisterType<PostService>().As<IPostService>()
-                .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
                 .InstancePerLifetimeScope();
-
             builder.RegisterType<CommentService>().As<ICommentService>()
-               .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+               .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
                .InstancePerLifetimeScope();
 
+            builder.RegisterType<CallLogger>();
             //Build()方法生成一个对应的Container实例,这样,就可以通过Resolve解析到注册的类型实例
             return builder.Build();
         }
