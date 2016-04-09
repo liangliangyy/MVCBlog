@@ -58,7 +58,7 @@ namespace MVCBlog.Service
             var entity = await Context.CommentInfo.FindAsync(id);
             return entity;
         }
-        
+
 
         public override CommentInfo GetFromDB(int id)
         {
@@ -72,7 +72,7 @@ namespace MVCBlog.Service
 
         public override void Insert(CommentInfo model, int userid = 0)
         {
-            model.CommentUser = Context.UserInfo.Find(userid);
+            model.CommentUser = Context.UserInfo.Find(model.CommentUser.Id);
             Context.CommentInfo.Add(model);
             Context.SaveChanges();
             base.Insert(model, userid);

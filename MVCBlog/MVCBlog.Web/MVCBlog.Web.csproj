@@ -494,6 +494,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="CommonHelper\ApplicationContainer.cs" />
     <Compile Include="CommonHelper\Helper.cs" />
+    <Compile Include="CommonHelper\LogHelper.cs" />
     <Compile Include="CommonHelper\Menu\MenuHelper.cs" />
     <Compile Include="CommonHelper\Menu\MenuInfo.cs" />
     <Compile Include="CommonHelper\OAuthClientFactory.cs" />
