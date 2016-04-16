@@ -6,6 +6,7 @@ using MVCBlog.Web.CommonHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -42,9 +43,9 @@ namespace MVCBlog.Web.Controllers
             return PartialView();
         }
 
-        public ActionResult UserPostInfo(int userid, int index = 1)
+        public async Task<ActionResult> UserPostInfo(int userid, int index = 1)
         {
-            var postinfos = postService.GetUserPostsAsync(userid, index, ConfigInfo.PageCount).Result;
+            var postinfos = await postService.Query(index, ConfigInfo.PageCount, x => x.PostAuthor.Id == userid);
             return View(postinfos);
         }
     }

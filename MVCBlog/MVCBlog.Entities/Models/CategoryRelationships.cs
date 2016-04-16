@@ -9,12 +9,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MVCBlog.Entities.Models
 {
     [Table("CategoryRelationships")]
-    public class CategoryRelationships
+    public class CategoryRelationships : BaseModel
     {
-        [Key]
-        public int Id { get; set; }
+      
         public virtual CategoryInfo CategoryInfo { get; set; }
         public virtual CategoryInfo ParentCategoryInfo { get; set; }
-        public bool IsDelete { get; set; }
+ 
     }
 }

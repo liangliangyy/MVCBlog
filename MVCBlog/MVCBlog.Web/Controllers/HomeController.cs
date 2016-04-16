@@ -11,6 +11,7 @@ using MVCBlog.Entities.Models;
 using MVCBlog.Common;
 using MVCBlog.Entities;
 using MVCBlog.Web.CommonHelper;
+using System.Threading.Tasks;
 
 namespace MVCBlog.Web.Controllers
 {
@@ -24,7 +25,7 @@ namespace MVCBlog.Web.Controllers
             userService = _userService;
         }
         // GET: Home
-        public ActionResult Index(int pageindex = 1)
+        public async Task<ActionResult> Index(int pageindex = 1)
         { 
             //List<MenuInfo> list = new List<MenuInfo>();
             //list.Add(new MenuInfo() { MenuName = "Home", MenuUrl = "/Admin/", MenuPosition = 1 });
@@ -32,8 +33,8 @@ namespace MVCBlog.Web.Controllers
             //string jsoninfo = JsonConvert.SerializeObject(list);
             //var test = postService.GetPosts();
             //return View();
-            UserHelper.GetLogInUserInfo();
-            Pagination<PostInfo> pagination = postService.PostPagination(pageindex, ConfigInfo.PageCount);
+            UserHelper.GetLogInUserInfo(); 
+            Pagination<PostInfo> pagination =await postService.Query(pageindex, ConfigInfo.PageCount);
             return View(pagination);
         }
     }

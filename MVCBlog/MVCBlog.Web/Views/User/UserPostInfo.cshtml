@@ -8,7 +8,7 @@
 
 
 <main class="col-md-8">
-    @if (Model != null && Model.Items != null && Model.Items.Count > 0)
+    @if (Model != null && Model.Items != null && Model.Items.Count() > 0)
     {
         foreach (var item in Model.Items)
         {

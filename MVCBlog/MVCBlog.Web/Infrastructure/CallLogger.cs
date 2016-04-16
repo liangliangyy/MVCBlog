@@ -32,7 +32,7 @@ namespace MVCBlog.Web.Infrastructure
         {
             for (int i = 0; i < arguments.Length; i++)
             {
-                yield return new KeyValuePair<string, object>(getParameters[i].Name, arguments[i]);
+                yield return new KeyValuePair<string, object>(getParameters[i] == null ? string.Empty : getParameters[i].Name, arguments[i] == null ? new object() : arguments[i]);
             }
         }
 
@@ -112,7 +112,8 @@ namespace MVCBlog.Web.Infrastructure
                        }
                        catch (Exception ex)
                        {
-
+                           LogHelper.WriteLog(LogType.EXCEPTION, string.Format("Intercept Exception.{0}.ex:{1}", invocation.ToString(), ex.ToString()));
+                           throw ex;
                        }
                    }
                }

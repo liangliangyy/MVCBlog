@@ -10,7 +10,7 @@ namespace MVCBlog.Entities.Models
 {
     [Table("UserInfo")]
 
-    public class UserInfo
+    public class UserInfo : BaseModel
     {
         public UserInfo()
         {
@@ -19,8 +19,7 @@ namespace MVCBlog.Entities.Models
             this.CreateTime = DateTime.Now;
 
         }
-        [Key]
-        public int Id { get; set; }
+     
 
         [Required]
         public string Name { get; set; }
@@ -33,11 +32,9 @@ namespace MVCBlog.Entities.Models
         public string Password { get; set; }
         public string UserRole { get; set; }
         public UserStatus UserStatus { get; set; }
-        public DateTime CreateTime { get; set; }
-        public DateTime? EditedTime { get; set; }
+      
         public DateTime? LastLoginTime { get; set; }
-        public bool IsDelete { get; set; }
-
+    
         public string WeiBoAccessToken { get; set; }
         public string WeiBoUid { get; set; }
         public string WeiBoAvator { get; set; }

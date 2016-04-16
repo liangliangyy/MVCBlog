@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MVCBlog.Entities.Models.PostInfo>
+﻿@model IEnumerable<string>
 
 
 @if (Model != null && Model.Count() > 0)
@@ -8,8 +8,10 @@
         <ul>
             @foreach (var item in Model)
             {
+                var year = item.Split('-')[0];
+                var month = item.Split('-')[1];
                 <li>
-                    <a href="@Url.Action("PostInfo","PostInfo",new { id=item.Id})">@item.Title</a>
+                    <a href="@Url.Action("PostMonthInfo", "PostInfo", new { year = year, month = month })">@string.Format("{0}年{1}月", year, month)</a>
                 </li>
             }
         </ul>

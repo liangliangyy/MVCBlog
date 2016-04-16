@@ -69,6 +69,10 @@
     <Compile Include="Migrations\201603251239122_updatepost.Designer.cs">
       <DependentUpon>201603251239122_updatepost.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604161633132_addbasemodels.cs" />
+    <Compile Include="Migrations\201604161633132_addbasemodels.Designer.cs">
+      <DependentUpon>201604161633132_addbasemodels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MVCBlogContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603251239122_updatepost.resx">
       <DependentUpon>201603251239122_updatepost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604161633132_addbasemodels.resx">
+      <DependentUpon>201604161633132_addbasemodels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

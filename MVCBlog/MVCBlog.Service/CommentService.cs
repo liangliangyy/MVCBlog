@@ -14,23 +14,11 @@ namespace MVCBlog.Service
     public class CommentService : BaseService<CommentInfo>, ICommentService
     {
         private MVCBlogContext Context;
-        public CommentService(MVCBlogContext _contest)
+        public CommentService(MVCBlogContext _contest) : base(_contest)
         {
             this.Context = _contest;
         }
-
-
-        public List<CommentInfo> CommentList(int postid)
-        {
-            Func<List<CommentInfo>> getbydb = () =>
-            {
-                return Context.CommentInfo.Where(x => x.PostID == postid).ToList();
-            };
-            string key = RedisKeyHelper.GetCommentKey(postid);
-            var list = RedisHelper.GetEntityByList(key, getbydb);
-            return list;
-        }
-
+        
         public override void Delete(CommentInfo model)
         {
             var entity = Context.CommentInfo.Find(model.Id);
@@ -46,28 +34,10 @@ namespace MVCBlog.Service
             await SaveChanges();
             await base.DeleteAsync(model);
         }
-
-        public override CommentInfo GetById(int id)
+         
+        public override string GetModelKey(int id)
         {
-            var entity = Context.CommentInfo.Find(id);
-            return entity;
-        }
-
-        public override async Task<CommentInfo> GetByIdAsync(int id)
-        {
-            var entity = await Context.CommentInfo.FindAsync(id);
-            return entity;
-        }
-
-
-        public override CommentInfo GetFromDB(int id)
-        {
-            return Context.CommentInfo.Find(id);
-        }
-
-        public override string GetModelKey(CommentInfo model)
-        {
-            return RedisKeyHelper.GetCommentKey(model.PostID);
+            return RedisKeyHelper.GetCommentKey(id);
         }
 
         public override void Insert(CommentInfo model, int userid = 0)

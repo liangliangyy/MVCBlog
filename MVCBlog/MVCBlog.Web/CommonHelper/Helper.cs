@@ -15,8 +15,8 @@ namespace MVCBlog.Web.CommonHelper
         public static async Task<List<SelectListItem>> GetCategorySelectList()
         {
             ICategoryService service = ApplicationContainer.Container.Resolve<ICategoryService>();
-            List<CategoryInfo> list = await service.GetCategoryListAsync();
-            if (list.Count == 0)
+            IEnumerable<CategoryInfo> list = await service.Query();
+            if (list.Count() == 0)
             {
                 IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>();
                 var loginuser = UserHelper.GetLogInUserInfo();

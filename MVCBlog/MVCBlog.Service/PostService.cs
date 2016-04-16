@@ -10,6 +10,7 @@ using MVCBlog.Common;
 using MVCBlog.CacheManager;
 using MVCBlog.Entities;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace MVCBlog.Service
 {
@@ -18,7 +19,7 @@ namespace MVCBlog.Service
         private MVCBlogContext Context;
 
 
-        public PostService(MVCBlogContext _contest)
+        public PostService(MVCBlogContext _contest) : base(_contest)
         {
             this.Context = _contest;
         }
@@ -46,20 +47,7 @@ namespace MVCBlog.Service
                 await base.DeleteAsync(model);
             }
         }
-        public override PostInfo GetById(int id)
-        {
-            Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
-            string key = RedisKeyHelper.GetPostKey(id);
-            PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
-            return info;
-        }
-        public override async Task<PostInfo> GetByIdAsync(int id)
-        {
-            Func<PostInfo> GetDb = () => Context.PostInfo.Find(id);
-            string key = RedisKeyHelper.GetPostKey(id);
-            return await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
-        }
-
+     
 
         public List<PostInfo> GetRecentPost(int count)
         {
@@ -101,88 +89,7 @@ namespace MVCBlog.Service
             }
             return new List<PostInfo>();
         }
-
-        public async Task<Pagination<PostInfo>> GetUserPostsAsync(int authorid, int index, int pagecount)
-        {
-            Func<IPagedList<int>> GetIds = () =>
-            {
-                return Context.PostInfo
-             .Where(x => x.PostAuthor.Id == authorid)
-             .Select(x => x.Id).OrderByDescending(x => x)
-             .ToPagedList(index, pagecount);
-            };
-            IPagedList<int> postids = await Common.TaskExtensions.WithCurrentCulture<IPagedList<int>>(GetIds);
-
-            // var postids = Common.TaskExtensions.GetItemAsync(GetIds).GetAwaiter().GetResult();
-            if (postids != null && postids.Count > 0)
-            {
-                List<PostInfo> list = new List<PostInfo>();
-                foreach (var item in postids)
-                {
-                    string key = RedisKeyHelper.GetPostKey(item);
-                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
-
-                    //PostInfo info = await Common.TaskExtensions.WithCurrentCulture<PostInfo>(GetDb);
-                    PostInfo info = await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
-                    list.Add(info);
-                }
-                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
-                {
-                    Items = list,
-                    TotalItemCount = postids.TotalItemCount,
-                    PageCount = postids.PageCount,
-                    PageNumber = postids.PageNumber,
-                    PageSize = postids.PageSize
-                };
-                return pagination;
-            }
-            return new Pagination<PostInfo>()
-            {
-                Items = null,
-                TotalItemCount = 0,
-                PageCount = 0,
-                PageSize = pagecount,
-                PageNumber = index
-            };
-        }
-
-        public Pagination<PostInfo> GetUserPosts(int authorid, int index, int pagecount)
-        {
-            var postids = Context.PostInfo
-                .Where(x => x.PostAuthor.Id == authorid)
-                .Select(x => x.Id).OrderByDescending(x => x)
-                .ToPagedList(index, pagecount);
-            if (postids != null && postids.Count > 0)
-            {
-                List<PostInfo> list = new List<PostInfo>();
-                foreach (var item in postids)
-                {
-                    string key = RedisKeyHelper.GetPostKey(item);
-                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
-                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
-                    list.Add(info);
-                }
-                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
-                {
-                    Items = list,
-                    TotalItemCount = postids.TotalItemCount,
-                    PageCount = postids.PageCount,
-                    PageNumber = postids.PageNumber,
-                    PageSize = postids.PageSize
-                };
-                return pagination;
-            }
-            return new Pagination<PostInfo>()
-            {
-                Items = null,
-                TotalItemCount = 0,
-                PageCount = 0,
-                PageSize = pagecount,
-                PageNumber = index
-            };
-        }
-
-
+         
         public override async Task InsertAsync(PostInfo model, int userid)
         {
             model.PostStatus = PostStatus.发布;
@@ -212,75 +119,8 @@ namespace MVCBlog.Service
             Context.SaveChanges();
             base.Insert(model, userid);
         }
-
-        public Pagination<PostInfo> PostPagination(int index, int pagecount)
-        {
-            var res = Context.PostInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
-            if (res != null && res.Count > 0)
-            {
-                List<PostInfo> list = new List<PostInfo>();
-                foreach (var item in res)
-                {
-                    string key = RedisKeyHelper.GetPostKey(item);
-                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
-                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
-                    list.Add(info);
-                }
-                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
-                {
-                    Items = list,
-                    TotalItemCount = res.TotalItemCount,
-                    PageCount = res.PageCount,
-                    PageNumber = res.PageNumber,
-                    PageSize = res.PageSize
-                };
-                return pagination;
-            }
-            return new Pagination<PostInfo>()
-            {
-                Items = null,
-                TotalItemCount = 0,
-                PageCount = 0,
-                PageSize = pagecount,
-                PageNumber = index
-            };
-        }
-        public async Task<Pagination<PostInfo>> PostPaginationAsync(int index, int pagecount)
-        {
-            Func<IPagedList<int>> getids = () =>
-            {
-                return Context.PostInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
-            };
-            var res = await Common.TaskExtensions.WithCurrentCulture<IPagedList<int>>(getids);
-            if (res != null && res.Count > 0)
-            {
-                List<PostInfo> list = new List<PostInfo>();
-                foreach (var item in res)
-                {
-                    string key = RedisKeyHelper.GetPostKey(item);
-                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
-                    PostInfo info = await RedisHelper.GetEntityAsync<PostInfo>(key, GetDb);
-                    list.Add(info);
-                }
-                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
-                {
-                    Items = list,
-                    TotalItemCount = res.TotalItemCount,
-                    PageCount = res.PageCount,
-                    PageNumber = res.PageNumber,
-                    PageSize = res.PageSize
-                };
-                return pagination;
-            }
-            return new Pagination<PostInfo>()
-            {
-                Items = null,
-                TotalItemCount = 0,
-                PageCount = 0,
-                PageSize = pagecount,
-                PageNumber = index
-            };
-        }
+        
+   
         public override void Update(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
@@ -310,15 +150,49 @@ namespace MVCBlog.Service
         {
             return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
         }
-
-        public override PostInfo GetFromDB(int id)
+         
+        public override string GetModelKey(int id)
         {
-            return Context.PostInfo.Find(id);
+            return RedisKeyHelper.GetPostKey(id);
         }
 
-        public override string GetModelKey(PostInfo model)
+        public IEnumerable<DateTime> GetPostMonthInfos()
         {
-            return RedisKeyHelper.GetPostKey(model.Id);
+            var datetimes = Context.PostInfo.Select(x => x.CreateTime).ToList();
+            return datetimes;
+        }
+
+        public Pagination<PostInfo> Query(Expression<Func<PostInfo, bool>> query, int index, int pagecount)
+        {
+            // System.Linq.Expressions.Expression<Func<PostInfo, bool>> ex = s => s.IsDelete == true;
+            var res = Context.PostInfo.Where(query).Select(x => x.Id).OrderByDescending(x => x).ToPagedList(index, pagecount);
+            if (res != null && res.Count > 0)
+            {
+                List<PostInfo> list = new List<PostInfo>();
+                foreach (var item in res)
+                {
+                    string key = RedisKeyHelper.GetPostKey(item);
+                    Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
+                    PostInfo info = RedisHelper.GetEntityAsync<PostInfo>(key, GetDb).Result;
+                    list.Add(info);
+                }
+                Pagination<PostInfo> pagination = new Pagination<PostInfo>()
+                {
+                    Items = list,
+                    TotalItemCount = res.TotalItemCount,
+                    PageCount = res.PageCount,
+                    PageNumber = res.PageNumber,
+                    PageSize = res.PageSize
+                };
+            }
+            return new Pagination<PostInfo>()
+            {
+                Items = null,
+                TotalItemCount = 0,
+                PageCount = 0,
+                PageSize = pagecount,
+                PageNumber = index
+            };
         }
     }
 }

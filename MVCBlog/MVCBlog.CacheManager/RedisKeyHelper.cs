@@ -10,16 +10,16 @@ namespace MVCBlog.CacheManager
     {
         static RedisKeyHelper()
         {
-            UserCackeKey = "MVCBlog:UserInfo";
+            UserKey = "MVCBlog:UserInfo";
             PostListKey = "MVCBlog:PostInfo";
             CommentKey = "MVCBlog:CommentInfo";
             CategoryKey = "MVCBlog:CategoryInfo";
         }
         public static string GetUserKey(int id)
         {
-            return string.Format("{0}:{1}", UserCackeKey, id);
+            return string.Format("{0}:{1}", UserKey, id);
         }
-        private static string UserCackeKey { get; set; }
+        private static string UserKey { get; set; }
         private static string PostListKey { get; set; }
         private static string CommentKey { get; set; }
         private static string CategoryKey { get; set; }
@@ -27,9 +27,9 @@ namespace MVCBlog.CacheManager
         {
             return string.Format("{0}:{1}", PostListKey, id);
         }
-        public static string GetCommentKey(int postid)
+        public static string GetCommentKey(int id)
         {
-            return string.Format("{0}:{1}", CommentKey, postid);
+            return string.Format("{0}:{1}", CommentKey, id);
         }
         public static string GetCategoryKey(int id)
         {

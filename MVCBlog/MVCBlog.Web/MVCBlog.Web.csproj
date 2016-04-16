@@ -560,6 +560,7 @@
     <Content Include="Views\OAuth\Index.cshtml" />
     <Content Include="Views\OAuth\BindUserInfo.cshtml" />
     <Content Include="Views\User\UserWightInfo.cshtml" />
+    <Content Include="Views\PostInfo\PostMonthList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -9,19 +9,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MVCBlog.Entities.Models
 {
     [Table("CategoryInfo")]
-    public class CategoryInfo
+    public class CategoryInfo : BaseModel
     {
         public CategoryInfo()
         {
             CreateTime = DateTime.Now;
             IsDelete = false;
         }
-        [Key]
-        public int Id { get; set; }
-        [Required(ErrorMessage ="分类名称不能为空")]
+
+        [Required(ErrorMessage = "分类名称不能为空")]
         public string CategoryName { get; set; }
         public virtual UserInfo CreateUser { get; set; }
-        public DateTime CreateTime { get; set; }
-        public bool IsDelete { get; set; }
+
     }
 }

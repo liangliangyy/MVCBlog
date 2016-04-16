@@ -3,6 +3,7 @@ using MVCBlog.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -32,7 +33,7 @@ namespace MVCBlog.Web.Controllers
 
         public ActionResult PostCategoryInfo()
         {
-            var categorylist = categoryService.GetCategoryList();
+            var categorylist = categoryService.Query().Result;
             return PartialView(categorylist);
         }
 
@@ -40,6 +41,18 @@ namespace MVCBlog.Web.Controllers
         {
             var entity = postService.GetById(id);
             return View(entity);
+        }
+
+        public ActionResult PostMonthList()
+        {
+            var posttimes = postService.GetPostMonthInfos();
+            var times = posttimes.Select(x => x.ToString("yyyy-MM")).Distinct();
+            return PartialView(times);
+        }
+        public async Task<ActionResult> PostMonthInfo(int year, int month, int index = 1)
+        {
+            var postinfo = await postService.Query(index, ConfigInfo.PageCount, x => x.CreateTime.Year == year && x.CreateTime.Month == month);
+            return View(postinfo);
         }
     }
 }

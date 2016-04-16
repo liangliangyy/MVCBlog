@@ -124,7 +124,7 @@ namespace MVCBlog.Web.Controllers
                 entity.Id = postinfo.Id;
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
-                entity.PostCategoryInfo = categoryService.GetCategoryList().First(x => x.Id == postinfo.CategoryID);
+                entity.PostCategoryInfo = categoryService.GetFromDB(postinfo.CategoryID);
                 if (entity.Id == 0)
                 {
                     await postService.InsertAsync(entity, UserHelper.GetLogInUserInfo().Id);
@@ -159,11 +159,11 @@ namespace MVCBlog.Web.Controllers
         }
         [Authorize]
         [HttpGet]
-        public ActionResult CategoryList()
+        public async Task<ActionResult> CategoryList()
         {
-            var list = categoryService.GetCategoryList();
+            var list = await categoryService.Query();
             return View(list);
         }
-         
+
     }
 }

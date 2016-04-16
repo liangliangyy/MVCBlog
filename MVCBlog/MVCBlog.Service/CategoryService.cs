@@ -15,7 +15,7 @@ namespace MVCBlog.Service
     {
         private MVCBlogContext Context;
 
-        public CategoryService(MVCBlogContext _contest)
+        public CategoryService(MVCBlogContext _contest) : base(_contest)
         {
             this.Context = _contest;
         }
@@ -37,16 +37,7 @@ namespace MVCBlog.Service
             await base.DeleteAsync(model);
         }
 
-        public override CategoryInfo GetById(int id)
-        {
-            var list = RedisHelper.GetEntity<List<CategoryInfo>>(RedisKeyHelper.GetCategoryKey(id));
-            if (list != null)
-            {
-                return list.Find(x => x.Id == id);
-            }
-            return Context.CategoryInfo.Find(id);
-        }
-
+      
         public override async Task<CategoryInfo> GetByIdAsync(int id)
         {
             Func<CategoryInfo> getitem = () =>
@@ -61,33 +52,7 @@ namespace MVCBlog.Service
             return await Common.TaskExtensions.WithCurrentCulture<CategoryInfo>(getitem);
         }
 
-        public List<CategoryInfo> GetCategoryList()
-        {
-            List<CategoryInfo> list = new List<CategoryInfo>();
-            var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
-            foreach (int id in categoryids)
-            {
-                Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
-                string key = RedisKeyHelper.GetCategoryKey(id);
-                CategoryInfo info = RedisHelper.GetEntity<CategoryInfo>(key, GetDb);
-                list.Add(info);
-            }
-            return list;
-        }
-
-        public async Task<List<CategoryInfo>> GetCategoryListAsync()
-        {
-            List<CategoryInfo> list = new List<CategoryInfo>();
-            var categoryids = Context.CategoryInfo.Select(x => x.Id).ToList();
-            foreach (int id in categoryids)
-            {
-                Func<CategoryInfo> GetDb = () => Context.CategoryInfo.Find(id);
-                string key = RedisKeyHelper.GetCategoryKey(id);
-                CategoryInfo info = await RedisHelper.GetEntityAsync<CategoryInfo>(key, GetDb);
-                list.Add(info);
-            }
-            return list;
-        }
+   
         public override void Insert(CategoryInfo model, int userid = 0)
         {
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
@@ -133,15 +98,10 @@ namespace MVCBlog.Service
         {
             return await Context.SaveChangesAsync();
         }
-
-        public override CategoryInfo GetFromDB(int id)
+     
+        public override string GetModelKey(int id)
         {
-            return Context.CategoryInfo.Find(id);
-        }
-
-        public override string GetModelKey(CategoryInfo model)
-        {
-            return RedisKeyHelper.GetCategoryKey(model.Id);
+            return RedisKeyHelper.GetCategoryKey(id);
         }
 
 

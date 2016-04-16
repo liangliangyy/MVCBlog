@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MVCBlog.Entities.Models
 {
     [Table("PostInfo")]
-    public class PostInfo
+    public class PostInfo : BaseModel
     {
         public PostInfo()
         {
@@ -20,8 +20,7 @@ namespace MVCBlog.Entities.Models
             //this.CommentCount = 0;
 
         }
-        [Key]
-        public int Id { get; set; }
+      
         [Required]
         public string Title { get; set; }
         [Required]
@@ -40,9 +39,6 @@ namespace MVCBlog.Entities.Models
         public virtual ICollection<PostMetasInfo> PostMetasInfos { get; set; }
 
         public virtual CategoryInfo PostCategoryInfo { get; set; }
-        public DateTime? EditedTime { get; set; }
-
-        public DateTime CreateTime { get; set; }
-        public bool IsDelete { get; set; }
+      
     }
 }

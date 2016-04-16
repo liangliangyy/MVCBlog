@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Service.Interfaces
 {
-   public interface ICommentService:IBase<CommentInfo>
+    public interface ICommentService : IBase<CommentInfo>
     {
-        List<CommentInfo> CommentList(int postid);
     }
 }

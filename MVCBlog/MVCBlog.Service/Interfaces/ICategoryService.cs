@@ -9,7 +9,6 @@ namespace MVCBlog.Service.Interfaces
 {
     public interface ICategoryService : IBase<CategoryInfo>
     {
-        List<CategoryInfo> GetCategoryList();
-        Task<List<CategoryInfo>> GetCategoryListAsync();
+       
     }
 }

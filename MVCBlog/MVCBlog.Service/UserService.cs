@@ -17,7 +17,7 @@ namespace MVCBlog.Service
     {
         private MVCBlogContext Context;
 
-        public UserService(MVCBlogContext _contest)
+        public UserService(MVCBlogContext _contest) : base(_contest)
         {
             this.Context = _contest;
         }
@@ -179,9 +179,9 @@ namespace MVCBlog.Service
             return Context.UserInfo.Find(id);
         }
 
-        public override string GetModelKey(UserInfo model)
+        public override string GetModelKey(int id)
         {
-            return RedisKeyHelper.GetUserKey(model.Id);
+            return RedisKeyHelper.GetUserKey(id);
         }
 
         public UserInfo GetUserInfo(string email)

@@ -16,7 +16,7 @@ namespace MVCBlog.Web.Controllers
     public class CommentController : Controller
     {
         // GET: Comment
-        private ICommentService commentService ;
+        private ICommentService commentService;
         private IPostService postService;
         private IUserService userService;
         public CommentController(ICommentService _commentService, IPostService _postService, IUserService _userService)
@@ -32,7 +32,7 @@ namespace MVCBlog.Web.Controllers
         [HttpGet]
         public ActionResult GetCommentInfo(int postid)
         {
-            var res = commentService.CommentList(postid);
+            var res =  commentService.Query(x => x.PostID == postid).Result;
             return PartialView(res);
         }
         [HttpGet]
