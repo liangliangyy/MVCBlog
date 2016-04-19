@@ -10,6 +10,9 @@ using MVCBlog.Service.Interfaces;
 using MVCBlog.Common;
 using MVCBlog.CacheManager;
 using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities;
+using System.Linq.Expressions;
+using PagedList;
 
 namespace MVCBlog.Service
 {
@@ -17,9 +20,9 @@ namespace MVCBlog.Service
     {
         private MVCBlogContext Context;
 
-        public UserService(MVCBlogContext _contest) : base(_contest)
+        public UserService(MVCBlogContext _context)
         {
-            this.Context = _contest;
+            this.Context = _context;
         }
 
         public override async Task InsertAsync(UserInfo user, int userid = 0)
@@ -174,10 +177,10 @@ namespace MVCBlog.Service
             base.Insert(user, userid);
         }
 
-        public override UserInfo GetFromDB(int id)
-        {
-            return Context.UserInfo.Find(id);
-        }
+        //public override UserInfo GetFromDB(int id)
+        //{
+        //    return Context.UserInfo.Find(id);
+        //}
 
         public override string GetModelKey(int id)
         {
@@ -196,5 +199,62 @@ namespace MVCBlog.Service
                 return Context.UserInfo.Single(x => x.Email == email);
             });
         }
+
+        //public override UserInfo GetById(int id)
+        //{
+        //    string key = GetModelKey(id);
+        //    Func<UserInfo> GetEntity = () => GetFromDB(id);
+        //    return RedisHelper.GetEntity<UserInfo>(key, GetEntity);
+        //}
+
+        //public override Pagination<UserInfo> Query(int index, int pagecount, Expression<Func<UserInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.UserInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount) : Context.UserInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
+        //    if (ids != null && ids.Count() > 0)
+        //    {
+
+        //        Pagination<UserInfo> pagination = new Pagination<UserInfo>()
+        //        {
+        //            Items = GetByIds(ids),
+        //            TotalItemCount = ids.TotalItemCount,
+        //            PageCount = ids.PageCount,
+        //            PageNumber = ids.PageNumber,
+        //            PageSize = ids.PageSize
+        //        };
+        //        return pagination;
+        //    }
+        //    else
+        //    {
+        //        return new Pagination<UserInfo>()
+        //        {
+        //            Items = null,
+        //            TotalItemCount = 0,
+        //            PageCount = 0,
+        //            PageNumber = index,
+        //            PageSize = pagecount
+        //        };
+        //    }
+        //}
+
+        //public override IEnumerable<UserInfo> Query(Expression<Func<UserInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.UserInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToList() : Context.UserInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToList();
+        //    if (ids != null && ids.Count > 0)
+        //    {
+        //        return GetByIds(ids);
+        //    }
+        //    else
+        //    {
+        //        return new List<UserInfo>();
+        //    }
+        //}
+
+        //public override IEnumerable<UserInfo> GetByIds(IEnumerable<int> ids)
+        //{
+        //    foreach (int id in ids)
+        //    {
+        //        yield return GetById(id);
+        //    }
+        //}
     }
 }

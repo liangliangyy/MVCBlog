@@ -611,7 +611,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2359</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://lylinux.org</IISUrl>
+          <IISUrl>http://lylinux.org/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

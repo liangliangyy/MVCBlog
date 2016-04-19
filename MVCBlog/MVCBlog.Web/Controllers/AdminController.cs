@@ -112,7 +112,7 @@ namespace MVCBlog.Web.Controllers
         [Authorize]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PostDeal(PostViewModel postinfo)
+        public ActionResult PostDeal(PostViewModel postinfo)
         {
             if (UserHelper.GetLogInUserInfo() == null)
             {
@@ -127,13 +127,13 @@ namespace MVCBlog.Web.Controllers
                 entity.PostCategoryInfo = categoryService.GetFromDB(postinfo.CategoryID);
                 if (entity.Id == 0)
                 {
-                    await postService.InsertAsync(entity, UserHelper.GetLogInUserInfo().Id);
+                    postService.Insert(entity, UserHelper.GetLogInUserInfo().Id);
                 }
                 else
                 {
                     entity.PostCommentStatus = postinfo.PostCommentStatus;
                     entity.PostStatus = postinfo.PostStatus;
-                    await postService.UpdateAsync(entity);
+                    postService.Update(entity);
                 }
                 return RedirectToAction("Index", "Home");
             }
@@ -161,7 +161,7 @@ namespace MVCBlog.Web.Controllers
         [HttpGet]
         public ActionResult CategoryList()
         {
-            var list =  categoryService.Query();
+            var list = categoryService.Query();
             return View(list);
         }
 

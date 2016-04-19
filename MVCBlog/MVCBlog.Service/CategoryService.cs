@@ -8,6 +8,9 @@ using MVCBlog.Entities.Models;
 using MVCBlog.Repository;
 using MVCBlog.CacheManager;
 using MVCBlog.Common;
+using MVCBlog.Entities;
+using System.Linq.Expressions;
+using PagedList;
 
 namespace MVCBlog.Service
 {
@@ -15,9 +18,9 @@ namespace MVCBlog.Service
     {
         private MVCBlogContext Context;
 
-        public CategoryService(MVCBlogContext _contest) : base(_contest)
+        public CategoryService(MVCBlogContext _context)
         {
-            this.Context = _contest;
+            this.Context = _context;
         }
 
 
@@ -37,7 +40,7 @@ namespace MVCBlog.Service
             await base.DeleteAsync(model);
         }
 
-      
+
         //public override async Task<CategoryInfo> GetByIdAsync(int id)
         //{
         //    Func<CategoryInfo> getitem = () =>
@@ -52,7 +55,7 @@ namespace MVCBlog.Service
         //    return await Common.TaskExtensions.WithCurrentCulture<CategoryInfo>(getitem);
         //}
 
-   
+
         public override void Insert(CategoryInfo model, int userid = 0)
         {
             model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
@@ -98,12 +101,72 @@ namespace MVCBlog.Service
         {
             return await Context.SaveChangesAsync();
         }
-     
+
         public override string GetModelKey(int id)
         {
             return RedisKeyHelper.GetCategoryKey(id);
         }
 
+        //public override CategoryInfo GetById(int id)
+        //{
+        //    string key = GetModelKey(id);
+        //    Func<CategoryInfo> GetEntity = () => GetFromDB(id);
+        //    return RedisHelper.GetEntity<CategoryInfo>(key, GetEntity);
+        //}
 
+        //public override CategoryInfo GetFromDB(int id)
+        //{
+        //    return Context.CategoryInfo.Find(id);
+        //}
+
+        //public override Pagination<CategoryInfo> Query(int index, int pagecount, Expression<Func<CategoryInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.CategoryInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount) : Context.CategoryInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
+        //    if (ids != null && ids.Count() > 0)
+        //    {
+
+        //        Pagination<CategoryInfo> pagination = new Pagination<CategoryInfo>()
+        //        {
+        //            Items = GetByIds(ids),
+        //            TotalItemCount = ids.TotalItemCount,
+        //            PageCount = ids.PageCount,
+        //            PageNumber = ids.PageNumber,
+        //            PageSize = ids.PageSize
+        //        };
+        //        return pagination;
+        //    }
+        //    else
+        //    {
+        //        return new Pagination<CategoryInfo>()
+        //        {
+        //            Items = null,
+        //            TotalItemCount = 0,
+        //            PageCount = 0,
+        //            PageNumber = index,
+        //            PageSize = pagecount
+        //        };
+        //    }
+        //}
+
+        //public override IEnumerable<CategoryInfo> Query(Expression<Func<CategoryInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.CategoryInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToList() : Context.CategoryInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToList();
+        //    if (ids != null && ids.Count > 0)
+        //    {
+        //        return GetByIds(ids);
+        //    }
+        //    else
+        //    {
+        //        return new List<CategoryInfo>();
+        //    }
+        //}
+
+        //public override IEnumerable<CategoryInfo> GetByIds(IEnumerable<int> ids)
+        //{
+        //    foreach (int id in ids)
+        //    {
+        //        yield return GetById(id);
+        //    }
+        //}
     }
 }

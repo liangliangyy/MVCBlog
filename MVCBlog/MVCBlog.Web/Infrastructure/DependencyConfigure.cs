@@ -20,7 +20,7 @@ namespace MVCBlog.Web.Infrastructure
             var builder = new ContainerBuilder();
             IContainer container = RegisterServices(builder);
             builder.RegisterType<IDependencyResolver>().As<Dependency>();
-            ApplicationContainer.Container = container;
+            //ApplicationContainer.Container = container;
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             //DependencyResolver.SetResolver(new Dependency(container));
         }
@@ -34,8 +34,11 @@ namespace MVCBlog.Web.Infrastructure
                 ).PropertiesAutowired();
 
             //注册上下文.每次都会创建不同的实例
-            //builder.RegisterType<MVCBlogContext>().As<MVCBlogContext>().InstancePerRequest();
-            builder.RegisterType<MVCBlogContext>().InstancePerLifetimeScope();
+
+            //builder.RegisterType<MVCBlogContext>().InstancePerLifetimeScope();
+            //builder.Register(c => new MVCBlogContext()).As(typeof(MVCBlogContext)).InstancePerLifetimeScope();
+            //builder.Register<MVCBlogContext>(c => new MVCBlogContext());
+            //builder.RegisterType<MVCBlogContext>().AsImplementedInterfaces().InstancePerLifetimeScope();
             //builder.Register(x => new MVCBlogContext()).As(typeof(MVCBlogContext)).InstancePerLifetimeScope();
             //注册PostService
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
@@ -57,20 +60,49 @@ namespace MVCBlog.Web.Infrastructure
             //builder.RegisterType<CommentService>().As<ICommentService>()
             //   .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
             //   .InstancePerLifetimeScope();
+            builder.Register<IUserService>(c => new UserService(new MVCBlogContext()))
+                 .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
 
+            builder.Register<ICategoryService>(c => new CategoryService(new MVCBlogContext()))
+                 .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
 
-            builder.RegisterType<UserService>().As<IUserService>()
-                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
-                .InstancePerLifetimeScope();
-            builder.RegisterType<CategoryService>().As<ICategoryService>()
-                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
-                .InstancePerLifetimeScope(); ;
-            builder.RegisterType<PostService>().As<IPostService>()
-                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
-                .InstancePerLifetimeScope();
-            builder.RegisterType<CommentService>().As<ICommentService>()
-               .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
-               .InstancePerLifetimeScope();
+            builder.Register<ICommentService>(c => new CommentService(new MVCBlogContext()))
+                .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
+
+            builder.Register<IPostService>(c => new PostService(new MVCBlogContext()))
+                 .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+                .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
+            //   builder.RegisterType<UserService>().As<IUserService>()
+            //        .WithParameter(
+            //new ResolvedParameter(
+            //  (pi, ctx) => pi.ParameterType == typeof(MVCBlogContext),
+            //  (pi, ctx) => ctx.Resolve<MVCBlogContext>()))
+            //       .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
+            //       .InstancePerLifetimeScope();
+            //   builder.RegisterType<CategoryService>().As<ICategoryService>()
+            //        .WithParameter(
+            //new ResolvedParameter(
+            //  (pi, ctx) => pi.ParameterType == typeof(MVCBlogContext),
+            //  (pi, ctx) => ctx.Resolve<MVCBlogContext>()))
+            //       .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
+            //       .InstancePerLifetimeScope(); ;
+            //   builder.RegisterType<PostService>().As<IPostService>()
+            //        .WithParameter(
+            //new ResolvedParameter(
+            //  (pi, ctx) => pi.ParameterType == typeof(MVCBlogContext),
+            // (pi, ctx) => ctx.Resolve<MVCBlogContext>()))
+            //       .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
+            //       .InstancePerLifetimeScope();
+            //   builder.RegisterType<CommentService>().As<ICommentService>()
+            //        .WithParameter(
+            //new ResolvedParameter(
+            //  (pi, ctx) => pi.ParameterType == typeof(MVCBlogContext),
+            //  (pi, ctx) => ctx.Resolve<MVCBlogContext>()))
+            //      .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
+            //      .InstancePerLifetimeScope();
 
             builder.RegisterType<CallLogger>();
             //Build()方法生成一个对应的Container实例,这样,就可以通过Resolve解析到注册的类型实例

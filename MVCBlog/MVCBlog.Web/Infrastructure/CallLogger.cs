@@ -14,6 +14,7 @@ using MVCBlog.CacheManager;
 using MVCBlog.Entities.Models;
 using Autofac.Core;
 using MVCBlog.Repository;
+using Autofac.Integration.Mvc;
 
 namespace MVCBlog.Web.Infrastructure
 {
@@ -88,6 +89,7 @@ namespace MVCBlog.Web.Infrastructure
                        }
                    };
                    using (var scope = ApplicationContainer.Container.BeginLifetimeScope())
+                   // AutofacDependencyResolver.Current.ApplicationContainer.BeginLifetimeScope())
                    {
                        var service = scope.Resolve(servciceinterface, new TypedParameter(typeof(MVCBlogContext), new MVCBlogContext()));
 

@@ -4,6 +4,12 @@ namespace MVCBlog.Web.CommonHelper
 {
     public class ApplicationContainer
     {
-        public static IContainer Container { get; set; }
+        public static ILifetimeScope Container
+        {
+            get
+            {
+                return Autofac.Integration.Mvc.AutofacDependencyResolver.Current.ApplicationContainer;
+            }
+        }
     }
 }

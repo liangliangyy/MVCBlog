@@ -22,13 +22,8 @@ namespace MVCBlog.Service
         public event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
         public event EventHandler<ModelCacheEventArgs> ModelUpdateEventHandler;
 
-        private MVCBlogContext Context;
+        private MVCBlogContext Context = new MVCBlogContext();
 
-
-        public BaseService(MVCBlogContext _context)
-        {
-            this.Context = _context;
-        }
 
         private void Service_ModelCreateEventHandler(T model)
         {
@@ -65,18 +60,18 @@ namespace MVCBlog.Service
             await Common.ThreadHelper.StartAsync(() => { Service_ModelDeleteEventHandler(model); });
         }
 
-        public virtual T GetById(int id)
-        {
-            string key = GetModelKey(id);
-            Func<T> GetDb = () => GetFromDB(id);
-            return RedisHelper.GetEntity<T>(key, GetDb);
-        }
+        //public virtual T GetById(int id)
+        //{
+        //    string key = GetModelKey(id);
+        //    Func<T> GetDb = () => GetFromDB(id);
+        //    return RedisHelper.GetEntity<T>(key, GetDb);
+        //}
 
 
-        public virtual T GetFromDB(int id)
-        {
-            return Context.Set<T>().Find(id);
-        }
+        //public virtual T GetFromDB(int id)
+        //{
+        //    return Context.Set<T>().Find(id);
+        //}
 
         [ModelHandlerAttribute(ModelModifyType.Create)]
         public virtual void Insert(T model, int userid = 0)
@@ -111,6 +106,15 @@ namespace MVCBlog.Service
             ModelCacheEventArgs e = new ModelCacheEventArgs() { Key = GetModelKey(model.Id), ID = id };
             return e;
         }
+
+        //  public abstract T GetById(int id);
+        public T GetFromDB(int id)
+        {
+            return Context.Set<T>().Find(id);
+        }
+        // public abstract Pagination<T> Query(int index, int pagecount, Expression<Func<T, bool>> query = null);
+        //  public abstract IEnumerable<T> Query(Expression<Func<T, bool>> query = null);
+        //public abstract IEnumerable<T> GetByIds(IEnumerable<int> ids);
 
         //public virtual async Task<Pagination<T>> Query(int index, int pagecount, Expression<Func<T, bool>> query = null)
         //{
@@ -162,15 +166,22 @@ namespace MVCBlog.Service
         //    }
 
         //}
-
-        public virtual IEnumerable<T> GetByIds(IEnumerable<int> ids)
+        public T GetById(int id)
         {
+            string key = GetModelKey(id);
+            Func<T> GetDb = () => GetFromDB(id);
+            return RedisHelper.GetEntity<T>(key, GetDb);
+        }
+
+        public IEnumerable<T> GetByIds(IEnumerable<int> ids)
+        {
+            List<T> list = new List<T>();
             foreach (int id in ids)
             {
-                string key = GetModelKey(id);
-                Func<T> GetDb = () => GetById(id);
-                yield return RedisHelper.GetEntity(key, GetDb);
+                var item = GetById(id);
+                list.Add(item);
             }
+            return list;
         }
 
         public Pagination<T> Query(int index, int pagecount, Expression<Func<T, bool>> query)

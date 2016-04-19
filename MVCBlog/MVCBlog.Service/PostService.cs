@@ -19,9 +19,9 @@ namespace MVCBlog.Service
         private MVCBlogContext Context;
 
 
-        public PostService(MVCBlogContext _contest) : base(_contest)
+        public PostService(MVCBlogContext _context)
         {
-            this.Context = _contest;
+            this.Context = _context;
         }
 
         public override void Delete(PostInfo model)
@@ -47,7 +47,7 @@ namespace MVCBlog.Service
                 await base.DeleteAsync(model);
             }
         }
-     
+
 
         public List<PostInfo> GetRecentPost(int count)
         {
@@ -89,7 +89,7 @@ namespace MVCBlog.Service
             }
             return new List<PostInfo>();
         }
-         
+
         public override async Task InsertAsync(PostInfo model, int userid)
         {
             model.PostStatus = PostStatus.发布;
@@ -119,8 +119,8 @@ namespace MVCBlog.Service
             Context.SaveChanges();
             base.Insert(model, userid);
         }
-        
-   
+
+
         public override void Update(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
@@ -148,9 +148,9 @@ namespace MVCBlog.Service
         }
         public override async Task<int> SaveChanges()
         {
-             return await Context.SaveChangesAsync();
+            return await Context.SaveChangesAsync();
         }
-         
+
         public override string GetModelKey(int id)
         {
             return RedisKeyHelper.GetPostKey(id);
@@ -194,5 +194,70 @@ namespace MVCBlog.Service
                 PageNumber = index
             };
         }
+
+        //public override PostInfo GetById(int id)
+        //{
+        //    string key = GetModelKey(id);
+        //    Func<PostInfo> GetEntity = () => GetFromDB(id);
+        //    return RedisHelper.GetEntity<PostInfo>(key, GetEntity);
+        //}
+
+        //public override PostInfo GetFromDB(int id)
+        //{
+        //    return Context.PostInfo.Find(id);
+        //}
+
+        //public override Pagination<PostInfo> Query(int index, int pagecount, Expression<Func<PostInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.PostInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount) : Context.PostInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToPagedList(index, pagecount);
+        //    if (ids != null && ids.Count() > 0)
+        //    {
+
+        //        Pagination<PostInfo> pagination = new Pagination<PostInfo>()
+        //        {
+        //            Items = GetByIds(ids),
+        //            TotalItemCount = ids.TotalItemCount,
+        //            PageCount = ids.PageCount,
+        //            PageNumber = ids.PageNumber,
+        //            PageSize = ids.PageSize
+        //        };
+        //        return pagination;
+        //    }
+        //    else
+        //    {
+        //        return new Pagination<PostInfo>()
+        //        {
+        //            Items = null,
+        //            TotalItemCount = 0,
+        //            PageCount = 0,
+        //            PageNumber = index,
+        //            PageSize = pagecount
+        //        };
+        //    }
+        //}
+
+        //public override IEnumerable<PostInfo> Query(Expression<Func<PostInfo, bool>> query = null)
+        //{
+        //    var ids = query != null ? Context.PostInfo.Where(query).OrderByDescending(x => x.Id).Select(x => x.Id).ToList() : Context.PostInfo.OrderByDescending(x => x.Id).Select(x => x.Id).ToList();
+        //    if (ids != null && ids.Count > 0)
+        //    {
+        //        return GetByIds(ids);
+        //    }
+        //    else
+        //    {
+        //        return new List<PostInfo>();
+        //    }
+        //}
+
+        //public override IEnumerable<PostInfo> GetByIds(IEnumerable<int> ids)
+        //{
+        //    List<PostInfo> list = new List<PostInfo>();
+        //    foreach (int id in ids)
+        //    {
+        //        var item = GetById(id);
+        //        list.Add(item);
+        //    }
+        //    return list;
+        //}
     }
 }
