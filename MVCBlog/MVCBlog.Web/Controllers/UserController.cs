@@ -43,9 +43,9 @@ namespace MVCBlog.Web.Controllers
             return PartialView();
         }
 
-        public async Task<ActionResult> UserPostInfo(int userid, int index = 1)
+        public ActionResult UserPostInfo(int userid, int index = 1)
         {
-            var postinfos = await postService.Query(index, ConfigInfo.PageCount, x => x.PostAuthor.Id == userid);
+            var postinfos = postService.Query(index, ConfigInfo.PageCount, x => x.PostAuthor.Id == userid);
             return View(postinfos);
         }
     }

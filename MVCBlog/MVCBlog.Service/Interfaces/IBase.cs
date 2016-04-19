@@ -19,11 +19,15 @@ namespace MVCBlog.Service.Interfaces
         Task<int> SaveChanges();
         T GetById(int id);
         T GetFromDB(int id);
-        Task<T> GetByIdAsync(int id);
+        //Task<T> GetByIdAsync(int id);
         string GetModelKey(int id);
         ModelCacheEventArgs GetEventArgs(T model);
-        Task<Pagination<T>> Query(int index, int pagecount, Expression<Func<T, bool>> query=null);
-        Task<IEnumerable<T>> Query(Expression<Func<T, bool>> query = null);
+
+        Pagination<T> Query(int index, int pagecount, Expression<Func<T, bool>> query = null);
+        IEnumerable<T> Query(Expression<Func<T, bool>> query = null);
+
+        //Task<Pagination<T>> Query(int index, int pagecount, Expression<Func<T, bool>> query=null);
+        //Task<IEnumerable<T>> Query(Expression<Func<T, bool>> query = null);
         IEnumerable<T> GetByIds(IEnumerable<int> ids);
         event EventHandler<ModelCacheEventArgs> ModelDeleteEventHandler;
         event EventHandler<ModelCacheEventArgs> ModelCreateEventHandler;

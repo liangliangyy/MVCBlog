@@ -25,7 +25,7 @@ namespace MVCBlog.Web.Controllers
             userService = _userService;
         }
         // GET: Home
-        public async Task<ActionResult> Index(int pageindex = 1)
+        public   ActionResult Index(int pageindex = 1)
         { 
             //List<MenuInfo> list = new List<MenuInfo>();
             //list.Add(new MenuInfo() { MenuName = "Home", MenuUrl = "/Admin/", MenuPosition = 1 });
@@ -34,7 +34,7 @@ namespace MVCBlog.Web.Controllers
             //var test = postService.GetPosts();
             //return View();
             UserHelper.GetLogInUserInfo(); 
-            Pagination<PostInfo> pagination =await postService.Query(pageindex, ConfigInfo.PageCount);
+            Pagination<PostInfo> pagination = postService.Query(pageindex, ConfigInfo.PageCount);
             return View(pagination);
         }
     }

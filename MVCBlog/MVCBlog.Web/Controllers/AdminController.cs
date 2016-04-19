@@ -97,7 +97,7 @@ namespace MVCBlog.Web.Controllers
             PostViewModel model = new PostViewModel();
             if (postid != 0)
             {
-                var entity = await postService.GetByIdAsync(postid);
+                var entity = postService.GetById(postid);
                 model.Id = entity.Id;
                 model.Content = entity.Content;
                 model.Title = entity.Title;
@@ -159,9 +159,9 @@ namespace MVCBlog.Web.Controllers
         }
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult> CategoryList()
+        public ActionResult CategoryList()
         {
-            var list = await categoryService.Query();
+            var list =  categoryService.Query();
             return View(list);
         }
 

@@ -27,7 +27,7 @@ namespace MVCBlog.Web.CommonHelper
                 if (mvcblogidentity != null && mvcblogidentity.IsAuthenticated)
                 {
                     IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>(); 
-                    var userinfo = userservice.GetByIdAsync(mvcblogidentity.UserData.Id).Result;
+                    var userinfo = userservice.GetById(mvcblogidentity.UserData.Id);
                     return userinfo;
                 }
             }

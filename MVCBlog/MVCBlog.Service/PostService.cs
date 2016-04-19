@@ -74,7 +74,7 @@ namespace MVCBlog.Service
                 return Context.PostInfo.OrderByDescending(x => x.Id).Take(count).Select(x => x.Id).ToList();
             };
             //var res = Context.PostInfo.OrderByDescending(x => x.Id).Take(count).Select(x => x.Id).ToList();
-            var res = await GetIds.WithCurrentCulture<List<int>>();
+            var res = await GetIds.StartAsync<List<int>>();
             if (res != null && res.Count > 0)
             {
                 List<PostInfo> list = new List<PostInfo>();
@@ -148,7 +148,7 @@ namespace MVCBlog.Service
         }
         public override async Task<int> SaveChanges()
         {
-            return await Common.TaskExtensions.WithCurrentCulture<int>(this.Context.SaveChangesAsync());
+             return await Context.SaveChangesAsync();
         }
          
         public override string GetModelKey(int id)
@@ -173,7 +173,7 @@ namespace MVCBlog.Service
                 {
                     string key = RedisKeyHelper.GetPostKey(item);
                     Func<PostInfo> GetDb = () => Context.PostInfo.Find(item);
-                    PostInfo info = RedisHelper.GetEntityAsync<PostInfo>(key, GetDb).Result;
+                    PostInfo info = RedisHelper.GetEntity<PostInfo>(key, GetDb);
                     list.Add(info);
                 }
                 Pagination<PostInfo> pagination = new Pagination<PostInfo>()

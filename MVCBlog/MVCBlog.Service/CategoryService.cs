@@ -38,19 +38,19 @@ namespace MVCBlog.Service
         }
 
       
-        public override async Task<CategoryInfo> GetByIdAsync(int id)
-        {
-            Func<CategoryInfo> getitem = () =>
-            {
-                var list = RedisHelper.GetEntity<List<CategoryInfo>>(RedisKeyHelper.GetCategoryKey(id));
-                if (list != null)
-                {
-                    return list.Find(x => x.Id == id);
-                }
-                return Context.CategoryInfo.Find(id);
-            };
-            return await Common.TaskExtensions.WithCurrentCulture<CategoryInfo>(getitem);
-        }
+        //public override async Task<CategoryInfo> GetByIdAsync(int id)
+        //{
+        //    Func<CategoryInfo> getitem = () =>
+        //    {
+        //        var list = RedisHelper.GetEntity<List<CategoryInfo>>(RedisKeyHelper.GetCategoryKey(id));
+        //        if (list != null)
+        //        {
+        //            return list.Find(x => x.Id == id);
+        //        }
+        //        return Context.CategoryInfo.Find(id);
+        //    };
+        //    return await Common.TaskExtensions.WithCurrentCulture<CategoryInfo>(getitem);
+        //}
 
    
         public override void Insert(CategoryInfo model, int userid = 0)

@@ -51,7 +51,7 @@ namespace MVCBlog.Service
         {
             string encryptPassword = AesSecret.EncryptStringToAES(password);
             Func<UserInfo> finditem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
-            var entity = await Common.TaskExtensions.WithCurrentCulture<UserInfo>(finditem);
+            var entity = await Common.ThreadHelper.StartAsync<UserInfo>(finditem);
             if (entity != null)
             {
                 entity.LastLoginTime = DateTime.Now;
@@ -125,28 +125,28 @@ namespace MVCBlog.Service
 
         public override async Task<int> SaveChanges()
         {
-            return await Common.TaskExtensions.WithCurrentCulture<int>(Context.SaveChangesAsync());
+            return await Context.SaveChangesAsync();
         }
 
-        public override UserInfo GetById(int id)
-        {
-            return Context.UserInfo.Find(id);
-        }
+        //public override UserInfo GetById(int id)
+        //{
+        //    return Context.UserInfo.Find(id);
+        //}
 
-        public override async Task<UserInfo> GetByIdAsync(int id)
-        {
-            return await Context.UserInfo.FindAsync(id);
-        }
+        //public override async Task<UserInfo> GetByIdAsync(int id)
+        //{
+        //    return await Context.UserInfo.FindAsync(id);
+        //}
 
-        public UserInfo GetUserInfoByUid(string uid)
-        {
-            if (!string.IsNullOrEmpty(uid))
-            {
-                var userinfo = Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
-                return userinfo;
-            }
-            return null;
-        }
+        //public UserInfo GetUserInfoByUid(string uid)
+        //{
+        //    if (!string.IsNullOrEmpty(uid))
+        //    {
+        //        var userinfo = Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
+        //        return userinfo;
+        //    }
+        //    return null;
+        //}
 
         public UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype)
         {
@@ -191,7 +191,7 @@ namespace MVCBlog.Service
 
         public async Task<UserInfo> GetUserInfoAsync(string email)
         {
-            return await Common.TaskExtensions.WithCurrentCulture<UserInfo>(() =>
+            return await Common.ThreadHelper.StartAsync<UserInfo>(() =>
             {
                 return Context.UserInfo.Single(x => x.Email == email);
             });

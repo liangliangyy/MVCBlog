@@ -33,7 +33,7 @@ namespace MVCBlog.Web.Controllers
 
         public ActionResult PostCategoryInfo()
         {
-            var categorylist = categoryService.Query().Result;
+            var categorylist = categoryService.Query();
             return PartialView(categorylist);
         }
 
@@ -49,9 +49,9 @@ namespace MVCBlog.Web.Controllers
             var times = posttimes.Select(x => x.ToString("yyyy-MM")).Distinct();
             return PartialView(times);
         }
-        public async Task<ActionResult> PostMonthInfo(int year, int month, int index = 1)
+        public ActionResult PostMonthInfo(int year, int month, int index = 1)
         {
-            var postinfo = await postService.Query(index, ConfigInfo.PageCount, x => x.CreateTime.Year == year && x.CreateTime.Month == month);
+            var postinfo = postService.Query(index, ConfigInfo.PageCount, x => x.CreateTime.Year == year && x.CreateTime.Month == month);
             return View(postinfo);
         }
     }

@@ -16,7 +16,6 @@ namespace MVCBlog.Service.Interfaces
         Task<UserInfo> ValidateUserAsync(string email, string password);
         UserInfo GetUserInfo(string email);
         Task<UserInfo> GetUserInfoAsync(string email); 
-        UserInfo GetUserInfoByUid(string uid);
         UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype);
     }
 }

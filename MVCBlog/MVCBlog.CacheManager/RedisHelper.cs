@@ -80,7 +80,7 @@ namespace MVCBlog.CacheManager
         }
         public async static Task<bool> ExistsAsync(string key)
         {
-            return await Common.TaskExtensions.WithCurrentCulture(() =>
+            return await Common.ThreadHelper.StartAsync(() =>
              {
                  using (var client = new RedisClient(Host))
                  {
@@ -165,20 +165,10 @@ namespace MVCBlog.CacheManager
                 return default(T);
             }
         }
-        public async static Task<T> GetEntityAsync<T>(string key)
-        {
-            if (await ExistsAsync(key))
-            {
-                return await Common.TaskExtensions.WithCurrentCulture(() =>
-                 {
-                     return GetEntity<T>(key);
-                 });
-            }
-            else
-            {
-                return default(T);
-            }
-        }
+        //public async static Task<T> GetEntityAsync<T>(string key)
+        //{
+        //    return await Common.ThreadHelper.StartAsync<T>(() => GetEntity<T>(key));
+        //}
         /// <summary>
         /// 获取实体.若存在.返回对象.若不存在通过委托获取并设置缓存
         /// </summary>
@@ -201,20 +191,13 @@ namespace MVCBlog.CacheManager
             }
         }
 
-        public static async Task<T> GetEntityAsync<T>(string key, Func<T> GetItemByDb)
-        {
-            var entity = await GetEntityAsync<T>(key);
-            if (entity != null)
-            {
-                return entity;
-            }
-            else
-            {
-                entity = await Common.TaskExtensions.WithCurrentCulture<T>(GetItemByDb);
-                await SetEntityAsync<T>(key, entity);
-                return entity;
-            }
-        }
+        //public static async Task<T> GetEntityAsync<T>(string key, Func<T> GetItemByDb)
+        //{
+        //    return await Common.ThreadHelper.StartAsync<T>(() =>
+        //    {
+        //        return GetEntity<T>(key, GetItemByDb);
+        //    });
+        //}
 
         public static List<T> GetEntityByList<T>(string key, Func<List<T>> GetItemByDb)
         {
@@ -328,7 +311,7 @@ namespace MVCBlog.CacheManager
 
         public async static Task SetEntityAsync<T>(string key, T val)
         {
-            await Common.TaskExtensions.WithCurrentCulture(() =>
+            await Common.ThreadHelper.StartAsync(() =>
             {
                 if (GetEntity<T>(key) != null)
                 {

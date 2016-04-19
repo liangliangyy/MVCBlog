@@ -20,9 +20,9 @@ namespace MVCBlog.Web.Infrastructure
             var builder = new ContainerBuilder();
             IContainer container = RegisterServices(builder);
             builder.RegisterType<IDependencyResolver>().As<Dependency>();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             ApplicationContainer.Container = container;
-            // DependencyResolver.SetResolver(new Dependency(container));
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            //DependencyResolver.SetResolver(new Dependency(container));
         }
 
 
@@ -36,6 +36,7 @@ namespace MVCBlog.Web.Infrastructure
             //注册上下文.每次都会创建不同的实例
             //builder.RegisterType<MVCBlogContext>().As<MVCBlogContext>().InstancePerRequest();
             builder.RegisterType<MVCBlogContext>().InstancePerLifetimeScope();
+            //builder.Register(x => new MVCBlogContext()).As(typeof(MVCBlogContext)).InstancePerLifetimeScope();
             //注册PostService
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
             //通过AS可以通过构造函数依赖注入类型相应的接口

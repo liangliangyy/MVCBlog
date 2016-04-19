@@ -32,7 +32,7 @@ namespace MVCBlog.Web.Controllers
         [HttpGet]
         public ActionResult GetCommentInfo(int postid)
         {
-            var res =  commentService.Query(x => x.PostID == postid).Result;
+            var res = commentService.Query(x => x.PostID == postid);
             return PartialView(res);
         }
         [HttpGet]
@@ -68,6 +68,8 @@ namespace MVCBlog.Web.Controllers
                     userinfo = await userService.GetUserInfoAsync(model.UserEmail);
                 }
                 var postinfo = postService.GetById(model.PostID);
+                postinfo.CommentCount += 1;
+                await postService.UpdateAsync(postinfo);
                 var commentinfo = new CommentInfo()
                 {
                     CommentUser = userinfo,
