@@ -104,6 +104,7 @@ namespace MVCBlog.Web.Controllers
                 model.PostStatus = entity.PostStatus;
                 model.PostCommentStatus = entity.PostCommentStatus;
                 model.CategoryID = entity.PostCategoryInfo.Id;
+                model.PostMetasInfos = entity.PostMetasInfos.ToList();
             }
             return View(model);
         }

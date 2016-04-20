@@ -57,21 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201603011308482_Initial.cs" />
-    <Compile Include="Migrations\201603011308482_Initial.Designer.cs">
-      <DependentUpon>201603011308482_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603031331158_UpdateUserInfo.cs" />
-    <Compile Include="Migrations\201603031331158_UpdateUserInfo.Designer.cs">
-      <DependentUpon>201603031331158_UpdateUserInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603251239122_updatepost.cs" />
-    <Compile Include="Migrations\201603251239122_updatepost.Designer.cs">
-      <DependentUpon>201603251239122_updatepost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604161633132_addbasemodels.cs" />
-    <Compile Include="Migrations\201604161633132_addbasemodels.Designer.cs">
-      <DependentUpon>201604161633132_addbasemodels.cs</DependentUpon>
+    <Compile Include="Migrations\201604200849372_init.cs" />
+    <Compile Include="Migrations\201604200849372_init.Designer.cs">
+      <DependentUpon>201604200849372_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MVCBlogContext.cs" />
@@ -88,17 +76,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603011308482_Initial.resx">
-      <DependentUpon>201603011308482_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603031331158_UpdateUserInfo.resx">
-      <DependentUpon>201603031331158_UpdateUserInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603251239122_updatepost.resx">
-      <DependentUpon>201603251239122_updatepost.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604161633132_addbasemodels.resx">
-      <DependentUpon>201604161633132_addbasemodels.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201604200849372_init.resx">
+      <DependentUpon>201604200849372_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

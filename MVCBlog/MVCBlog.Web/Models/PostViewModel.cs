@@ -34,5 +34,7 @@ namespace MVCBlog.Web.Models
         public PostCommentStatus PostCommentStatus { get; set; }
 
         public virtual UserInfo PostAuthor { get; set; }
+
+        public ICollection<PostMetasInfo> PostMetasInfos { get; set; }
     }
 }

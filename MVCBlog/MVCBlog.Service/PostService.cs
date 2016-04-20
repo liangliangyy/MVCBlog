@@ -100,8 +100,11 @@ namespace MVCBlog.Service
             model.IsDelete = false;
             model.PostAuthor = Context.UserInfo.Find(userid);
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
+
             var entity = Context.PostInfo.Add(model);
-            await SaveChanges();
+            Context.SaveChanges();
+            PostMetaService metaservice = new PostMetaService(new MVCBlogContext());
+            metaservice.Insert(model.PostMetasInfos, entity.Id);
             await base.InsertAsync(model, userid);
         }
 
@@ -115,8 +118,12 @@ namespace MVCBlog.Service
             model.IsDelete = false;
             model.PostAuthor = Context.UserInfo.Find(userid);
             model.PostCategoryInfo = Context.CategoryInfo.Find(model.PostCategoryInfo.Id);
+
             var entity = Context.PostInfo.Add(model);
             Context.SaveChanges();
+
+            PostMetaService metaservice = new PostMetaService(new MVCBlogContext());
+            metaservice.Insert(model.PostMetasInfos, entity.Id);
             base.Insert(model, userid);
         }
 
@@ -124,6 +131,7 @@ namespace MVCBlog.Service
         public override void Update(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
+            entity.CommentCount = model.CommentCount;
             entity.Title = model.Title;
             entity.Content = model.Content;
             entity.PostStatus = model.PostStatus;
@@ -136,6 +144,7 @@ namespace MVCBlog.Service
         public override async Task UpdateAsync(PostInfo model)
         {
             var entity = Context.PostInfo.Find(model.Id);
+            entity.CommentCount = model.CommentCount;
             entity.Title = model.Title;
             entity.Content = model.Content;
             entity.PostStatus = model.PostStatus;

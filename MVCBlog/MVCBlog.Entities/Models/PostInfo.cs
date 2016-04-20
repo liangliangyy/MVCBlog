@@ -20,7 +20,7 @@ namespace MVCBlog.Entities.Models
             //this.CommentCount = 0;
 
         }
-      
+
         [Required]
         public string Title { get; set; }
         [Required]
@@ -36,9 +36,9 @@ namespace MVCBlog.Entities.Models
         [DefaultValue(0)]
         public int CommentCount { get; set; }
         public virtual UserInfo PostAuthor { get; set; }
-        public virtual ICollection<PostMetasInfo> PostMetasInfos { get; set; }
+        public IEnumerable<PostMetasInfo> PostMetasInfos { get; set; }
 
         public virtual CategoryInfo PostCategoryInfo { get; set; }
-      
+
     }
 }

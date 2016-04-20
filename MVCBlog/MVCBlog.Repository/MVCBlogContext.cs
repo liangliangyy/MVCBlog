@@ -19,5 +19,6 @@ namespace MVCBlog.Repository
         public DbSet<PostInfo> PostInfo { get; set; }
         public DbSet<PostMetasInfo> PostMetasInfo { get; set; }
         public DbSet<UserInfo> UserInfo { get; set; }
+        public DbSet<PostMetaRelation> PostMetaRelation { get; set; }
     }
 }

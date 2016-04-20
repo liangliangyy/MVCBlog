@@ -47,6 +47,7 @@
     <Compile Include="Models\CategoryRelationships.cs" />
     <Compile Include="Models\CommentInfo.cs" />
     <Compile Include="Models\PostInfo.cs" />
+    <Compile Include="Models\PostMetaRelation.cs" />
     <Compile Include="Models\PostMetasInfo.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Pagination.cs" />

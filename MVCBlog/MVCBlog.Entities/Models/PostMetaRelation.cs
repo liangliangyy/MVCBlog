@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace MVCBlog.Entities.Models
 {
-    public class PostMetasInfo : BaseModel
+    public class PostMetaRelation : BaseModel
     {
-        public string Name { get; set; }
+        public int PostId { get; set; }
+        public int PostMetaId { get; set; }
     }
 }

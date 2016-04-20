@@ -14,6 +14,7 @@ namespace MVCBlog.CacheManager
             PostListKey = "MVCBlog:PostInfo";
             CommentKey = "MVCBlog:CommentInfo";
             CategoryKey = "MVCBlog:CategoryInfo";
+            PostMetasKey = "MVCBlog:PostMetas";
         }
         public static string GetUserKey(int id)
         {
@@ -23,6 +24,7 @@ namespace MVCBlog.CacheManager
         private static string PostListKey { get; set; }
         private static string CommentKey { get; set; }
         private static string CategoryKey { get; set; }
+        private static string PostMetasKey { get; set; }
         public static string GetPostKey(int id)
         {
             return string.Format("{0}:{1}", PostListKey, id);
@@ -34,6 +36,10 @@ namespace MVCBlog.CacheManager
         public static string GetCategoryKey(int id)
         {
             return string.Format("{0}:{1}", CategoryKey, id);
+        }
+        public static string GetPostMeatsKey(int postid)
+        {
+            return string.Format("{0}:{1}", PostMetasKey, postid);
         }
     }
 }
