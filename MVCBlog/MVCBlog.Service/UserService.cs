@@ -106,23 +106,10 @@ namespace MVCBlog.Service
 
         public override async Task UpdateAsync(UserInfo model)
         {
-            using (MVCBlogContext Context = new MVCBlogContext())
+            await Common.ThreadHelper.StartAsync(() =>
             {
-                var entity = await Context.UserInfo.FindAsync(model.Id);
-                entity.EditedTime = DateTime.Now;
-                entity.Name = model.Name;
-                entity.Password = model.Password;
-                entity.UserRole = model.UserRole;
-                entity.UserStatus = model.UserStatus;
-                entity.WeiBoAccessToken = model.WeiBoAccessToken;
-                entity.WeiBoUid = model.WeiBoUid;
-                entity.WeiBoAvator = model.WeiBoAvator;
-                entity.QQAccessToken = model.QQAccessToken;
-                entity.QQAvator = model.QQAvator;
-                entity.QQUid = model.QQUid;
-                await Context.SaveChangesAsync();
-                await base.UpdateAsync(model);
-            }
+                Update(model);
+            });
         }
 
         public override void Delete(UserInfo model)
@@ -138,38 +125,13 @@ namespace MVCBlog.Service
 
         public override async Task DeleteAsync(UserInfo model)
         {
-            using (MVCBlogContext Context = new MVCBlogContext())
+            await Common.ThreadHelper.StartAsync(() =>
             {
-                var entity = await Context.UserInfo.FindAsync(model.Id);
-                if (entity != null)
-                {
-                    entity.IsDelete = true;
-                    await Context.SaveChangesAsync();
-                    await base.DeleteAsync(model);
-                }
-            }
+                Delete(model);
+            });
         }
-        
 
-        //public override UserInfo GetById(int id)
-        //{
-        //    return Context.UserInfo.Find(id);
-        //}
-
-        //public override async Task<UserInfo> GetByIdAsync(int id)
-        //{
-        //    return await Context.UserInfo.FindAsync(id);
-        //}
-
-        //public UserInfo GetUserInfoByUid(string uid)
-        //{
-        //    if (!string.IsNullOrEmpty(uid))
-        //    {
-        //        var userinfo = Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
-        //        return userinfo;
-        //    }
-        //    return null;
-        //}
+  
 
         public UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype)
         {
@@ -202,11 +164,7 @@ namespace MVCBlog.Service
                 base.Insert(user, userid);
             }
         }
-
-        //public override UserInfo GetFromDB(int id)
-        //{
-        //    return Context.UserInfo.Find(id);
-        //}
+         
 
         public override string GetModelKey(int id)
         {

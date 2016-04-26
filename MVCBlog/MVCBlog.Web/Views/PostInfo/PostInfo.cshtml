@@ -32,9 +32,14 @@
 
 </main>
 <div class="col-md-8">
+    @if (Model.PostCommentStatus != MVCBlog.Entities.Enums.PostCommentStatus.关闭)
+    {
+        @Html.Action("GetCommentInfo", "Comment", new { postid = Model.Id })
+        @Html.Action("CommentInfo", "Comment", new { postid = Model.Id })
+    }
+    else
+    {
+        <span>该文章评论已关闭</span>
+    }
 
-    @Html.Action("GetCommentInfo", "Comment", new { postid = Model.Id })
-
-
-    @Html.Action("CommentInfo", "Comment", new { postid = Model.Id })
 </div>

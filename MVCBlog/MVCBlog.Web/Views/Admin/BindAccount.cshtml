@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "帐号绑定";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <a href="@MVCBlog.Web.CommonHelper.OAuthClientFactory.GetOAuthLoginUrl(MVCBlog.Common.OAuth.Models.OAuthSystemType.Weibo)"  class="btn btn-default">
+            绑定微博帐号
+        </a>
+        <a href="@MVCBlog.Web.CommonHelper.OAuthClientFactory.GetOAuthLoginUrl(MVCBlog.Common.OAuth.Models.OAuthSystemType.QQ)" class="btn btn-default">
+            绑定QQ帐号
+        </a>
+    </div>
+</div>

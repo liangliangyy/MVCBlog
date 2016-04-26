@@ -569,6 +569,7 @@
     <Content Include="Views\User\UserWightInfo.cshtml" />
     <Content Include="Views\PostInfo\PostMonthList.cshtml" />
     <Content Include="Views\PostInfo\PostMetaInfo.cshtml" />
+    <Content Include="Views\Admin\BindAccount.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

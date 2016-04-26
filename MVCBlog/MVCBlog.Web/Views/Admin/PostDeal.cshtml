@@ -1,10 +1,11 @@
 ﻿@model MVCBlog.Web.Models.PostViewModel
-
+@using MVCBlog.Entities.Enums;
 @{
     ViewBag.Title = "写文章";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var categorylist = MVCBlog.Web.CommonHelper.Helper.GetCategorySelectList().Result;
-    int index = -1;
+    var commentstatus = MVCBlog.Web.CommonHelper.Helper.ParseEnumToSelectList<PostCommentStatus>();
+    var poststatus = MVCBlog.Web.CommonHelper.Helper.ParseEnumToSelectList<PostStatus>();
 }
 
 <h2>写文章</h2>
@@ -16,8 +17,6 @@
 
     <div class="form-horizontal">
         @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.PostCommentStatus)
-        @Html.HiddenFor(model => model.PostStatus)
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -43,28 +42,44 @@
                 @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostCommentStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PostCommentStatus, commentstatus);
+                @Html.ValidationMessageFor(model => model.PostCommentStatus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PostStatus, poststatus);
+                @Html.ValidationMessageFor(model => model.PostStatus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <div class="form-group">
             <label class="control-label col-md-2">文章标签</label>
             <div class="row form-group" id="metalist">
                 @if (Model.PostMetasInfos != null)
                 {
-
+                    int index = 0;
                     foreach (var item in Model.PostMetasInfos)
-                    {
-                        index++;
-                        <div class="col-md-1" style="width:auto" id="postmetas">
-                            <a href="#" onclick="DeleteMeta(this)" title="删除">
+                    { 
+                        <div class="col-md-1 postmetas" style="width:auto" id="postmetas">
+                            <a href="javascript:void(0)" onclick="DeleteMeta(this)" title="删除">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                             <input type="hidden" name="[@index].Id" value="@item.Id" />
                             <input type="text" name="[@index].Name" style="width:3rem" value="@item.Name" />
                         </div>
+                        index++;
                     }
                 }
                 else
                 {
-                    index++;
-                    <div class="col-md-1" style="width:auto" id="postmetas">
+                    int index = 0;
+                    <div class="col-md-1 postmetas" style="width:auto" id="postmetas">
 
                         <input type="hidden" name="[@index].Id" value="0" />
                         <input type="text" name="[@index].Name" style="width:3rem" value="" />
@@ -72,7 +87,6 @@
                 }
             </div>
         </div>
-        @Html.Hidden("metaindex", index)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Submit" class="btn btn-primary" />
@@ -88,20 +102,26 @@
     function DeleteMeta(alink) {
         var div = $(alink).parent();
         div.remove();
+        SetIndex();
+    }
+    function SetIndex() {
+        var index = -1;
+        $(".postmetas").each(function (index,item) {
+            var idinput = $(item).find("input")[0];
+            var metainput = $(item).find("input")[1];
+            $(idinput).attr("name", "[" + index + "].Id");
+            $(metainput).attr("name", "[" + index + "].Name");
+        });
     }
 
     function AddPostMeta() {
-        var indexstr = $("#metaindex").val();
-        index = parseInt(indexstr);
-        index += 1;
-        $("#metaindex").val(index);
         var div = $("#postmetas").clone(true);
         var idinput = div.find("input")[0];
         var metainput = div.find("input")[1];
-        $(idinput).attr("name", "[" + index + "].Id");
         $(idinput).attr("value", "0");
         $(metainput).attr("value", "");
-        $(metainput).attr("name", "[" + index + "].Name");
+       
         div.appendTo("#metalist");
+        SetIndex();
     }
 </script>

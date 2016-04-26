@@ -98,7 +98,7 @@ namespace MVCBlog.Service
         {
             using (MVCBlogContext Context = new MVCBlogContext())
             {
-                var entity = GetFromDB(model.Id);
+                var entity = Context.PostMetasInfo.Find(model.Id);
                 entity.Name = model.Name;
                 Context.SaveChanges();
             }
@@ -144,12 +144,12 @@ namespace MVCBlog.Service
                             Context.PostMetaRelation.Add(relation);
                         }
                     }
-                    var removes = Context.PostMetaRelation.Where(x => x.PostId == postid && !infos.Select(s => s.Id).Contains(x.PostMetaId)).ToList();
+                    var ids = infos.Select(s => s.Id);
+                    var removes = Context.PostMetaRelation.Where(x => x.PostId == postid && !ids.Contains(x.PostMetaId)).ToList();
                     foreach (var item in removes)
                     {
                         item.IsDelete = true;
                     }
-                    Context.SaveChanges();
                     Context.SaveChanges();
                 }
             }

@@ -75,58 +75,52 @@ namespace MVCBlog.Web.Infrastructure
 
                    var servciceinterface = interfaces.FirstOrDefault(x => x.GetInterfaces().Select(e => e.Name).Any(s => s.Contains("IBase")));
 
+
+
+                   var service = ApplicationContainer.Container.Resolve(servciceinterface);
                    Action<string, object> HandlerModelUpdateCreateCache = (k, m) =>
                    {
-                       using (var scope2 = ApplicationContainer.Container.BeginLifetimeScope())
-                       {
-                           var service2 = scope2.Resolve(servciceinterface, new TypedParameter(typeof(MVCBlogContext), new MVCBlogContext()));
-                           RedisHelper.DeleteEntity(k);
-                           var idProperties = m.GetType().GetProperties().FirstOrDefault(x => x.Name.Equals("id", StringComparison.OrdinalIgnoreCase));
-                           int id = (int)idProperties.GetValue(m);
-                           var entity = service2.GetType().GetMethod("GetFromDB").Invoke(service2, new object[] { id });
-                           RedisHelper.SetEntity(k, entity);
-                           LogHelper.WriteLog(LogType.INFO, string.Format("Model {0}. Before:{1} After:{2}", modifyType.ToString(), JsonConvert.SerializeObject(m), JsonConvert.SerializeObject(entity)));
-                       }
+                       RedisHelper.DeleteEntity(k);
+                       var idProperties = m.GetType().GetProperties().FirstOrDefault(x => x.Name.Equals("id", StringComparison.OrdinalIgnoreCase));
+                       int id = (int)idProperties.GetValue(m);
+                       var entity = service.GetType().GetMethod("GetFromDB").Invoke(service, new object[] { id });
+                       RedisHelper.SetEntity(k, entity);
+                       LogHelper.WriteLog(LogType.INFO, string.Format("Model {0}. Before:{1} After:{2}", modifyType.ToString(), JsonConvert.SerializeObject(m), JsonConvert.SerializeObject(entity)));
+
                    };
-                   using (var scope = ApplicationContainer.Container.BeginLifetimeScope())
-                   // AutofacDependencyResolver.Current.ApplicationContainer.BeginLifetimeScope())
+                   var model = invocation.Arguments.FirstOrDefault(x => typeof(BaseModel).IsInstanceOfType(x));
+                   if (model != null)
                    {
-                       var service = scope.Resolve(servciceinterface, new TypedParameter(typeof(MVCBlogContext), new MVCBlogContext()));
-
-                       var model = invocation.Arguments.FirstOrDefault(x => typeof(BaseModel).IsInstanceOfType(x.GetType()));
-                       if (model != null)
+                       try
                        {
-                           try
+                           string key = service.GetType().GetMethod("GetModelKey").Invoke(service, new object[] { ((BaseModel)model).Id }).ToString();
+                           switch (modifyType)
                            {
-                               string key = service.GetType().GetMethod("GetModelKey").Invoke(service, new object[] { ((BaseModel)model).Id }).ToString();
-                               switch (modifyType)
-                               {
-                                   case ModelModifyType.Create:
-                                       {
-                                           HandlerModelUpdateCreateCache(key, model);
-                                           break;
-                                       }
-                                   case ModelModifyType.Delete:
-                                       {
-                                           RedisHelper.DeleteEntity(key);
-                                           LogHelper.WriteLog(LogType.INFO, string.Format("Model {0}. Before:{1}", modifyType.ToString()));
-                                           break;
-                                       }
-                                   case ModelModifyType.Update:
-                                       {
-                                           HandlerModelUpdateCreateCache(key, model);
-                                           break;
-                                       }
-                                   default:
+                               case ModelModifyType.Create:
+                                   {
+                                       HandlerModelUpdateCreateCache(key, model);
                                        break;
-                               }
+                                   }
+                               case ModelModifyType.Delete:
+                                   {
+                                       RedisHelper.DeleteEntity(key);
+                                       LogHelper.WriteLog(LogType.INFO, string.Format("Model {0}. Before:{1}", modifyType.ToString()));
+                                       break;
+                                   }
+                               case ModelModifyType.Update:
+                                   {
+                                       HandlerModelUpdateCreateCache(key, model);
+                                       break;
+                                   }
+                               default:
+                                   break;
+                           }
 
-                           }
-                           catch (Exception ex)
-                           {
-                               LogHelper.WriteLog(LogType.EXCEPTION, string.Format("Intercept Exception.{0}.ex:{1}", invocation.ToString(), ex.ToString()));
-                               throw ex;
-                           }
+                       }
+                       catch (Exception ex)
+                       {
+                           LogHelper.WriteLog(LogType.EXCEPTION, string.Format("Intercept Exception.{0}.ex:{1}", invocation.ToString(), ex.ToString()));
+                           throw ex;
                        }
                    }
                }

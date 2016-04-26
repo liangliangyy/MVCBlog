@@ -50,7 +50,7 @@ namespace MVCBlog.Web
         {
             //配置log4net日志
             log4net.Config.XmlConfigurator.Configure(new FileInfo(Server.MapPath("log4net.config")));
-            CacheManager.RedisHelper.DeleteAllKeys();
+            //CacheManager.RedisHelper.DeleteAllKeys();
 
             DbConfiguration.SetConfiguration(new MySqlEFConfiguration());
 

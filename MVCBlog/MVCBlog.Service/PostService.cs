@@ -150,13 +150,14 @@ namespace MVCBlog.Service
         {
             using (MVCBlogContext Context = new MVCBlogContext())
             {
-                var entity = GetFromDB(model.Id);
+                var entity = Context.PostInfo.Find(model.Id);
                 entity.CommentCount = model.CommentCount;
                 entity.Title = model.Title;
                 entity.Content = model.Content;
                 entity.PostStatus = model.PostStatus;
                 entity.PostCommentStatus = model.PostCommentStatus;
                 entity.EditedTime = DateTime.Now;
+                entity.PostCategoryInfo = Context.CategoryInfo.Find(entity.PostCategoryInfo.Id);
                 Context.SaveChanges();
                 IPostMetaService metaservice = new PostMetaService();
                 metaservice.Update(model.PostMetasInfos, model.Id);

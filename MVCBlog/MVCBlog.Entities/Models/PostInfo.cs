@@ -35,10 +35,10 @@ namespace MVCBlog.Entities.Models
         public PostCommentStatus PostCommentStatus { get; set; }
         [DefaultValue(0)]
         public int CommentCount { get; set; }
-        public  UserInfo PostAuthor { get; set; }
+        public virtual UserInfo PostAuthor { get; set; }
         public IEnumerable<PostMetasInfo> PostMetasInfos { get; set; }
 
-        public  CategoryInfo PostCategoryInfo { get; set; }
+        public virtual CategoryInfo PostCategoryInfo { get; set; }
 
     }
 }

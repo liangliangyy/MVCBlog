@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities.Enums;
 using MVCBlog.Entities.Models;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
@@ -101,8 +102,8 @@ namespace MVCBlog.Web.Controllers
                 model.Id = entity.Id;
                 model.Content = entity.Content;
                 model.Title = entity.Title;
-                model.PostStatus = entity.PostStatus;
-                model.PostCommentStatus = entity.PostCommentStatus;
+                model.PostStatus = (int)entity.PostStatus;
+                model.PostCommentStatus = (int)entity.PostCommentStatus;
                 model.CategoryID = entity.PostCategoryInfo.Id;
                 model.PostMetasInfos = entity.PostMetasInfos.ToList();
                 //model.PostMetasInfos = new List<PostMetasInfo>()
@@ -127,6 +128,7 @@ namespace MVCBlog.Web.Controllers
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
                 entity.PostCategoryInfo = categoryService.GetFromDB(postinfo.CategoryID);
+                entity.PostCommentStatus =(PostCommentStatus) postinfo.PostCommentStatus;
                 //entity.PostMetasInfos = metas;
                 if (metas != null && metas.Count() > 0)
                 {
@@ -140,8 +142,7 @@ namespace MVCBlog.Web.Controllers
                 }
                 else
                 {
-                    entity.PostCommentStatus = postinfo.PostCommentStatus;
-                    entity.PostStatus = postinfo.PostStatus;
+                    entity.PostStatus = (PostStatus)postinfo.PostStatus;
                     postService.Update(entity);
                 }
                 return RedirectToAction("Index", "Home");
@@ -174,5 +175,11 @@ namespace MVCBlog.Web.Controllers
             return View(list);
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult BindAccount()
+        {
+            return View();
+        }
     }
 }

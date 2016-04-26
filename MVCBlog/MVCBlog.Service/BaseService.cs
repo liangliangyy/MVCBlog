@@ -110,10 +110,8 @@ namespace MVCBlog.Service
         //  public abstract T GetById(int id);
         public virtual T GetFromDB(int id)
         {
-            using (MVCBlogContext Context = new MVCBlogContext())
-            {
-                return Context.Set<T>().Find(id);
-            }
+            MVCBlogContext Context = new MVCBlogContext();
+            return Context.Set<T>().Find(id);
         }
         // public abstract Pagination<T> Query(int index, int pagecount, Expression<Func<T, bool>> query = null);
         //  public abstract IEnumerable<T> Query(Expression<Func<T, bool>> query = null);

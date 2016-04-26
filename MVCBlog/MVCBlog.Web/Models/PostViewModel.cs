@@ -30,8 +30,10 @@ namespace MVCBlog.Web.Models
         [Display(Name = "分类目录")]
         public int CategoryID { get; set; }
 
-        public PostStatus PostStatus { get; set; }
-        public PostCommentStatus PostCommentStatus { get; set; }
+        public int PostStatus { get; set; }
+        [Required]
+        [Display(Name = "评论状态")]
+        public int PostCommentStatus { get; set; }
 
         public virtual UserInfo PostAuthor { get; set; }
 

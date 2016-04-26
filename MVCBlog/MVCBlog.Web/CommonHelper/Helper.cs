@@ -12,6 +12,21 @@ namespace MVCBlog.Web.CommonHelper
 {
     public class Helper
     {
+        public static List<SelectListItem> ParseEnumToSelectList<T>()
+        {
+            if (typeof(T).IsEnum)
+            {
+                return Enum.GetValues(typeof(T)).Cast<T>().Select(x => new SelectListItem()
+                {
+                    Text = x.ToString(),
+                    Value = (Convert.ToInt32(x)).ToString()
+                }).ToList();
+            }
+            else
+            {
+                throw new NotSupportedException("type is not enum");
+            }
+        }
         public static async Task<List<SelectListItem>> GetCategorySelectList()
         {
             ICategoryService service = ApplicationContainer.Container.Resolve<ICategoryService>();
