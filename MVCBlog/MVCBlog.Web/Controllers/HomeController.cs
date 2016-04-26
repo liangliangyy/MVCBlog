@@ -33,7 +33,7 @@ namespace MVCBlog.Web.Controllers
             //string jsoninfo = JsonConvert.SerializeObject(list);
             //var test = postService.GetPosts();
             //return View();
-            UserHelper.GetLogInUserInfo(); 
+            //UserHelper.GetLogInUserInfo(); 
             Pagination<PostInfo> pagination = postService.Query(pageindex, ConfigInfo.PageCount);
             return View(pagination);
         }

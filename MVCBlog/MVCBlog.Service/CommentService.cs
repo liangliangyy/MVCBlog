@@ -16,26 +16,32 @@ namespace MVCBlog.Service
 {
     public class CommentService : BaseService<CommentInfo>, ICommentService
     {
-        private MVCBlogContext Context;
-        public CommentService(MVCBlogContext _context) 
-        {
-            this.Context = _context;
-        }
+        //private MVCBlogContext Context;
+        //public CommentService(MVCBlogContext _context) 
+        //{
+        //    this.Context = _context;
+        //}
         
         public override void Delete(CommentInfo model)
         {
-            var entity = Context.CommentInfo.Find(model.Id);
-            entity.IsDelete = true;
-            Context.SaveChanges();
-            base.Delete(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.CommentInfo.Find(model.Id);
+                entity.IsDelete = true;
+                Context.SaveChanges();
+                base.Delete(model);
+            }
         }
 
         public override async Task DeleteAsync(CommentInfo model)
         {
-            var entity = Context.CommentInfo.Find(model.Id);
-            entity.IsDelete = true;
-            await SaveChanges();
-            await base.DeleteAsync(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.CommentInfo.Find(model.Id);
+                entity.IsDelete = true;
+                await Context.SaveChangesAsync();
+                await base.DeleteAsync(model);
+            }
         }
 
         //public override CommentInfo GetById(int id)
@@ -65,18 +71,24 @@ namespace MVCBlog.Service
 
         public override void Insert(CommentInfo model, int userid = 0)
         {
-            model.CommentUser = Context.UserInfo.Find(model.CommentUser.Id);
-            Context.CommentInfo.Add(model);
-            Context.SaveChanges();
-            base.Insert(model, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                model.CommentUser = Context.UserInfo.Find(model.CommentUser.Id);
+                Context.CommentInfo.Add(model);
+                Context.SaveChanges();
+                base.Insert(model, userid);
+            }
         }
 
         public override async Task InsertAsync(CommentInfo model, int userid = 0)
         {
-            model.CommentUser = await Context.UserInfo.FindAsync(userid);
-            Context.CommentInfo.Add(model);
-            await SaveChanges();
-            await base.InsertAsync(model, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                model.CommentUser = await Context.UserInfo.FindAsync(userid);
+                Context.CommentInfo.Add(model);
+                await Context.SaveChangesAsync(); 
+                await base.InsertAsync(model, userid);
+            }
         }
 
         //public override IEnumerable<CommentInfo> Query(Expression<Func<CommentInfo, bool>> query = null)
@@ -121,25 +133,28 @@ namespace MVCBlog.Service
         //    }
         //}
 
-        public override async Task<int> SaveChanges()
-        {
-            return await Context.SaveChangesAsync();
-        }
+     
 
         public override void Update(CommentInfo model)
         {
-            var entity = Context.CommentInfo.Find(model.Id);
-            entity.CommentContent = model.CommentContent;
-            Context.SaveChanges();
-            base.Update(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.CommentInfo.Find(model.Id);
+                entity.CommentContent = model.CommentContent;
+                Context.SaveChanges();
+                base.Update(model);
+            }
         }
 
         public override async Task UpdateAsync(CommentInfo model)
         {
-            var entity = await Context.CommentInfo.FindAsync(model.Id);
-            entity.CommentContent = model.CommentContent;
-            await SaveChanges();
-            await base.UpdateAsync(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = await Context.CommentInfo.FindAsync(model.Id);
+                entity.CommentContent = model.CommentContent;
+                await Context.SaveChangesAsync();
+                await base.UpdateAsync(model);
+            }
         }
     }
 }

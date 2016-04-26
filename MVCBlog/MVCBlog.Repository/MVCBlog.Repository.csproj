@@ -61,6 +61,10 @@
     <Compile Include="Migrations\201604200849372_init.Designer.cs">
       <DependentUpon>201604200849372_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604260944273_updateentity.cs" />
+    <Compile Include="Migrations\201604260944273_updateentity.Designer.cs">
+      <DependentUpon>201604260944273_updateentity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MVCBlogContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +82,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604200849372_init.resx">
       <DependentUpon>201604200849372_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604260944273_updateentity.resx">
+      <DependentUpon>201604260944273_updateentity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -33,13 +33,8 @@ namespace MVCBlog.Web.Infrastructure
                 typeof(MvcApplication).Assembly
                 ).PropertiesAutowired();
 
-            //注册上下文.每次都会创建不同的实例
-
-            //builder.RegisterType<MVCBlogContext>().InstancePerLifetimeScope();
-            //builder.Register(c => new MVCBlogContext()).As(typeof(MVCBlogContext)).InstancePerLifetimeScope();
-            //builder.Register<MVCBlogContext>(c => new MVCBlogContext());
-            //builder.RegisterType<MVCBlogContext>().AsImplementedInterfaces().InstancePerLifetimeScope();
-            //builder.Register(x => new MVCBlogContext()).As(typeof(MVCBlogContext)).InstancePerLifetimeScope();
+          
+            
             //注册PostService
             //这里通过ContainerBuilder方法RegisterType进行注册.当注册的类型在相应得到的容器中可以Resolve你的实例
             //通过AS可以通过构造函数依赖注入类型相应的接口
@@ -48,32 +43,40 @@ namespace MVCBlog.Web.Infrastructure
             builder.RegisterType<ModelCacheEventHandle>().InstancePerLifetimeScope();
 
             //builder.RegisterType<UserService>().As<IUserService>()
-            //    .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+            //    //.OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+            //    .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
             //    .InstancePerLifetimeScope();
             //builder.RegisterType<CategoryService>().As<ICategoryService>()
-            //    .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+            //   // .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+            //    .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
             //    .InstancePerLifetimeScope(); ;
             //builder.RegisterType<PostService>().As<IPostService>()
-            //    .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+            //   // .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+            //    .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
             //    .InstancePerLifetimeScope();
-
             //builder.RegisterType<CommentService>().As<ICommentService>()
-            //   .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+            //  // .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+            //   .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
             //   .InstancePerLifetimeScope();
-            builder.Register<IUserService>(c => new UserService(new MVCBlogContext()))
-                 .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
+            //builder.RegisterType<PostMetaService>().As<IPostMetaService>()
+            //// .OnActivated(InitinalServiceHandlerEvent<PostMetaService, PostMetasInfo>.handler)
+            // .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger))
+            // .InstancePerLifetimeScope();
+
+            builder.Register<IUserService>(c => new UserService())
+                //  .OnActivated(InitinalServiceHandlerEvent<IUserService, UserInfo>.handler)
                 .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
 
-            builder.Register<ICategoryService>(c => new CategoryService(new MVCBlogContext()))
-                 .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
+            builder.Register<ICategoryService>(c => new CategoryService())
+                // .OnActivated(InitinalServiceHandlerEvent<ICategoryService, CategoryInfo>.handler)
                 .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
 
-            builder.Register<ICommentService>(c => new CommentService(new MVCBlogContext()))
-                .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
+            builder.Register<ICommentService>(c => new CommentService())
+                // .OnActivated(InitinalServiceHandlerEvent<ICommentService, CommentInfo>.handler)
                 .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
 
-            builder.Register<IPostService>(c => new PostService(new MVCBlogContext()))
-                 .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
+            builder.Register<IPostService>(c => new PostService())
+                // .OnActivated(InitinalServiceHandlerEvent<IPostService, PostInfo>.handler)
                 .EnableInterfaceInterceptors().InterceptedBy(typeof(CallLogger)).InstancePerLifetimeScope();
             //   builder.RegisterType<UserService>().As<IUserService>()
             //        .WithParameter(

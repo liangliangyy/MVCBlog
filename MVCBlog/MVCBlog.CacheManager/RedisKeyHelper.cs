@@ -37,9 +37,9 @@ namespace MVCBlog.CacheManager
         {
             return string.Format("{0}:{1}", CategoryKey, id);
         }
-        public static string GetPostMeatsKey(int postid)
+        public static string GetPostMeatsKey(int id)
         {
-            return string.Format("{0}:{1}", PostMetasKey, postid);
+            return string.Format("{0}:{1}", PostMetasKey, id);
         }
     }
 }

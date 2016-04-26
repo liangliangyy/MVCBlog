@@ -13,5 +13,6 @@ namespace MVCBlog.Service.Interfaces
         List<PostInfo> GetRecentPost(int count);
         Task<List<PostInfo>> GetRecentPostAsync(int count);
         IEnumerable<DateTime> GetPostMonthInfos();
+        void SetPostMetaInfo(PostInfo info);
     }
 }

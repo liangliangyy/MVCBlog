@@ -1,0 +1,24 @@
+﻿@model MVCBlog.Entities.Models.PostInfo
+@using MVCBlog.Common;
+<div class="entry-meta">
+    <span class="post-category"><a href="#">@Model.PostCategoryInfo.CategoryName</a></span>
+
+    <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@Model.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
+
+    <span class="post-author"><a href="@Url.Action("UserPostInfo", "User", new { userid = Model.PostAuthor.Id })">@Model.PostAuthor.Name</a></span>
+    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+        <span class="post-category"><a href="@Url.Action("PostDeal", "Admin", new { postid = Model.Id })">编辑</a></span>
+    }
+    <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
+
+    @if (Model.PostMetasInfos != null && Model.PostMetasInfos.Count() > 0)
+    {
+        <span class="post-category">
+
+        </span>
+        <span> 文章标签</span>
+        @Html.Raw(string.Join(",", Model.PostMetasInfos.Select(x => string.Format("<a href='#'>{0}</a>", x.Name))))
+    }
+
+</div>

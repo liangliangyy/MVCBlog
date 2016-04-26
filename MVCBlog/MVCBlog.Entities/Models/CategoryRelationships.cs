@@ -12,8 +12,8 @@ namespace MVCBlog.Entities.Models
     public class CategoryRelationships : BaseModel
     {
       
-        public virtual CategoryInfo CategoryInfo { get; set; }
-        public virtual CategoryInfo ParentCategoryInfo { get; set; }
+        public  CategoryInfo CategoryInfo { get; set; }
+        public  CategoryInfo ParentCategoryInfo { get; set; }
  
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common;
+using MVCBlog.Entities.Models;
 using MVCBlog.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Web.Mvc;
 
 namespace MVCBlog.Web.Controllers
 {
+    [AllowAnonymous]
     public class PostInfoController : Controller
     {
         private readonly IPostService postService;
@@ -53,6 +55,11 @@ namespace MVCBlog.Web.Controllers
         {
             var postinfo = postService.Query(index, ConfigInfo.PageCount, x => x.CreateTime.Year == year && x.CreateTime.Month == month);
             return View(postinfo);
+        }
+
+        public ActionResult PostMetaInfo(PostInfo info)
+        {
+            return PartialView(info);
         }
     }
 }

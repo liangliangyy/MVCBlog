@@ -15,7 +15,7 @@ namespace MVCBlog.Entities.Models
         }
       
         [Required]
-        public virtual UserInfo CommentUser { get; set; }
+        public  UserInfo CommentUser { get; set; }
     
         [Required]
         public int PostID { get; set; }

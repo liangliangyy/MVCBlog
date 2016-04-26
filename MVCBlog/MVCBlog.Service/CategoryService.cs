@@ -16,28 +16,34 @@ namespace MVCBlog.Service
 {
     public class CategoryService : BaseService<CategoryInfo>, ICategoryService
     {
-        private MVCBlogContext Context;
+        //private MVCBlogContext Context;
 
-        public CategoryService(MVCBlogContext _context)
-        {
-            this.Context = _context;
-        }
+        //public CategoryService(MVCBlogContext _context)
+        //{
+        //    this.Context = _context;
+        //}
 
 
         public override void Delete(CategoryInfo model)
         {
-            var entity = Context.CategoryInfo.Find(model.Id);
-            entity.IsDelete = true;
-            Context.SaveChanges();
-            base.Delete(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.CategoryInfo.Find(model.Id);
+                entity.IsDelete = true;
+                Context.SaveChanges();
+                base.Delete(model);
+            }
         }
 
         public override async Task DeleteAsync(CategoryInfo model)
         {
-            var entity = Context.CategoryInfo.Find(model.Id);
-            entity.IsDelete = true;
-            await SaveChanges();
-            await base.DeleteAsync(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.CategoryInfo.Find(model.Id);
+                entity.IsDelete = true;
+                await Context.SaveChangesAsync(); 
+                await base.DeleteAsync(model);
+            }
         }
 
 
@@ -58,49 +64,57 @@ namespace MVCBlog.Service
 
         public override void Insert(CategoryInfo model, int userid = 0)
         {
-            model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
-            Context.CategoryInfo.Add(model);
-            Context.SaveChanges();
-            base.Insert(model, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
+                Context.CategoryInfo.Add(model);
+                Context.SaveChanges();
+                base.Insert(model, userid);
+            }
         }
 
         public override async Task InsertAsync(CategoryInfo model, int userid)
         {
-
-            model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
-            Context.CategoryInfo.Add(model);
-            await SaveChanges();
-            await base.InsertAsync(model, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                model.CreateUser = Context.UserInfo.Find(userid == 0 ? model.CreateUser.Id : userid);
+                Context.CategoryInfo.Add(model);
+                await Context.SaveChangesAsync();
+                await base.InsertAsync(model, userid);
+            }
         }
 
 
         public override void Update(CategoryInfo model)
         {
-            var entity = Context.CategoryInfo.Find(model.Id);
-            if (entity != null)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                entity.CategoryName = model.CategoryName;
-                entity.IsDelete = model.IsDelete;
-                Context.SaveChanges();
-                base.Update(model);
+                var entity = Context.CategoryInfo.Find(model.Id);
+                if (entity != null)
+                {
+                    entity.CategoryName = model.CategoryName;
+                    entity.IsDelete = model.IsDelete;
+                    Context.SaveChanges();
+                    base.Update(model);
+                }
             }
         }
 
         public override async Task UpdateAsync(CategoryInfo model)
         {
-            var entity = Context.CategoryInfo.Find(model.Id);
-            if (entity != null)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                entity.CategoryName = model.CategoryName;
-                entity.IsDelete = model.IsDelete;
-                await SaveChanges();
-                await base.UpdateAsync(model);
+                var entity = Context.CategoryInfo.Find(model.Id);
+                if (entity != null)
+                {
+                    entity.CategoryName = model.CategoryName;
+                    entity.IsDelete = model.IsDelete;
+                    await Context.SaveChangesAsync();
+                    await base.UpdateAsync(model);
+                }
             }
         }
-        public override async Task<int> SaveChanges()
-        {
-            return await Context.SaveChangesAsync();
-        }
+       
 
         public override string GetModelKey(int id)
         {

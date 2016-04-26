@@ -480,6 +480,7 @@
     <Content Include="Content\css\embed.default.css" />
     <Content Include="Content\css\ionicons.min.css" />
     <Content Include="Content\css\pace.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\img\me.jpg" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\jquery-2.1.3.min.js" />
@@ -556,6 +557,10 @@
     <Content Include="Content\ckeditor\plugins\wsc\README.md" />
     <Content Include="Content\ckeditor\README.md" />
     <Content Include="Content\ckeditor\skins\moono\readme.md" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\MVCBlog.pubxml" />
     <Content Include="Views\User\UserPostInfo.cshtml" />
     <Content Include="Views\Admin\PostDeal.cshtml" />
@@ -563,6 +568,7 @@
     <Content Include="Views\OAuth\BindUserInfo.cshtml" />
     <Content Include="Views\User\UserWightInfo.cshtml" />
     <Content Include="Views\PostInfo\PostMonthList.cshtml" />
+    <Content Include="Views\PostInfo\PostMetaInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -611,7 +617,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2359</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://lylinux.org/</IISUrl>
+          <IISUrl>http://lylinux.org</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -19,7 +19,7 @@ namespace MVCBlog.Entities.Models
 
         [Required(ErrorMessage = "分类名称不能为空")]
         public string CategoryName { get; set; }
-        public virtual UserInfo CreateUser { get; set; }
+        public  UserInfo CreateUser { get; set; }
 
     }
 }

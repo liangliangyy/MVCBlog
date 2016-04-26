@@ -10,5 +10,6 @@ namespace MVCBlog.Service.Interfaces
     public interface IPostMetaService : IBase<PostMetasInfo>
     {
         void Insert(IEnumerable<PostMetasInfo> infos,int postid);
+        void Update(IEnumerable<PostMetasInfo> infos, int postid);
     }
 }

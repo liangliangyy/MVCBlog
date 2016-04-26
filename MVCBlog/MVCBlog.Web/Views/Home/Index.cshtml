@@ -16,7 +16,8 @@
                     <h1 class="entry-title">
                         <a href="@Url.Action("PostInfo", "PostInfo", new { id = item.Id })">@item.Title</a>
                     </h1>
-                    <div class="entry-meta">
+                    @Html.Action("PostMetaInfo", "PostInfo", item)
+                    @*<div class="entry-meta">
                         <span class="post-category"><a href="#">@item.PostCategoryInfo.CategoryName</a></span>
 
                         <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@item.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
@@ -24,7 +25,7 @@
                         <span class="post-author"><a href="@Url.Action("UserPostInfo", "User", new { userid = item.PostAuthor.Id })">@item.PostAuthor.Name</a></span>
 
                         <span class="comments-link"><a href="#">@item.CommentCount Comments</a></span>
-                    </div>
+                    </div>*@
                 </header>
                 <div class="entry-content clearfix">
                     <p>@Html.Raw(item.Content)</p>

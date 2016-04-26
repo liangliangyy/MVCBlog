@@ -18,118 +18,138 @@ namespace MVCBlog.Service
 {
     public class UserService : BaseService<UserInfo>, IUserService
     {
-        private MVCBlogContext Context;
+        //private MVCBlogContext Context;
 
-        public UserService(MVCBlogContext _context)
-        {
-            this.Context = _context;
-        }
+        //public UserService(MVCBlogContext _context)
+        //{
+        //    this.Context = _context;
+        //}
 
         public override async Task InsertAsync(UserInfo user, int userid = 0)
         {
-            user.Password = AesSecret.EncryptStringToAES(user.Password);
-            user.CreateTime = DateTime.Now;
-            user.EditedTime = DateTime.Now;
-            user.UserStatus = UserStatus.正常;
-            user.UserRole = UserRole.读者.ToString();
-            user.IsDelete = false;
-            Context.UserInfo.Add(user);
-            await SaveChanges();
-            await base.InsertAsync(user, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                user.Password = AesSecret.EncryptStringToAES(user.Password);
+                user.CreateTime = DateTime.Now;
+                user.EditedTime = DateTime.Now;
+                user.UserStatus = UserStatus.正常;
+                user.UserRole = UserRole.读者.ToString();
+                user.IsDelete = false;
+                Context.UserInfo.Add(user);
+                await Context.SaveChangesAsync();
+                await base.InsertAsync(user, userid);
+            }
         }
         public UserInfo ValidateUser(string email, string password)
         {
-            string encryptPassword = AesSecret.EncryptStringToAES(password);
-            var entity = Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
-            if (entity != null)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                entity.LastLoginTime = DateTime.Now;
-                Context.SaveChanges();
-                entity = Context.UserInfo.Find(entity.Id);
-                return entity;
+                string encryptPassword = AesSecret.EncryptStringToAES(password);
+                var entity = Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
+                if (entity != null)
+                {
+                    entity.LastLoginTime = DateTime.Now;
+                    Context.SaveChanges();
+                    entity = Context.UserInfo.Find(entity.Id);
+                    return entity;
+                }
+                return null;
             }
-            return null;
         }
         public async Task<UserInfo> ValidateUserAsync(string email, string password)
         {
-            string encryptPassword = AesSecret.EncryptStringToAES(password);
-            Func<UserInfo> finditem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
-            var entity = await Common.ThreadHelper.StartAsync<UserInfo>(finditem);
-            if (entity != null)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                entity.LastLoginTime = DateTime.Now;
-                await SaveChanges();
-                entity = await Context.UserInfo.FindAsync(entity.Id);
-                return entity;
+                string encryptPassword = AesSecret.EncryptStringToAES(password);
+                Func<UserInfo> finditem = () => Context.UserInfo.FirstOrDefault(x => x.Email == email && x.Password == encryptPassword);
+                var entity = await Common.ThreadHelper.StartAsync<UserInfo>(finditem);
+                if (entity != null)
+                {
+                    entity.LastLoginTime = DateTime.Now;
+                    await Context.SaveChangesAsync();
+                    entity = await Context.UserInfo.FindAsync(entity.Id);
+                    return entity;
+                }
+                return null;
             }
-            return null;
         }
 
         public bool CheckUserEmail(string email)
         {
-            return Context.UserInfo.Any(x => x.Email == email);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                return Context.UserInfo.Any(x => x.Email == email);
+            }
         }
 
         public override void Update(UserInfo model)
         {
-            var entity = Context.UserInfo.Find(model.Id);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.UserInfo.Find(model.Id);
 
-            entity.EditedTime = DateTime.Now;
-            entity.Name = model.Name;
-            entity.Password = model.Password;
-            entity.UserRole = model.UserRole;
-            entity.UserStatus = model.UserStatus;
-            entity.WeiBoAccessToken = model.WeiBoAccessToken;
-            entity.WeiBoUid = model.WeiBoUid;
-            entity.WeiBoAvator = model.WeiBoAvator;
-            entity.QQAccessToken = model.QQAccessToken;
-            entity.QQAvator = model.QQAvator;
-            entity.QQUid = model.QQUid;
-            Context.SaveChanges();
-            base.Update(model);
+                entity.EditedTime = DateTime.Now;
+                entity.Name = model.Name;
+                entity.Password = model.Password;
+                entity.UserRole = model.UserRole;
+                entity.UserStatus = model.UserStatus;
+                entity.WeiBoAccessToken = model.WeiBoAccessToken;
+                entity.WeiBoUid = model.WeiBoUid;
+                entity.WeiBoAvator = model.WeiBoAvator;
+                entity.QQAccessToken = model.QQAccessToken;
+                entity.QQAvator = model.QQAvator;
+                entity.QQUid = model.QQUid;
+                Context.SaveChanges();
+                base.Update(model);
+            }
         }
 
         public override async Task UpdateAsync(UserInfo model)
         {
-            var entity = await Context.UserInfo.FindAsync(model.Id);
-            entity.EditedTime = DateTime.Now;
-            entity.Name = model.Name;
-            entity.Password = model.Password;
-            entity.UserRole = model.UserRole;
-            entity.UserStatus = model.UserStatus;
-            entity.WeiBoAccessToken = model.WeiBoAccessToken;
-            entity.WeiBoUid = model.WeiBoUid;
-            entity.WeiBoAvator = model.WeiBoAvator;
-            entity.QQAccessToken = model.QQAccessToken;
-            entity.QQAvator = model.QQAvator;
-            entity.QQUid = model.QQUid;
-            await SaveChanges();
-            await base.UpdateAsync(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = await Context.UserInfo.FindAsync(model.Id);
+                entity.EditedTime = DateTime.Now;
+                entity.Name = model.Name;
+                entity.Password = model.Password;
+                entity.UserRole = model.UserRole;
+                entity.UserStatus = model.UserStatus;
+                entity.WeiBoAccessToken = model.WeiBoAccessToken;
+                entity.WeiBoUid = model.WeiBoUid;
+                entity.WeiBoAvator = model.WeiBoAvator;
+                entity.QQAccessToken = model.QQAccessToken;
+                entity.QQAvator = model.QQAvator;
+                entity.QQUid = model.QQUid;
+                await Context.SaveChangesAsync();
+                await base.UpdateAsync(model);
+            }
         }
 
         public override void Delete(UserInfo model)
         {
-            var entity = Context.UserInfo.Find(model.Id);
-            entity.IsDelete = true;
-            Context.SaveChanges();
-            base.Delete(model);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                var entity = Context.UserInfo.Find(model.Id);
+                entity.IsDelete = true;
+                Context.SaveChanges();
+                base.Delete(model);
+            }
         }
 
         public override async Task DeleteAsync(UserInfo model)
         {
-            var entity = await Context.UserInfo.FindAsync(model.Id);
-            if (entity != null)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                entity.IsDelete = true;
-                await SaveChanges();
-                await base.DeleteAsync(model);
+                var entity = await Context.UserInfo.FindAsync(model.Id);
+                if (entity != null)
+                {
+                    entity.IsDelete = true;
+                    await Context.SaveChangesAsync();
+                    await base.DeleteAsync(model);
+                }
             }
         }
-
-        public override async Task<int> SaveChanges()
-        {
-            return await Context.SaveChangesAsync();
-        }
+        
 
         //public override UserInfo GetById(int id)
         //{
@@ -153,28 +173,34 @@ namespace MVCBlog.Service
 
         public UserInfo GetUserInfoByUid(string uid, OAuthSystemType systemtype)
         {
-            switch (systemtype)
+            using (MVCBlogContext Context = new MVCBlogContext())
             {
-                case OAuthSystemType.QQ:
-                    return Context.UserInfo.FirstOrDefault(x => x.QQUid == uid);
-                case OAuthSystemType.Weibo:
-                    return Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
-                default:
-                    return null;
+                switch (systemtype)
+                {
+                    case OAuthSystemType.QQ:
+                        return Context.UserInfo.FirstOrDefault(x => x.QQUid == uid);
+                    case OAuthSystemType.Weibo:
+                        return Context.UserInfo.FirstOrDefault(x => x.WeiBoUid == uid);
+                    default:
+                        return null;
+                }
             }
         }
 
         public override void Insert(UserInfo user, int userid = 0)
         {
-            user.Password = AesSecret.EncryptStringToAES(user.Password);
-            user.CreateTime = DateTime.Now;
-            user.EditedTime = DateTime.Now;
-            user.UserStatus = UserStatus.正常;
-            user.UserRole = UserRole.读者.ToString();
-            user.IsDelete = false;
-            user = Context.UserInfo.Add(user);
-            Context.SaveChanges();
-            base.Insert(user, userid);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                user.Password = AesSecret.EncryptStringToAES(user.Password);
+                user.CreateTime = DateTime.Now;
+                user.EditedTime = DateTime.Now;
+                user.UserStatus = UserStatus.正常;
+                user.UserRole = UserRole.读者.ToString();
+                user.IsDelete = false;
+                user = Context.UserInfo.Add(user);
+                Context.SaveChanges();
+                base.Insert(user, userid);
+            }
         }
 
         //public override UserInfo GetFromDB(int id)
@@ -189,15 +215,21 @@ namespace MVCBlog.Service
 
         public UserInfo GetUserInfo(string email)
         {
-            return Context.UserInfo.Single(x => x.Email == email);
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                return Context.UserInfo.Single(x => x.Email == email);
+            }
         }
 
         public async Task<UserInfo> GetUserInfoAsync(string email)
         {
-            return await Common.ThreadHelper.StartAsync<UserInfo>(() =>
+            using (MVCBlogContext Context = new MVCBlogContext())
+            {
+                return await Common.ThreadHelper.StartAsync<UserInfo>(() =>
             {
                 return Context.UserInfo.Single(x => x.Email == email);
             });
+            }
         }
 
         //public override UserInfo GetById(int id)

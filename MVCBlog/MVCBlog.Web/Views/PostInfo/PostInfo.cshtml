@@ -9,19 +9,20 @@
     <article class="post post-1">
         <header class="entry-header">
             <h1 class="entry-title">@Model.Title</h1>
-            <div class="entry-meta">
-                <span class="post-category"><a href="#">@Model.PostCategoryInfo.CategoryName</a></span>
+            @Html.Action("PostMetaInfo", "PostInfo", Model)
+            @*<div class="entry-meta">
+                    <span class="post-category"><a href="#">@Model.PostCategoryInfo.CategoryName</a></span>
 
-                <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@Model.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
+                    <span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">@Model.CreateTime.ToString(ConfigInfo.TimeFormat)</time></a></span>
 
-                <span class="post-author"><a href="@Url.Action("UserPostInfo", "User", new { userid = Model.PostAuthor.Id })">@Model.PostAuthor.Name</a></span>
-                @if (HttpContext.Current.User.Identity.IsAuthenticated)
-                {
-                    <span class="post-category"><a href="@Url.Action("PostDeal", "Admin", new { postid = Model.Id })">编辑</a></span>
-                }
-                <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
-                
-            </div>
+                    <span class="post-author"><a href="@Url.Action("UserPostInfo", "User", new { userid = Model.PostAuthor.Id })">@Model.PostAuthor.Name</a></span>
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        <span class="post-category"><a href="@Url.Action("PostDeal", "Admin", new { postid = Model.Id })">编辑</a></span>
+                    }
+                    <span class="comments-link"><a href="#">@Model.CommentCount Comments</a></span>
+
+                </div>*@
         </header>
 
         <div class="entry-content clearfix">

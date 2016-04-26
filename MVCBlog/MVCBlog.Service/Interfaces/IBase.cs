@@ -16,7 +16,7 @@ namespace MVCBlog.Service.Interfaces
         Task UpdateAsync(T model);
         void Delete(T model);
         Task DeleteAsync(T model);
-        Task<int> SaveChanges();
+        //Task<int> SaveChanges();
         T GetById(int id);
         T GetFromDB(int id);
         //Task<T> GetByIdAsync(int id);

@@ -105,6 +105,11 @@ namespace MVCBlog.Web.Controllers
                 model.PostCommentStatus = entity.PostCommentStatus;
                 model.CategoryID = entity.PostCategoryInfo.Id;
                 model.PostMetasInfos = entity.PostMetasInfos.ToList();
+                //model.PostMetasInfos = new List<PostMetasInfo>()
+                //{
+                //    new PostMetasInfo() { Id = 1, Name = "ff" },
+                //        new PostMetasInfo() { Id = 2, Name = "gg" },
+                //};
             }
             return View(model);
         }
@@ -113,12 +118,8 @@ namespace MVCBlog.Web.Controllers
         [Authorize]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult PostDeal(PostViewModel postinfo)
+        public ActionResult PostDeal(PostViewModel postinfo, IEnumerable<PostMetasInfo> metas)
         {
-            if (UserHelper.GetLogInUserInfo() == null)
-            {
-                return RedirectToAction("LogIn");
-            }
             if (ModelState.IsValid)
             {
                 var entity = new PostInfo();
@@ -126,6 +127,13 @@ namespace MVCBlog.Web.Controllers
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
                 entity.PostCategoryInfo = categoryService.GetFromDB(postinfo.CategoryID);
+                //entity.PostMetasInfos = metas;
+                if (metas != null && metas.Count() > 0)
+                {
+                    var list = metas.ToList();
+                    list.RemoveAll(x => string.IsNullOrEmpty(x.Name));
+                    entity.PostMetasInfos = list;
+                }
                 if (entity.Id == 0)
                 {
                     postService.Insert(entity, UserHelper.GetLogInUserInfo().Id);
