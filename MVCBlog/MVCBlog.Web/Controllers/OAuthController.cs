@@ -15,6 +15,7 @@ using MVCBlog.Common.OAuth.Models;
 using MVCBlog.Service;
 using System.Web.Security;
 using MVCBlog.Web.Models;
+using MVCBlog.Entities.Enums;
 
 namespace MVCBlog.Web.Controllers
 {
@@ -61,7 +62,8 @@ namespace MVCBlog.Web.Controllers
                         Name = userinfo.Name,
                         SystemType = OAuthSystemType.Weibo,
                         Uid = oauthUserinfo.Uid,
-                        AccessToken = oauthUserinfo.AccessToken
+                        AccessToken = oauthUserinfo.AccessToken,
+                        UserRoles = new List<UserRole>() { userinfo.UserRole }
                     };
                     UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
                 }
@@ -71,7 +73,8 @@ namespace MVCBlog.Web.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet]  
+        
         public ActionResult QQAuthorized(string code)
         {
             bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.QQ, code);
@@ -89,7 +92,8 @@ namespace MVCBlog.Web.Controllers
                         Name = userinfo.Name,
                         SystemType = OAuthSystemType.Weibo,
                         Uid = oauthUserinfo.Uid,
-                        AccessToken = oauthUserinfo.AccessToken
+                        AccessToken = oauthUserinfo.AccessToken,
+                        UserRoles = new List<UserRole>() { userinfo.UserRole }
                     };
                     UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
                 }

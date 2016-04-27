@@ -1,14 +1,17 @@
 ﻿using MVCBlog.Repository;
+using System.Linq;
 using MVCBlog.Web.App_Start;
 using MVCBlog.Web.Infrastructure;
 using MySql.Data.Entity;
 using System;
 using System.Data.Entity;
 using System.IO;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using MVCBlog.Entities.Enums;
 
 namespace MVCBlog.Web
 {
@@ -39,9 +42,13 @@ namespace MVCBlog.Web
                     AuthenticationType = formsIdetity.AuthenticationType,
                     IsAuthenticated = formsIdetity.IsAuthenticated,
                     Name = formsIdetity.Name,
-                    Ticket = formsIdetity.Ticket,
+                    Ticket = formsIdetity.Ticket
                 };
-                MVCBlogPrincipal mvcblogPrincipal = new MVCBlogPrincipal() { Identity = mvcblogIdentity, };
+                //MVCBlogPrincipal mvcblogPrincipal = new MVCBlogPrincipal() { Identity = mvcblogIdentity, };
+                UserRole[] roles = mvcblogIdentity.UserData.UserRoles == null ? new UserRole[] { UserRole.作者 } :
+                    mvcblogIdentity.UserData.UserRoles.ToArray();
+
+                MVCBlogPrincipal mvcblogPrincipal = new MVCBlogPrincipal(mvcblogIdentity, roles);
                 HttpContext.Current.User = mvcblogPrincipal;
             }
         }

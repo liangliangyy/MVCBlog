@@ -33,7 +33,7 @@ namespace MVCBlog.Service
                 user.CreateTime = DateTime.Now;
                 user.EditedTime = DateTime.Now;
                 user.UserStatus = UserStatus.正常;
-                user.UserRole = UserRole.读者.ToString();
+                user.UserRole = UserRole.读者;
                 user.IsDelete = false;
                 Context.UserInfo.Add(user);
                 await Context.SaveChangesAsync();
@@ -157,7 +157,7 @@ namespace MVCBlog.Service
                 user.CreateTime = DateTime.Now;
                 user.EditedTime = DateTime.Now;
                 user.UserStatus = UserStatus.正常;
-                user.UserRole = UserRole.读者.ToString();
+                user.UserRole = UserRole.读者;
                 user.IsDelete = false;
                 user = Context.UserInfo.Add(user);
                 Context.SaveChanges();

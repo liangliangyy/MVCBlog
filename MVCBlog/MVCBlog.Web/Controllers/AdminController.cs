@@ -3,6 +3,7 @@ using MVCBlog.Entities.Enums;
 using MVCBlog.Entities.Models;
 using MVCBlog.Service.Interfaces;
 using MVCBlog.Web.CommonHelper;
+using MVCBlog.Web.Infrastructure;
 using MVCBlog.Web.Models;
 using Newtonsoft.Json;
 using System;
@@ -15,7 +16,7 @@ using System.Web.Security;
 
 namespace MVCBlog.Web.Controllers
 {
-    [Authorize]
+   
     public class AdminController : Controller
     {
         private readonly IPostService postService;
@@ -81,13 +82,15 @@ namespace MVCBlog.Web.Controllers
                 Name = userinfo.Name,
                 SystemType = OAuthSystemType.Email,
                 Uid = string.Empty,
-                AccessToken = string.Empty
+                AccessToken = string.Empty,
+                UserRoles = new List<UserRole>() { userinfo.UserRole }
             };
             UserHelper.SetFormsAuthenticationTicket(email, userData, true);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
+        [AuthorizeRoleAttribute(UserRole.作者)]
         public async Task<ActionResult> PostDeal(int postid = 0)
         {
             var category = await Helper.GetCategorySelectList();
@@ -128,7 +131,7 @@ namespace MVCBlog.Web.Controllers
                 entity.Title = postinfo.Title;
                 entity.Content = postinfo.Content;
                 entity.PostCategoryInfo = categoryService.GetFromDB(postinfo.CategoryID);
-                entity.PostCommentStatus =(PostCommentStatus) postinfo.PostCommentStatus;
+                entity.PostCommentStatus = (PostCommentStatus)postinfo.PostCommentStatus;
                 //entity.PostMetasInfos = metas;
                 if (metas != null && metas.Count() > 0)
                 {
@@ -149,7 +152,7 @@ namespace MVCBlog.Web.Controllers
             }
             return View();
         }
-        [Authorize]
+        [AuthorizeRoleAttribute(UserRole.超级管理员)]
         [HttpGet]
         public ActionResult AddCategoryInfo()
         {
@@ -180,6 +183,31 @@ namespace MVCBlog.Web.Controllers
         public ActionResult BindAccount()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            UserHelper.UserLogOut();
+            return RedirectToAction("Index");
+        }
+        [Authorize]
+        [HttpGet]
+        public ActionResult UserList()
+        {
+            var list = userService.Query(x => !x.IsDelete);
+            var infos = list.Select(x => new UserInfoModel()
+            {
+                Id = x.Id,
+                Email = x.Email,
+                Name = x.Name,
+                UserRole = x.UserRole,
+                UserStatus = x.UserStatus,
+                CreateTime = x.CreateTime,
+                LastLoginTime = x.LastLoginTime
+            });
+            return View(infos);
         }
     }
 }

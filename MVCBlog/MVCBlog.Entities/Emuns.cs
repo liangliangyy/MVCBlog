@@ -56,10 +56,10 @@ namespace MVCBlog.Entities.Enums
     /// </summary>
     public enum UserRole
     {
-        读者,
-        作者,
-        管理员,
-        超级管理员
+        读者 = 0,
+        作者 = 1,
+        管理员 = 2,
+        超级管理员 = 3
     }
     /// <summary>
     /// 评论状态

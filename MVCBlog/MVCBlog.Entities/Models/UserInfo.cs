@@ -14,7 +14,7 @@ namespace MVCBlog.Entities.Models
     {
         public UserInfo()
         {
-            this.UserRole = string.Empty;
+            this.UserRole = UserRole.作者;
             this.UserStatus = MVCBlog.Entities.Enums.UserStatus.正常;
             this.CreateTime = DateTime.Now;
 
@@ -30,7 +30,7 @@ namespace MVCBlog.Entities.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public string UserRole { get; set; }
+        public UserRole UserRole { get; set; }
         public UserStatus UserStatus { get; set; }
       
         public DateTime? LastLoginTime { get; set; }

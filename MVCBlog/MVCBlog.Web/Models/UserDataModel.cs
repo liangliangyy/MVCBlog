@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace MVCBlog.Web.Models
         public string Uid { get; set; }
         public string AccessToken { get; set; }
         public OAuthSystemType SystemType { get; set; }
+        public List<UserRole> UserRoles { get; set; }
     }
 }

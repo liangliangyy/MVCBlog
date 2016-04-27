@@ -26,7 +26,7 @@ namespace MVCBlog.Web.CommonHelper
                 MVCBlogIdentity mvcblogidentity = HttpContext.Current.User.Identity as MVCBlogIdentity;
                 if (mvcblogidentity != null && mvcblogidentity.IsAuthenticated)
                 {
-                    IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>(); 
+                    IUserService userservice = ApplicationContainer.Container.Resolve<IUserService>();
                     var userinfo = userservice.GetById(mvcblogidentity.UserData.Id);
                     return userinfo;
                 }
@@ -37,6 +37,28 @@ namespace MVCBlog.Web.CommonHelper
                 //HttpContext.Current.Response.Redirect("/Admin/LogIn");
             }
             return null;
+        }
+
+        public static void UserLogOut()
+        {
+            try
+            {
+                if (HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    MVCBlogIdentity mvcblogidentity = HttpContext.Current.User.Identity as MVCBlogIdentity;
+                    if (mvcblogidentity != null)
+                    {
+                        var cookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+                        cookie.Expires = DateTime.Now.AddDays(-1);
+                        HttpContext.Current.Response.Cookies.Add(cookie);
+                        HttpContext.Current.User = null;
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public static void SetFormsAuthenticationTicket(string email, UserDataModel userdata, bool isRemember)

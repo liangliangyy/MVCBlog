@@ -512,6 +512,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\AuthorizeRoleAttribute.cs" />
     <Compile Include="Infrastructure\CallLogger.cs" />
     <Compile Include="Infrastructure\CustomExceptionAttribute.cs" />
     <Compile Include="Infrastructure\ModelCacheEventHandle.cs" />
@@ -523,6 +524,7 @@
     <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -570,6 +572,7 @@
     <Content Include="Views\PostInfo\PostMonthList.cshtml" />
     <Content Include="Views\PostInfo\PostMetaInfo.cshtml" />
     <Content Include="Views\Admin\BindAccount.cshtml" />
+    <Content Include="Views\Admin\UserList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
