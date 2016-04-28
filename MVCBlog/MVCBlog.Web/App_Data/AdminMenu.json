@@ -18,5 +18,10 @@
     "MenuName": "分类目录",
     "MenuUrl": "/Admin/CategoryList",
     "MenuPosition": 2
+  },
+  {
+    "MenuName": "绑定第三方账号",
+    "MenuUrl": "/Admin/BindAccount",
+    "MenuPosition": 2
   }
 ]

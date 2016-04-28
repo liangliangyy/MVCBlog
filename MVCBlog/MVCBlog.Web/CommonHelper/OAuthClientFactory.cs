@@ -66,7 +66,15 @@ namespace MVCBlog.Web.CommonHelper
             if (client.IsAuthorized)
             {
                 HttpContext.Current.Session["access_token"] = client.AccessToken;
-                HttpContext.Current.Response.AppendCookie(new HttpCookie("uid", client.UID) { Expires = DateTime.Now.AddDays(7) });
+                HttpCookie cookie = new HttpCookie("uid", client.UID);
+                if (HttpContext.Current.Request.Cookies["uid"] != null)
+                {
+                    cookie = HttpContext.Current.Request.Cookies["uid"];
+                    cookie.Value = client.UID;
+                }
+                cookie.Expires = DateTime.Now.AddDays(7);
+                HttpContext.Current.Response.Cookies.Add(cookie);
+                //HttpContext.Current.Response.AppendCookie(new HttpCookie("uid", client.UID) { Expires = DateTime.Now.AddDays(7) });
                 log4net.LogManager.GetLogger("api").Info(string.Format("SystemType:{0}--AccessToken:{1}--Uid:{2}", systemtype.ToString(), client.AccessToken, client.UID));
                 return true;
             }
@@ -89,14 +97,14 @@ namespace MVCBlog.Web.CommonHelper
                 var loginuser = UserHelper.GetLogInUserInfo();
                 if (loginuser != null)
                 {
-                    IUserService userService = ApplicationContainer.Container.Resolve<IUserService>(); 
+                    IUserService userService = ApplicationContainer.Container.Resolve<IUserService>();
                     if (userinfo.SystemType == OAuthSystemType.QQ)
                     {
                         loginuser.QQAccessToken = userinfo.AccessToken;
                         loginuser.QQUid = userinfo.Uid;
                         loginuser.QQAvator = userinfo.ProfileImgUrl;
                         loginuser.Name = userinfo.Name;
-                        userService.UpdateAsync(loginuser);
+                        userService.Update(loginuser);
 
                     }
                     if (userinfo.SystemType == OAuthSystemType.Weibo)
@@ -105,7 +113,7 @@ namespace MVCBlog.Web.CommonHelper
                         loginuser.WeiBoUid = userinfo.Uid;
                         loginuser.WeiBoAvator = userinfo.ProfileImgUrl;
                         loginuser.Name = userinfo.Name;
-                        userService.UpdateAsync(loginuser);
+                        userService.Update(loginuser);
                     }
                 }
             }

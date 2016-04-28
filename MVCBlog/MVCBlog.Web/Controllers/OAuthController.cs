@@ -47,58 +47,40 @@ namespace MVCBlog.Web.Controllers
             {
                 return RedirectToAction("index");
             }
+            if (Request.Cookies["uid"] != null)
+            {
+                var c = new HttpCookie("uid");
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+            }
             bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.Weibo, code);
             if (result)
             {
                 var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.Weibo);
-                OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
-                var userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, OAuthSystemType.Weibo);
-                if (userinfo != null)
-                {
-                    UserDataModel userData = new UserDataModel()
-                    {
-                        Id = userinfo.Id,
-                        Email = userinfo.Email,
-                        Name = userinfo.Name,
-                        SystemType = OAuthSystemType.Weibo,
-                        Uid = oauthUserinfo.Uid,
-                        AccessToken = oauthUserinfo.AccessToken,
-                        UserRoles = new List<UserRole>() { userinfo.UserRole }
-                    };
-                    UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
-                }
+                UserHelper.HandleOauthUserLogIn(oauthUserinfo);
             }
-            return RedirectToAction("index");
+            return RedirectToAction("index", "home");
         }
 
 
 
-        [HttpGet]  
-        
+        [HttpGet]
+
         public ActionResult QQAuthorized(string code)
         {
+            if (Request.Cookies["uid"] != null)
+            {
+                var c = new HttpCookie("uid");
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+            }
             bool result = OAuthClientFactory.AuthorizedCode(OAuthSystemType.QQ, code);
             if (result)
             {
                 var oauthUserinfo = OAuthClientFactory.GetOAuthUserInfo(OAuthSystemType.QQ);
-                OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
-                var userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, OAuthSystemType.QQ);
-                if (userinfo != null)
-                {
-                    UserDataModel userData = new UserDataModel()
-                    {
-                        Id = userinfo.Id,
-                        Email = userinfo.Email,
-                        Name = userinfo.Name,
-                        SystemType = OAuthSystemType.Weibo,
-                        Uid = oauthUserinfo.Uid,
-                        AccessToken = oauthUserinfo.AccessToken,
-                        UserRoles = new List<UserRole>() { userinfo.UserRole }
-                    };
-                    UserHelper.SetFormsAuthenticationTicket(string.Empty, userData, true);
-                }
+                UserHelper.HandleOauthUserLogIn(oauthUserinfo);
             }
-            return RedirectToAction("index");
+            return RedirectToAction("index", "home");
         }
         [HttpPost]
         [Authorize]

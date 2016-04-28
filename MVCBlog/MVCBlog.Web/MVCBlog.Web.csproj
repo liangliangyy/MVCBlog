@@ -538,7 +538,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="CommonHelper\Menu\AdminMenu.json" />
     <Content Include="Views\Admin\AddCategoryInfo.cshtml" />
     <Content Include="Views\Admin\CategoryList.cshtml" />
     <Content Include="Views\PostInfo\RecentPost.cshtml" />
@@ -563,6 +562,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="App_Data\AdminMenu.json" />
     <None Include="Properties\PublishProfiles\MVCBlog.pubxml" />
     <Content Include="Views\User\UserPostInfo.cshtml" />
     <Content Include="Views\Admin\PostDeal.cshtml" />
@@ -581,7 +581,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

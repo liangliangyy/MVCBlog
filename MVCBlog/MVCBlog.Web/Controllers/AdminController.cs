@@ -16,7 +16,7 @@ using System.Web.Security;
 
 namespace MVCBlog.Web.Controllers
 {
-   
+
     public class AdminController : Controller
     {
         private readonly IPostService postService;
@@ -182,6 +182,12 @@ namespace MVCBlog.Web.Controllers
         [HttpGet]
         public ActionResult BindAccount()
         {
+            if (Request.Cookies["uid"] != null)
+            {
+                var cookie = new HttpCookie("uid");
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(cookie);
+            }
             return View();
         }
 

@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using MVCBlog.Common;
+using MVCBlog.Common.OAuth.Models;
+using MVCBlog.Entities.Enums;
 using MVCBlog.Entities.Models;
 using MVCBlog.Service;
 using MVCBlog.Service.Interfaces;
@@ -61,11 +63,89 @@ namespace MVCBlog.Web.CommonHelper
             }
         }
 
+        public static void CreateNewUserByOAuthUser(OAuthUserInfo oauthUser)
+        {
+            if (oauthUser != null)
+            {
+                UserInfo u = new UserInfo()
+                {
+                    Email = oauthUser.Uid,
+                    Password = ConfigInfo.UserDefaultPassword,
+                    CreateTime = DateTime.Now,
+                    Name = oauthUser.Name,
+                    UserRole = UserRole.读者,
+                    UserStatus = UserStatus.正常
+                };
+                switch (oauthUser.SystemType)
+                {
+                    case OAuthSystemType.Weibo:
+                        {
+                            u.WeiBoAccessToken = oauthUser.AccessToken;
+                            u.WeiBoAvator = oauthUser.ProfileImgUrl;
+                            u.WeiBoUid = oauthUser.Uid;
+                            break;
+                        }
+                    case OAuthSystemType.QQ:
+                        {
+                            u.QQAccessToken = oauthUser.AccessToken;
+                            u.QQAvator = oauthUser.ProfileImgUrl;
+                            u.QQUid = oauthUser.Uid;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                if (!string.IsNullOrEmpty(u.QQUid) || !string.IsNullOrEmpty(u.WeiBoUid))
+                {
+                    IUserService service = ApplicationContainer.Container.Resolve<IUserService>();
+                    service.Insert(u);
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+        public static void HandleOauthUserLogIn(OAuthUserInfo oauthUserinfo)
+        {
+            if (oauthUserinfo == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                OAuthClientFactory.UpdateUserOAuthInfo(oauthUserinfo);
+                IUserService userService = ApplicationContainer.Container.Resolve<IUserService>();
+                var userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, oauthUserinfo.SystemType);
+                if (userinfo == null)
+                {
+                    CreateNewUserByOAuthUser(oauthUserinfo);
+                    userinfo = userService.GetUserInfoByUid(oauthUserinfo.Uid, oauthUserinfo.SystemType);
+                }
+                UserDataModel userData = new UserDataModel()
+                {
+                    Id = userinfo.Id,
+                    Email = userinfo.Email,
+                    Name = userinfo.Name,
+                    SystemType = OAuthSystemType.Weibo,
+                    Uid = oauthUserinfo.Uid,
+                    AccessToken = oauthUserinfo.AccessToken,
+                    UserRoles = new List<UserRole>() { userinfo.UserRole }
+                };
+                SetFormsAuthenticationTicket(userinfo.Email, userData, true);
+            }
+        }
+
         public static void SetFormsAuthenticationTicket(string email, UserDataModel userdata, bool isRemember)
         {
             if (string.IsNullOrEmpty(email))
             {
-                email = StringHelper.CreateMD5(userdata.Id.ToString() + userdata.Uid);
+                throw new ArgumentNullException("user email cannot be null");
             }
             string userDataJson = JsonConvert.SerializeObject(userdata);
 

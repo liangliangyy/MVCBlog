@@ -17,6 +17,7 @@
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -27,6 +28,7 @@
                 </button>
                 <a class="navbar-brand" href="#">逝去日子的博客</a>
             </div>
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     @foreach (var item in MVCBlog.Web.CommonHelper.Menu.MenuHelper.GetMenuInfo(MVCBlog.Entities.Enums.MenuType.后台))
@@ -34,21 +36,19 @@
                         <li><a href="@item.MenuUrl">@item.MenuName</a></li>
                     }
                     @*<li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Profile</a></li>
-                    <li><a href="#">Help</a></li>*@
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Help</a></li>*@
                 </ul>
                 @*<form class="navbar-form navbar-right">
-                    <input type="text" class="form-control" placeholder="Search...">
-                </form>*@
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </form>*@
             </div>
         </div>
     </nav>
     <div class="container-fluid">
 
-        <div class="row row-offcanvas row-offcanvas-left">
-
-         
+        <div class="row row-offcanvas row-offcanvas-left"> 
 
             <div class="col-sm-9 col-md-10 main">
 
@@ -57,7 +57,7 @@
                     <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="glyphicon glyphicon-chevron-left"></i></button>
                 </p>
 
-             @RenderBody()
+                @RenderBody()
 
             </div><!--/row-->
         </div>
